@@ -4,7 +4,7 @@ A cross-platform real-time 3D spatial data visualization working with [ev3dev-ma
 ## Supported Platforms
 
 This is Unity project. In theory it should work on platforms ranging from desktops, through consoles to mobile devices and TVs.
-See [unity platforms](https://unity3d.com/unity/multiplatform) for the full list. Note that currently only some desktops were tested.
+See [Unity platforms](https://unity3d.com/unity/multiplatform) for the full list. Note that currently only some desktops were tested.
 Other platforms may not work, need some tweaking or disabling some functionality.
 
 ## State of the Project
@@ -53,7 +53,7 @@ Select the `Robot` Game Object in the hierarchy window. See the components (Odom
 See the components configuration (e.g. drive models, udp parameters, replay mode, laser geometry, laser plot, etc.)
 Try to change the replay files to some other from UDP folder.
 Wait for some documentation on building modules in [ev3dev-mapping-modules](https://github.com/bmegli/ev3dev-mapping-modules).
-Build the ev3drive module, configure Drive component accordingly and try to control robot with 2 engines from within unity.
+Build the ev3drive module, configure Drive component accordingly and try to control robot with 2 engines from within Unity.
 
 ## Troubleshooting
 

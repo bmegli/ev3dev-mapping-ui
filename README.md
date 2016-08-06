@@ -38,9 +38,8 @@ Only instructions for working with recorded UDP communication for now.
 
 1. Download [Unity](https://unity3d.com/)
 2. Clone the project with submodules
-``` bash
-git clone --recursive https://github.com/bmegli/ev3dev-mapping-ui
-```
+
+    `git clone --recursive https://github.com/bmegli/ev3dev-mapping-ui`
 3. Open the project in Unity
 4. Open the Base scene
 5. Hit `Play` button in Unity

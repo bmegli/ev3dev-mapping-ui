@@ -1,0 +1,3 @@
+[submodule "UDP"]
+	path = UDP
+	url = https://github.com/bmegli/ev3dev-mapping-ui-udp

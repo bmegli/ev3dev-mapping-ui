@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d09e0c04b0819d344a0ac34bb8fc6c7b
+timeCreated: 1469867821
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - ModuleName: {fileID: 11445212, guid: f4343af0dd1752d4dbeedd72c0ab47cd, type: 2}
+  - moduleText: {fileID: 11476718, guid: b3cd24b3fd3c11f468cca498f15db4ce, type: 2}
+  - enabledToggle: {fileID: 11469012, guid: 24eba0bcd1d1ad543b88447b9a715f6d, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

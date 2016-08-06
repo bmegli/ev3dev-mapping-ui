@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: 35116b162bbe69348ad4d55f907b7d29
+timeCreated: 1470133182
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - ModuleName: {fileID: 11445212, guid: f4343af0dd1752d4dbeedd72c0ab47cd, type: 2}
+  - ModuleText: {fileID: 11476718, guid: b3cd24b3fd3c11f468cca498f15db4ce, type: 2}
+  - EnabledToggle: {fileID: 11469012, guid: 24eba0bcd1d1ad543b88447b9a715f6d, type: 2}
+  - SpeedDistanceLayout: {fileID: 197220, guid: fea1a1c19ef3c064aa3ad7c2b2cfc597,
+      type: 2}
+  - DistanceInputField: {fileID: 11465008, guid: 6df19128db4bca344ac37eb947d30160,
+      type: 2}
+  - DistanceUnitText: {fileID: 11460400, guid: dbc6ff2687c82ae4abab447794025254, type: 2}
+  - SpeedInputField: {fileID: 11492832, guid: eb6397386ccea74449f248523cdb552b, type: 2}
+  - SpeedUnitText: {fileID: 11444408, guid: 3baaab142a995ce479a36c89cbee1e27, type: 2}
+  - GoButton: {fileID: 11447058, guid: 6822615a4e0993a4fad061940a39a276, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

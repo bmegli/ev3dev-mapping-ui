@@ -10,9 +10,11 @@ Other platforms may not work, need some tweaking or disabling some functionality
 ## State of the Project
 
 This is preliminary version. It's functional and stable but all programming interfaces are subject to change.
+Some architectural changes are also on the way and Control component/ev3control module are currently rewritten for TCP/IP.
 
 ## Current Functionality 
 
+1. Real time 3D mapping 
 2. Robot engines control 
 3. Recording/replaying UDP communication
 4. Exporting point clouds to [ply file format](https://en.wikipedia.org/wiki/PLY_(file_format)) for further processing

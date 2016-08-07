@@ -24,7 +24,7 @@ Some architectural changes are also on the way and Control component/ev3control 
 The project can be tested without hardware (robot) with recorded UDP communication. See details below.
 
 To test with robot hardware:
-- XV11 Lidar works with Laser component and ev3lidar module (plotting only current readings)
+- XV11 Lidar works with Laser component and ev3laser module (plotting only current readings)
 - 2 engines and CruizCore XG 1300L work with Odometry component and ev3odometry module (plotting only robot movement)
 - if you have all of the above mapping (2D or 3D) is possible.
 - 2 engines work with Drive component and ev3drive module (control of robot)

@@ -353,7 +353,7 @@ public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
 		
 	public string ModuleCall()
 	{
-		return "ev3lidar " + module.laserDevice + " " + module.motorPort + " " + module.hostIp + " " + udp.port + " " + module.laserDutyCycle;
+		return "ev3laser " + module.laserDevice + " " + module.motorPort + " " + module.hostIp + " " + udp.port + " " + module.laserDutyCycle;
 	}
 	public int ModulePriority()
 	{

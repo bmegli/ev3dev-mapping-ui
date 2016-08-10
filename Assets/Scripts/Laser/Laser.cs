@@ -260,11 +260,7 @@ public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
 		for (int i = from; i < from+len; ++i)
 		{
 			pos = snapshot.PositionAt(timestamps[i]);
-			if (pos.exc) //debugging to remove!
-			{
-				print(pos);
-				continue;
-			}
+
 			robotToGlobal.SetTRS(pos.position, Quaternion.Euler(0.0f, pos.heading, 0.0f), scale);
 			readings[i]=robotToGlobal.MultiplyPoint3x4(readings[i]);
 		}

@@ -140,9 +140,10 @@ public sealed class PositionHistory : MonoBehaviour
 
 				return pos;
 			}
-			catch(System.Exception e) {
+			catch(System.Exception) {
+				//the whole try catch can be removed, but recall when this was needed
 
-				return new PositionData{exc=true,heading=0,position=new Vector3(data[0].timestamp, timestamp, data[data.Length-1].timestamp), timestamp=timestamp, dummy_string=e.ToString()}; //DUMMY!
+				return new PositionData{heading=0,position=new Vector3(data[0].timestamp, timestamp, data[data.Length-1].timestamp), timestamp=timestamp}; //DUMMY!
 			}
 		}
 	}

@@ -137,7 +137,7 @@ public class Drive : ReplayableUDPClient<DrivePacket>, IRobotModule
 	}
 	public bool ModuleAutostart()
 	{
-		return module.autostart && udp.replayMode!=UDPReplayMode.Replay;
+		return module.autostart;
 	}
 	public int CreationDelayMs()
 	{

@@ -1,6 +1,10 @@
 # ev3dev-mapping-ui
 A cross-platform real-time 3D spatial data visualization working with [ev3dev-mapping-modules](https://github.com/bmegli/ev3dev-mapping-modules)
 
+For high-level project overview visit [ev3dev-mapping web page](http://www.ev3dev.org/projects/2016/08/07/Mapping/)
+
+For project meta-repository visit [ev3dev-mapping](https://github.com/bmegli/ev3dev-mapping)
+
 ## Supported Platforms
 
 This is Unity project. In theory it should work on platforms ranging from desktops, through consoles to mobile devices and TVs.

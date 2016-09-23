@@ -993,6 +993,9 @@ Prefab:
       propertyPath: plot.distanceLimit
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 11491674, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
+      propertyPath: properties.positionsKept
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 11462416, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
     - {fileID: 11427138, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}

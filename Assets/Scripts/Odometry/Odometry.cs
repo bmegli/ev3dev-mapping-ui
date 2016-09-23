@@ -160,7 +160,7 @@ public class Odometry : ReplayableUDPServer<OdometryPacket>, IRobotModule
 		
 	public override string GetUniqueName ()
 	{
-		return "odometry";
+		return name;
 	}
 		
 	public string ModuleCall()

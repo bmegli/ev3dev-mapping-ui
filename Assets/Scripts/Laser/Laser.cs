@@ -161,11 +161,8 @@ public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
 
 	#region UDP Thread Only Functions
 
-
 	protected override void ProcessPacket(LaserPacket packet)
-	{
-		//print("packet arrived " + packet.ToString());
-			
+	{			
 		threadInternal.laserRPM = packet.laser_speed / 64.0f;
 
 		// if we had unprocessed packet last time do it now
@@ -240,7 +237,7 @@ public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
 			threadInternal.SetPending (from, len, t_from, t_to);
 			return false;
 		}
-
+			
 		Matrix4x4 robotToGlobal = new Matrix4x4();
 		Vector3 scale = Vector3.one;
 		PositionData pos=new PositionData();

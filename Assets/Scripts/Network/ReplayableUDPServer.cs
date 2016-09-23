@@ -11,7 +11,7 @@
  */
 
 using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public abstract class ReplayableUDPServer<DATAGRAM> : MonoBehaviour, IReplayableUDPServer
 	where DATAGRAM : IDatagram, new()
@@ -74,9 +74,13 @@ public abstract class ReplayableUDPServer<DATAGRAM> : MonoBehaviour, IReplayable
 		if (udp.replayMode != UDPReplayMode.Replay)
 			return;
 
-		IReplayableUDPServer[] reps = GetComponentsInParent<IReplayableUDPServer>();
+		List<IReplayableUDPServer> servers=new List<IReplayableUDPServer>();
+		servers.AddRange(GetComponentsInParent<IReplayableUDPServer>());
+		servers.AddRange(GetComponents<IReplayableUDPServer>());
+		servers.AddRange(GetComponentsInChildren<IReplayableUDPServer>());
+	
 		ulong min_timestamp_us = ulong.MaxValue;
-		foreach (IReplayableUDPServer rep in reps)
+		foreach (IReplayableUDPServer rep in servers)
 			if (rep.GetFirstPacketTimestampUs() < min_timestamp_us)
 				min_timestamp_us = rep.GetFirstPacketTimestampUs();
 

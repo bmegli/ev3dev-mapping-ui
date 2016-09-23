@@ -996,6 +996,7 @@ Prefab:
     m_RemovedComponents:
     - {fileID: 11462416, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
     - {fileID: 11427138, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
+    - {fileID: 11431270, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &1951258155
@@ -1213,6 +1214,58 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 0
+--- !u!1 &2054566680
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 2054566681}
+  - 114: {fileID: 2054566682}
+  m_Layer: 0
+  m_Name: Odometry
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2054566681
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2054566680}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1958232684}
+  m_RootOrder: 3
+--- !u!114 &2054566682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2054566680}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 586a5475d09a52245ba1b55de8588ffd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  udp:
+    host: 
+    port: 8000
+    replayMode: 2
+    dumpFilename: odometry_body.bin
+  motionModel: {fileID: 11490698, guid: 6c6c735fc1c0f3b4fbcf7ab857899140, type: 2}
+  odometryUI: {fileID: 11400002, guid: 035f27fd694ed5440ae5ec3d36c6299d, type: 2}
+  module:
+    autostart: 1
+    priority: 0
+    creationDelayMs: 1000
+    hostIp: 192.168.0.103
 --- !u!1001 &2065968506
 Prefab:
   m_ObjectHideFlags: 0

@@ -995,6 +995,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11491674, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
       propertyPath: properties.positionsKept
+      value: 512
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 11462416, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}

@@ -72,10 +72,7 @@ public abstract class ReplayableUDPClient<DATAGRAM> : MonoBehaviour, IReplayable
 		if (udp.replayMode != UDPReplayMode.Replay)
 			return;
 
-		List<IReplayableUDPClient> clients=new List<IReplayableUDPClient>();
-		clients.AddRange(GetComponentsInParent<IReplayableUDPClient>());
-		clients.AddRange(GetComponents<IReplayableUDPClient>());
-		clients.AddRange(GetComponentsInChildren<IReplayableUDPClient>());
+		IReplayableUDPClient[] clients=GetComponents<IReplayableUDPClient>();
 
 		ulong min_timestamp_us = ulong.MaxValue;
 		foreach (IReplayableUDPClient rep in clients)

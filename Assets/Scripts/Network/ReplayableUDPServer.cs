@@ -74,22 +74,26 @@ public abstract class ReplayableUDPServer<DATAGRAM> : MonoBehaviour, IReplayable
 		if (udp.replayMode != UDPReplayMode.Replay)
 			return;
 
-		List<IReplayableUDPServer> servers=new List<IReplayableUDPServer>();
-		servers.AddRange(GetComponentsInParent<IReplayableUDPServer>());
-		servers.AddRange(GetComponents<IReplayableUDPServer>());
-		servers.AddRange(GetComponentsInChildren<IReplayableUDPServer>());
-	
+		IReplayableUDPServer[] servers=transform.parent.GetComponentsInChildren<IReplayableUDPServer>();
+			
 		ulong min_timestamp_us = ulong.MaxValue;
+
+		print(GetUniqueName() + ":");
 		foreach (IReplayableUDPServer rep in servers)
+		{
 			if (rep.GetFirstPacketTimestampUs() < min_timestamp_us)
 				min_timestamp_us = rep.GetFirstPacketTimestampUs();
-
+			print(rep.GetFirstPacketTimestampUs());
+		}
 
 		ulong start_us = min_timestamp_us;
+
 		if (time_offset >= 0)
 			start_us += (ulong) time_offset;
 		else
 			start_us -= (ulong)(-time_offset);
+
+		print(GetUniqueName() + servers.Length +  " min " + min_timestamp_us + " start " + start_us);
 
 		client.StartReplay(start_us); 
 	}

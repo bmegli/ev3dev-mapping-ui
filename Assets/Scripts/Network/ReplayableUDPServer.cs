@@ -78,12 +78,10 @@ public abstract class ReplayableUDPServer<DATAGRAM> : MonoBehaviour, IReplayable
 			
 		ulong min_timestamp_us = ulong.MaxValue;
 
-		print(GetUniqueName() + ":");
 		foreach (IReplayableUDPServer rep in servers)
 		{
 			if (rep.GetFirstPacketTimestampUs() < min_timestamp_us)
 				min_timestamp_us = rep.GetFirstPacketTimestampUs();
-			print(rep.GetFirstPacketTimestampUs());
 		}
 
 		ulong start_us = min_timestamp_us;
@@ -92,8 +90,6 @@ public abstract class ReplayableUDPServer<DATAGRAM> : MonoBehaviour, IReplayable
 			start_us += (ulong) time_offset;
 		else
 			start_us -= (ulong)(-time_offset);
-
-		print(GetUniqueName() + servers.Length +  " min " + min_timestamp_us + " start " + start_us);
 
 		client.StartReplay(start_us); 
 	}

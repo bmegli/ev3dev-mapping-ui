@@ -24,14 +24,7 @@ public class LaserModuleProperties : ModuleProperties
 	public string motorPort = "outC";
 	public int laserDutyCycle = -44;
 }
-
-[Serializable]
-public class LaserGeometryProperties
-{
-	public PlaneType laserPlane;
-	public Vector3 laserOffset;
-}
-
+	
 [Serializable]
 public class LaserPlotProperties
 {
@@ -94,7 +87,6 @@ class LaserThreadInternalData
 public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
 {
 	public LaserModuleProperties module;
-	public LaserGeometryProperties geometry;
 	public LaserPlotProperties plot;
 	public LaserUI laserUI;
 
@@ -104,7 +96,9 @@ public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
 
 	private LaserThreadSharedData data=new LaserThreadSharedData();
 
+	Matrix4x4 laserTRS;
 	private Vector3 laserPosition;
+	private Vector3 laserRotation;
 
 	#region UDP Thread Only Data
 	private LaserThreadInternalData threadInternal = new LaserThreadInternalData ();
@@ -130,7 +124,8 @@ public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
 		map3D = SafeInstantiate<Map3D> (plot.map3D);
 		base.Awake();
 		SafeInstantiate<LaserUI>(laserUI).SetModuleDataSource(this);
-		laserPosition = transform.localPosition;
+
+		laserTRS =  Matrix4x4.TRS (transform.localPosition, transform.localRotation, Vector3.one);
 	}
 
 	protected override void Start ()
@@ -207,7 +202,7 @@ public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
 			angle_index = packet.laser_angle + i;
 			angle = angle_index;
 
-			readings [angle_index] = laserPosition;
+			readings [angle_index] = Vector3.zero;
 			timestamps[angle_index] = packet.GetTimestampUs(i);
 			invalid_data[angle_index] = packet.laser_readings[i].invalid_data == 1;
 			//if distance is greater than maximum we allow, mark reading as inalid
@@ -216,21 +211,16 @@ public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
 			if (invalid_data[angle_index])
 				continue;
 
+			// calculate reading in laser plane
 			distance_mm = packet.laser_readings[i].distance;
 			alpha = angle - Constants.BETA;
-			pos = laserPosition;
 
-			if (geometry.laserPlane == PlaneType.XZ) {   
-				pos.x += -(distance_mm * (float)Mathf.Sin(angle * Constants.DEG2RAD) + Constants.B * (float)Mathf.Sin(alpha * Constants.DEG2RAD)) / 1000.0f;
-				pos.z += (distance_mm * (float)Mathf.Cos(angle * Constants.DEG2RAD) + Constants.B * (float)Mathf.Cos(alpha * Constants.DEG2RAD)) / 1000.0f;
+			pos.x = -(distance_mm * (float)Mathf.Sin(angle * Constants.DEG2RAD) + Constants.B * (float)Mathf.Sin(alpha * Constants.DEG2RAD)) / 1000.0f;
+			pos.y = 0;
+			pos.z = (distance_mm * (float)Mathf.Cos(angle * Constants.DEG2RAD) + Constants.B * (float)Mathf.Cos(alpha * Constants.DEG2RAD)) / 1000.0f;
 
-			} else if (geometry.laserPlane == PlaneType.XY) {  
-				pos.x += (distance_mm * (float)Mathf.Sin(angle * Constants.DEG2RAD) + Constants.B * (float)Mathf.Sin(alpha * Constants.DEG2RAD)) / 1000.0f;
-				pos.y += (distance_mm * (float)Mathf.Cos(angle * Constants.DEG2RAD) + Constants.B * (float)Mathf.Cos(alpha * Constants.DEG2RAD)) / 1000.0f;
-			} else
-				throw new NotImplementedException("Only PlaneType.XZ and XY are supported");
-
-			readings[angle_index] = pos;
+			// translate/rotate reading taking into acount laser mounting position and rotation
+			readings[angle_index] = laserTRS.MultiplyPoint3x4 (pos);
 		}
 	}
 
@@ -326,7 +316,7 @@ public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
 			return;
 		}
 
-		string filename = "map" + geometry.laserPlane.ToString() + ".ply";
+		string filename = GetUniqueName() + ".ply";
 		print("saving map to file \"" + filename + "\"");
 
 		map3D.SaveToPlyPolygonFileFormat(Config.MapPath(filename), "created with ev3dev-mapping");

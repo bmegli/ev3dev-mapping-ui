@@ -37,7 +37,7 @@ public class Drive : ReplayableUDPClient<DrivePacket>, IRobotModule
 
 	public override string GetUniqueName()
 	{
-		return "drive";
+		return name;
 	}
 
 	protected override void OnDestroy()

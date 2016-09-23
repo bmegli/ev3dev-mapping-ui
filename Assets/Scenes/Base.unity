@@ -846,6 +846,59 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a99520ee0c99ed44da3aa15448fb985f, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1437661590
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1437661591}
+  - 114: {fileID: 1437661592}
+  m_Layer: 0
+  m_Name: Drive
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1437661591
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1437661590}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1958232684}
+  m_RootOrder: 4
+--- !u!114 &1437661592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1437661590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16fafc25713fd58429f10b2ece1da39a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  udp:
+    host: 192.168.0.101
+    port: 8003
+    replayMode: 0
+    dumpFilename: drive_ncbj1.bin
+  packetDelayMs: 50
+  driveUI: {fileID: 11465338, guid: 81d8d61f137ffcf43a0c1d7dbdb25ee9, type: 2}
+  driveModel: {fileID: 11400972, guid: 90f74f59f68eca14d94228d59a90f7e1, type: 2}
+  module:
+    autostart: 1
+    priority: 10
+    creationDelayMs: 0
+    timeoutMs: 500
 --- !u!224 &1559581416 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 22473368, guid: fa583006a7afb4b41a176ed0a3e8953f,
@@ -1001,6 +1054,7 @@ Prefab:
     - {fileID: 11462416, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
     - {fileID: 11427138, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
     - {fileID: 11431270, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
+    - {fileID: 11469240, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &1951258155

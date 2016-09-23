@@ -23,7 +23,7 @@ public class Control : ReplayableUDPClient<ControlPacket>
 
 	public override string GetUniqueName()
 	{
-		return "control";
+		return name;
 	}
 
 	protected override void OnDestroy()
@@ -39,7 +39,7 @@ public class Control : ReplayableUDPClient<ControlPacket>
 
 	protected override void Start ()
 	{
-		GetComponents<IRobotModule>(modules);
+		modules.AddRange(transform.parent.GetComponentsInChildren<IRobotModule>());
 		modules.Sort();
 		EnableModules();
 	}
@@ -71,8 +71,8 @@ public class Control : ReplayableUDPClient<ControlPacket>
 	{
 		IRobotModule mod = modules.Find(m => (m.GetUniqueName() == packet.unique_name));
 
-		print("Control: " + packet.unique_name);
-		print("control: " + mod.GetUniqueName() + " state changed to " + ((ControlPacket.Commands)packet.command).ToString());
+		print(name + ": " + packet.unique_name);
+		print(name + ": " + mod.GetUniqueName() + " state changed to " + ((ControlPacket.Commands)packet.command).ToString());
 	
 		if (packet.command == (int)ControlPacket.Commands.Enabled)
 			mod.SetState(ModuleState.Online);
@@ -82,9 +82,6 @@ public class Control : ReplayableUDPClient<ControlPacket>
 			mod.SetState(ModuleState.Failed);
 		else
 			print("Unknown control packet command received");
-
-	//	if (packet.command == (int)ControlPacket.Commands.Failed)
-	//		print("failed fuck");
 	}
 
 	private ulong GetTimestampUs()
@@ -114,7 +111,7 @@ public class Control : ReplayableUDPClient<ControlPacket>
 		packet.unique_name = m.GetUniqueName();
 		packet.call = m.ModuleCall();
 		Send(packet);
-		print("control - enable module " + m.GetUniqueName());
+		print(name + " - enable module " + m.GetUniqueName());
 	}
 	public void DisableModule(IRobotModule m)
 	{
@@ -126,7 +123,7 @@ public class Control : ReplayableUDPClient<ControlPacket>
 		packet.unique_name = m.GetUniqueName();
 		packet.call = m.ModuleCall();
 		Send(packet);
-		print("control - disable module " + m.GetUniqueName());
+		print(name + " - disable module " + m.GetUniqueName());
 	}
 
 
@@ -148,6 +145,4 @@ public class Control : ReplayableUDPClient<ControlPacket>
 			DisableModule(module);
 		
 	}
-		
-
 }

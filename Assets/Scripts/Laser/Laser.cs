@@ -90,9 +90,7 @@ class LaserThreadInternalData
 		t_to = time_to;
 	}
 }
-
-
-[RequireComponent (typeof (PositionHistory))]
+	
 public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
 {
 	public LaserModuleProperties module;
@@ -106,6 +104,8 @@ public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
 
 	private LaserThreadSharedData data=new LaserThreadSharedData();
 
+	private Vector3 laserPosition;
+
 	#region UDP Thread Only Data
 	private LaserThreadInternalData threadInternal = new LaserThreadInternalData ();
 	#endregion
@@ -116,7 +116,7 @@ public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
 
 	public override string GetUniqueName ()
 	{
-		return "laser" + geometry.laserPlane.ToString();
+		return name;
 	}
 		
 	protected override void OnDestroy()
@@ -130,13 +130,13 @@ public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
 		map3D = SafeInstantiate<Map3D> (plot.map3D);
 		base.Awake();
 		SafeInstantiate<LaserUI>(laserUI).SetModuleDataSource(this);
+		laserPosition = transform.localPosition;
 	}
 
 	protected override void Start ()
 	{
-		positionHistory = SafeGetComponent<PositionHistory>();	
+		positionHistory = SafeGetComponentInParent<PositionHistory>();	
 		base.Start();
-//		base.StartReplay(0);
 	}
 	public void StartReplay()
 	{
@@ -207,7 +207,7 @@ public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
 			angle_index = packet.laser_angle + i;
 			angle = angle_index;
 
-			readings[angle_index] = geometry.laserOffset;
+			readings [angle_index] = laserPosition;
 			timestamps[angle_index] = packet.GetTimestampUs(i);
 			invalid_data[angle_index] = packet.laser_readings[i].invalid_data == 1;
 			//if distance is greater than maximum we allow, mark reading as inalid
@@ -218,7 +218,7 @@ public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
 
 			distance_mm = packet.laser_readings[i].distance;
 			alpha = angle - Constants.BETA;
-			pos = geometry.laserOffset;
+			pos = laserPosition;
 
 			if (geometry.laserPlane == PlaneType.XZ) {   
 				pos.x += -(distance_mm * (float)Mathf.Sin(angle * Constants.DEG2RAD) + Constants.B * (float)Mathf.Sin(alpha * Constants.DEG2RAD)) / 1000.0f;
@@ -305,9 +305,9 @@ public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
 		return Instantiate<T>(original);
 	}
 
-	private T SafeGetComponent<T>() where T : MonoBehaviour
+	private T SafeGetComponentInParent<T>() where T : MonoBehaviour
 	{
-		T component = GetComponent<T> ();
+		T component = GetComponentInParent<T> ();
 
 		if (component == null)
 			Debug.LogError ("Expected to find component of type " + typeof(T) + " but found none");

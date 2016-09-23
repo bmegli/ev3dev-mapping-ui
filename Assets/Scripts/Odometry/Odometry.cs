@@ -19,8 +19,7 @@ public class OdometryModuleProperties : ModuleProperties
 {
 	public string hostIp="192.168.0.103";
 }
-
-[RequireComponent (typeof (PositionHistory))]
+	
 public class Odometry : ReplayableUDPServer<OdometryPacket>, IRobotModule
 {
 	public MotionModel motionModel;
@@ -32,6 +31,8 @@ public class Odometry : ReplayableUDPServer<OdometryPacket>, IRobotModule
 	private PositionHistory positionHistory;
 	private PositionData actualPosition;
 	private float averagedPacketTimeMs;
+
+	private Transform parentTransform;
 
 	#region UDP Thread Only Data
 	private OdometryPacket lastPacket=new OdometryPacket();
@@ -59,9 +60,8 @@ public class Odometry : ReplayableUDPServer<OdometryPacket>, IRobotModule
 
 	protected override void Start ()
 	{
-		positionHistory = SafeGetComponent<PositionHistory>();
+		positionHistory = SafeGetComponentInParent<PositionHistory>();
 		base.Start();
-	//	base.StartReplay(20000);
 	}
 
 	public void StartReplay()
@@ -76,9 +76,9 @@ public class Odometry : ReplayableUDPServer<OdometryPacket>, IRobotModule
 			actualPosition = thread_shared_position;
 			averagedPacketTimeMs = thread_shared_averaged_packet_time_ms;
 		}
-			
-		transform.position = actualPosition.position;
-		transform.rotation = Quaternion.Euler(0.0f, actualPosition.heading, 0.0f);
+
+		transform.parent.transform.position=actualPosition.position;
+		transform.parent.transform.rotation=Quaternion.Euler(0.0f, actualPosition.heading, 0.0f);
 	}
 
 	#region UDP Thread Only Functions
@@ -123,9 +123,6 @@ public class Odometry : ReplayableUDPServer<OdometryPacket>, IRobotModule
 
 	#region Init
 
-
-
-
 	private T SafeInstantiate<T>(T original) where T : MonoBehaviour
 	{
 		if (original == null)
@@ -136,16 +133,16 @@ public class Odometry : ReplayableUDPServer<OdometryPacket>, IRobotModule
 		return Instantiate<T>(original);
 	}
 		
-	private T SafeGetComponent<T>() where T : MonoBehaviour
+	private T SafeGetComponentInParent<T>() where T : MonoBehaviour
 	{
-		T component = GetComponent<T> ();
+		T component = GetComponentInParent<T> ();
 
 		if (component == null)
 			Debug.LogError ("Expected to find component of type " + typeof(T) + " but found none");
 
 		return component;
 	}
-		
+				
 	#endregion
 
 	#region IRobotModule 
@@ -163,7 +160,7 @@ public class Odometry : ReplayableUDPServer<OdometryPacket>, IRobotModule
 		
 	public override string GetUniqueName ()
 	{
-		return "odometry";
+		return name;
 	}
 		
 	public string ModuleCall()

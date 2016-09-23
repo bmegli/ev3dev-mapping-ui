@@ -11,7 +11,7 @@
  */
 
 using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public abstract class ReplayableUDPClient<DATAGRAM> : MonoBehaviour, IReplayableUDPClient
 	where DATAGRAM : IDatagram, new()
@@ -72,9 +72,10 @@ public abstract class ReplayableUDPClient<DATAGRAM> : MonoBehaviour, IReplayable
 		if (udp.replayMode != UDPReplayMode.Replay)
 			return;
 
-		IReplayableUDPClient[] reps = GetComponentsInParent<IReplayableUDPClient>();
+		IReplayableUDPClient[] clients=GetComponents<IReplayableUDPClient>();
+
 		ulong min_timestamp_us = ulong.MaxValue;
-		foreach (IReplayableUDPClient rep in reps)
+		foreach (IReplayableUDPClient rep in clients)
 			if (rep.GetFirstPacketTimestampUs() < min_timestamp_us)
 				min_timestamp_us = rep.GetFirstPacketTimestampUs();
 

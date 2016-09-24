@@ -13,6 +13,7 @@
 using System;
 
 public enum UDPReplayMode {None, Record, Replay};
+public enum UDPReplayDirection {Inbound, Outbound};
 
 public interface IReplayableUDPServer 
 {
@@ -30,6 +31,5 @@ public interface IReplayableUDPClient
 public class UDPProperties
 {
 	public int port=8000;
-	public UDPReplayMode replayMode=UDPReplayMode.None;
-	public string dumpFilename="dump.bin";
+	//public string dumpFilename="dump.bin";
 }

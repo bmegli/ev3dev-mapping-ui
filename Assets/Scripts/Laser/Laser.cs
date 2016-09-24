@@ -335,7 +335,7 @@ public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
 		
 	public string ModuleCall()
 	{
-		return "ev3laser " + module.laserDevice + " " + module.motorPort + " " + GetComponentInParent<Network>().hostIp + " " + udp.port + " " + module.laserDutyCycle;
+		return "ev3laser " + module.laserDevice + " " + module.motorPort + " " + network.hostIp + " " + udp.port + " " + module.laserDutyCycle;
 	}
 	public int ModulePriority()
 	{
@@ -343,7 +343,7 @@ public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
 	}
 	public bool ModuleAutostart()
 	{
-		return module.autostart && udp.replayMode!=UDPReplayMode.Replay;
+		return module.autostart && !replay.ReplayInbound();
 	}
 	public int CreationDelayMs()
 	{

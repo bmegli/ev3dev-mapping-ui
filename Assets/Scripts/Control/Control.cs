@@ -53,8 +53,7 @@ public class Control : ReplayableUDPClient<ControlPacket>
 		
 	void Update ()
 	{
-		
-		if (udp.replayMode == UDPReplayMode.Replay)
+		if (replay.mode == UDPReplayMode.Replay)
 			return; //do nothing, we replay previous communication
 
 
@@ -103,6 +102,9 @@ public class Control : ReplayableUDPClient<ControlPacket>
 
 	public void EnableModule(IRobotModule m)
 	{
+		if (replay.mode == UDPReplayMode.Replay)
+			return; //we just replay
+		
 		m.SetState(ModuleState.Initializing);
 
 		packet.timestamp_us = GetTimestampUs();
@@ -115,6 +117,9 @@ public class Control : ReplayableUDPClient<ControlPacket>
 	}
 	public void DisableModule(IRobotModule m)
 	{
+		if (replay.mode == UDPReplayMode.Replay)
+			return; //we just replay
+		
 		m.SetState(ModuleState.Shutdown);
 
 		packet.timestamp_us = GetTimestampUs();
@@ -128,14 +133,13 @@ public class Control : ReplayableUDPClient<ControlPacket>
 
 
 	public void EnableModules()
-	{
+	{		
 		foreach (IRobotModule module in modules)
 		{
 			if (!module.ModuleAutostart())
 				continue;
 		
 			EnableModule(module);
-
 		}
 	}
 

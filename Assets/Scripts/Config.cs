@@ -15,13 +15,19 @@ using System.Collections;
 
 public class Config
 {
-	public const string MAPS_DIRECTORY="PLY/";
-	public const string DUMPS_DIRECTORY="UDP/";
+	public const string MAPS_DIRECTORY="PLY";
+	public const string DUMPS_DIRECTORY="UDP";
 
-	public static string DumpPath(string dump_file)
+	public static string DumpPath(string dump_dir)
 	{
-		return DUMPS_DIRECTORY + dump_file;
+		return DUMPS_DIRECTORY + "/" + dump_dir;
 	}
+	public static string DumpPath(string dump_dir, string dump_file)
+	{
+		return DUMPS_DIRECTORY + "/" + dump_dir + "/" + dump_file + ".bin";
+	}
+
+
 	public static string MapPath(string map_file)
 	{
 		return MAPS_DIRECTORY + map_file;

@@ -69,8 +69,8 @@ public class Drive : ReplayableUDPClient<DrivePacket>, IRobotModule
 		
 	void Update ()
 	{
-		if (udp.replayMode == UDPReplayMode.Replay)
-			return; //do nothing, we replay previous communication
+		if (replay.mode == UDPReplayMode.Replay)
+			return; //do nothing, we replay previous communication or replay inbound traffic
 
 		timeSinceLastPacketMs += Time.deltaTime*1000.0f;
 
@@ -106,6 +106,9 @@ public class Drive : ReplayableUDPClient<DrivePacket>, IRobotModule
 
 	public void DriveAhead(float distance_cm, float speed_cm_per_sec)
 	{
+		if (replay.mode == UDPReplayMode.Replay) 
+			return; //do nothing, we replay previous communication or inbound traffic
+		
 		mode = DriveMode.Auto;
 		packet.timestamp_us = Timestamp.TimestampUs();
 		packet.command = (short)DrivePacket.Commands.TO_POSITION_WITH_SPEED;

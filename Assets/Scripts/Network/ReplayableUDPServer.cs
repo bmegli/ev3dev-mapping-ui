@@ -12,11 +12,15 @@
 
 using UnityEngine;
 using System.Collections.Generic;
+using System.IO;
 
 public abstract class ReplayableUDPServer<DATAGRAM> : MonoBehaviour, IReplayableUDPServer
 	where DATAGRAM : IDatagram, new()
 {
 	public UDPProperties udp;
+
+	protected Network network;
+	protected Replay replay;
 
 	private UDPServer<DATAGRAM> server;
 	private UDPClient<DATAGRAM> client;
@@ -38,29 +42,33 @@ public abstract class ReplayableUDPServer<DATAGRAM> : MonoBehaviour, IReplayable
 		
 	protected virtual void Awake()
 	{
+		network = GetComponentInParent<Network>().DeepCopy();
+		replay = GetComponentInParent<Replay>().DeepCopy();
+
 		print(GetUniqueName() + " port: " + udp.port);
 
-		if (udp.replayMode == UDPReplayMode.None) 
-			server = new UDPServer<DATAGRAM>(udp.port);
-		else if (udp.replayMode == UDPReplayMode.Record) 
+		if(replay.RecordInbound()) 
 		{
-			print(GetUniqueName() + " - dumping packets to '" + udp.dumpFilename + "'");
-			server = new UDPServer<DATAGRAM>(udp.port, Config.DumpPath(udp.dumpFilename) );
+			print(GetUniqueName() + " - dumping packets to '" + Config.DumpPath(replay.directory, GetUniqueName()) + "'");
+			Directory.CreateDirectory(Config.DumpPath(replay.directory));
+			server = new UDPServer<DATAGRAM>(udp.port, Config.DumpPath(replay.directory, GetUniqueName()) );
 		} 
-		else if (udp.replayMode == UDPReplayMode.Replay) //the server and client reading from dump & sending
+		else if (replay.ReplayInbound()) //the server and client reading from dump & sending
 		{
-			print(GetUniqueName() + " - replay from '" + udp.dumpFilename + "'");
+			print(GetUniqueName() + " - replay from '" + Config.DumpPath(replay.directory, GetUniqueName()) + "'");
 			server = new UDPServer<DATAGRAM>(udp.port);
 			try
 			{
-				client = new UDPClient<DATAGRAM>("localhost", udp.port, Config.DumpPath(udp.dumpFilename), false );
+				client = new UDPClient<DATAGRAM>("localhost", udp.port, Config.DumpPath(replay.directory, GetUniqueName()), false );
 			}
 			catch
 			{
-				print(GetUniqueName() + " - replay disabled (can't initialize from '" + udp.dumpFilename + "' on port " + udp.port + ")");
-				udp.replayMode = UDPReplayMode.None;
+				print(GetUniqueName() + " - replay disabled (can't initialize from '" + Config.DumpPath(replay.directory, GetUniqueName()) + "' on port " + udp.port + ")");
+				replay.mode = UDPReplayMode.None;
 			}
 		}
+		else
+			server = new UDPServer<DATAGRAM>(udp.port);
 	}
 
 	protected virtual void Start()
@@ -71,7 +79,7 @@ public abstract class ReplayableUDPServer<DATAGRAM> : MonoBehaviour, IReplayable
 
 	protected void StartReplay(int time_offset)
 	{
-		if (udp.replayMode != UDPReplayMode.Replay)
+		if (!replay.ReplayInbound())
 			return;
 
 		IReplayableUDPServer[] servers=transform.parent.GetComponentsInChildren<IReplayableUDPServer>();
@@ -96,7 +104,7 @@ public abstract class ReplayableUDPServer<DATAGRAM> : MonoBehaviour, IReplayable
 
 	public ulong GetFirstPacketTimestampUs()
 	{
-		if (client == null || udp.replayMode != UDPReplayMode.Replay)
+		if (client == null || !replay.ReplayInbound())
 			return ulong.MaxValue;
 		return client.GetFirstReplayTimestamp();
 	}

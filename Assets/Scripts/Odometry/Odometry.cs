@@ -13,26 +13,18 @@
 using UnityEngine;
 using System.Collections;
 using System;
-
-[Serializable]
-public class OdometryModuleProperties : ModuleProperties
-{
-	public string hostIp="192.168.0.103";
-}
 	
 public class Odometry : ReplayableUDPServer<OdometryPacket>, IRobotModule
 {
 	public MotionModel motionModel;
 	public OdometryUI odometryUI;
-	public OdometryModuleProperties module;
+	public ModuleProperties module;
 
 	private MotionModel model;
 
 	private PositionHistory positionHistory;
 	private PositionData actualPosition;
 	private float averagedPacketTimeMs;
-
-	private Transform parentTransform;
 
 	#region UDP Thread Only Data
 	private OdometryPacket lastPacket=new OdometryPacket();
@@ -165,7 +157,7 @@ public class Odometry : ReplayableUDPServer<OdometryPacket>, IRobotModule
 		
 	public string ModuleCall()
 	{
-		return "ev3odometry " + module.hostIp + " " + udp.port ;
+		return "ev3odometry " + GetComponentInParent<Network>().hostIp + " " + udp.port ;
 	}
 	public int ModulePriority()
 	{

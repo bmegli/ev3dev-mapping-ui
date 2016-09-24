@@ -19,7 +19,6 @@ public enum PlotType {Local, Global, Map, GlobalWithMap}
 [Serializable]
 public class LaserModuleProperties : ModuleProperties
 {
-	public string hostIp="192.168.0.103";
 	public string laserDevice = "/dev/tty_in1";
 	public string motorPort = "outC";
 	public int laserDutyCycle = -44;
@@ -336,7 +335,7 @@ public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
 		
 	public string ModuleCall()
 	{
-		return "ev3laser " + module.laserDevice + " " + module.motorPort + " " + module.hostIp + " " + udp.port + " " + module.laserDutyCycle;
+		return "ev3laser " + module.laserDevice + " " + module.motorPort + " " + GetComponentInParent<Network>().hostIp + " " + udp.port + " " + module.laserDutyCycle;
 	}
 	public int ModulePriority()
 	{

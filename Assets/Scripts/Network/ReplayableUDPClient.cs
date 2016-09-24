@@ -41,11 +41,11 @@ public abstract class ReplayableUDPClient<DATAGRAM> : MonoBehaviour, IReplayable
 		print(GetUniqueName() + " - port: " + udp.port);
 
 		if (udp.replayMode == UDPReplayMode.None) 
-			client = new UDPClient<DATAGRAM>(udp.host, udp.port);
+			client = new UDPClient<DATAGRAM>(GetComponentInParent<Network>().robotIp, udp.port);
 		else if (udp.replayMode == UDPReplayMode.Record) 
 		{
 			print(GetUniqueName() + " - dumping packets to '" + udp.dumpFilename + "'");
-			client = new UDPClient<DATAGRAM>(udp.host, udp.port, Config.DumpPath(udp.dumpFilename), true);
+			client = new UDPClient<DATAGRAM>(GetComponentInParent<Network>().robotIp, udp.port, Config.DumpPath(udp.dumpFilename), true);
 		} 
 		else if (udp.replayMode == UDPReplayMode.Replay) //the client reading from dump & sending
 		{
@@ -53,7 +53,7 @@ public abstract class ReplayableUDPClient<DATAGRAM> : MonoBehaviour, IReplayable
 
 			try
 			{
-				client = new UDPClient<DATAGRAM>(udp.host, udp.port, Config.DumpPath(udp.dumpFilename), false);
+				client = new UDPClient<DATAGRAM>(GetComponentInParent<Network>().robotIp, udp.port, Config.DumpPath(udp.dumpFilename), false);
 			}
 			catch
 			{

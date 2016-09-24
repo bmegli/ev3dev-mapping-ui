@@ -29,7 +29,6 @@ public interface IReplayableUDPClient
 [Serializable]
 public class UDPProperties
 {
-	public string host="";
 	public int port=8000;
 	public UDPReplayMode replayMode=UDPReplayMode.None;
 	public string dumpFilename="dump.bin";

@@ -90,6 +90,23 @@ NavMeshSettings:
     cellSize: 0.16666667
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &59677799 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 133554, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
+  m_PrefabInternal: {fileID: 1925637239}
+--- !u!114 &59677801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 59677799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40255af2a5fce8a4081664ed839e5231, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hostIp: 192.168.0.103
+  robotIp: 192.168.0.101
 --- !u!224 &63021049 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 22494260, guid: 6dbc2d25d95229b4c805ca2e45d4186d,
@@ -280,7 +297,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   udp:
-    host: 192.168.0.101
     port: 8004
     replayMode: 0
     dumpFilename: control_guitar.bin
@@ -421,7 +437,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   udp:
-    host: 
     port: 8001
     replayMode: 0
     dumpFilename: laser_xz_body.bin
@@ -429,7 +444,6 @@ MonoBehaviour:
     autostart: 1
     priority: 9
     creationDelayMs: 0
-    hostIp: 192.168.0.103
     laserDevice: /dev/tty_in1
     motorPort: outC
     laserDutyCycle: -44
@@ -932,7 +946,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   udp:
-    host: 192.168.0.101
     port: 8003
     replayMode: 0
     dumpFilename: drive_ncbj1.bin
@@ -990,7 +1003,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   udp:
-    host: 
     port: 8002
     replayMode: 2
     dumpFilename: laser_xy_body.bin
@@ -998,7 +1010,6 @@ MonoBehaviour:
     autostart: 1
     priority: 9
     creationDelayMs: 0
-    hostIp: 192.168.0.103
     laserDevice: /dev/tty_in2
     motorPort: outB
     laserDutyCycle: 45
@@ -1359,7 +1370,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   udp:
-    host: 
     port: 8000
     replayMode: 2
     dumpFilename: odometry_body.bin
@@ -1369,7 +1379,6 @@ MonoBehaviour:
     autostart: 1
     priority: 0
     creationDelayMs: 1000
-    hostIp: 192.168.0.103
 --- !u!1001 &2065968506
 Prefab:
   m_ObjectHideFlags: 0

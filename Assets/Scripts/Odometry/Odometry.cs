@@ -157,7 +157,7 @@ public class Odometry : ReplayableUDPServer<OdometryPacket>, IRobotModule
 		
 	public string ModuleCall()
 	{
-		return "ev3odometry " + GetComponentInParent<Network>().hostIp + " " + udp.port ;
+		return "ev3odometry " + network.hostIp + " " + udp.port ;
 	}
 	public int ModulePriority()
 	{
@@ -165,7 +165,7 @@ public class Odometry : ReplayableUDPServer<OdometryPacket>, IRobotModule
 	}
 	public bool ModuleAutostart()
 	{
-		return module.autostart && udp.replayMode!=UDPReplayMode.Replay;
+		return module.autostart && !replay.ReplayInbound();
 	}
 	public int CreationDelayMs()
 	{

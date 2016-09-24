@@ -90,23 +90,6 @@ NavMeshSettings:
     cellSize: 0.16666667
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &59677799 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 133554, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
-  m_PrefabInternal: {fileID: 1925637239}
---- !u!114 &59677801
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 59677799}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40255af2a5fce8a4081664ed839e5231, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hostIp: 192.168.0.103
-  robotIp: 192.168.0.101
 --- !u!224 &63021049 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 22494260, guid: 6dbc2d25d95229b4c805ca2e45d4186d,
@@ -256,50 +239,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f66e1e073468eea4e90be06021505c6f, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &256834834
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 256834835}
-  - 114: {fileID: 256834836}
-  m_Layer: 0
-  m_Name: Control
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &256834835
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 256834834}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_Children: []
-  m_Father: {fileID: 1958232684}
-  m_RootOrder: 1
---- !u!114 &256834836
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 256834834}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 680e70490318a1241a2a64052386af7d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  udp:
-    port: 8004
-    replayMode: 0
-    dumpFilename: control_guitar.bin
 --- !u!1 &322643189
 GameObject:
   m_ObjectHideFlags: 0
@@ -396,63 +335,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!1 &610499539
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 610499540}
-  - 114: {fileID: 610499541}
-  m_Layer: 0
-  m_Name: LaserXZ
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &610499540
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 610499539}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.1475, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_Children: []
-  m_Father: {fileID: 1958232684}
-  m_RootOrder: 4
---- !u!114 &610499541
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 610499539}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91596b955124c8e48bd73bdc50fec278, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  udp:
-    port: 8001
-    replayMode: 0
-    dumpFilename: laser_xz_body.bin
-  module:
-    autostart: 1
-    priority: 9
-    creationDelayMs: 0
-    laserDevice: /dev/tty_in1
-    motorPort: outC
-    laserDutyCycle: -44
-  plot:
-    plotType: 1
-    distanceLimit: 10
-    laserPointCloud: {fileID: 11479396, guid: 75d3c019fe7a50e4ea1ae9dd76497287, type: 2}
-    map3D: {fileID: 11403926, guid: dba6fdbd023254042881c4c4b042be2f, type: 2}
-  laserUI: {fileID: 11490632, guid: f02fc234c332ace49aa53ed0d036aa03, type: 2}
 --- !u!4 &618030959 stripped
 Transform:
   m_PrefabParentObject: {fileID: 477560, guid: f66e1e073468eea4e90be06021505c6f, type: 2}
@@ -905,120 +787,11 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a99520ee0c99ed44da3aa15448fb985f, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &1437661590
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 1437661591}
-  - 114: {fileID: 1437661592}
-  m_Layer: 0
-  m_Name: Drive
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1437661591
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1437661590}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_Children: []
-  m_Father: {fileID: 1958232684}
-  m_RootOrder: 2
---- !u!114 &1437661592
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1437661590}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16fafc25713fd58429f10b2ece1da39a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  udp:
-    port: 8003
-    replayMode: 0
-    dumpFilename: drive_ncbj1.bin
-  packetDelayMs: 50
-  driveUI: {fileID: 11465338, guid: 81d8d61f137ffcf43a0c1d7dbdb25ee9, type: 2}
-  driveModel: {fileID: 11400972, guid: 90f74f59f68eca14d94228d59a90f7e1, type: 2}
-  module:
-    autostart: 1
-    priority: 10
-    creationDelayMs: 0
-    timeoutMs: 500
 --- !u!224 &1559581416 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 22473368, guid: fa583006a7afb4b41a176ed0a3e8953f,
     type: 2}
   m_PrefabInternal: {fileID: 812582709}
---- !u!1 &1916846890
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 1916846891}
-  - 114: {fileID: 1916846892}
-  m_Layer: 0
-  m_Name: LaserXY
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1916846891
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1916846890}
-  m_LocalRotation: {x: -0, y: 0.7071068, z: 0.7071068, w: 0}
-  m_LocalPosition: {x: 0, y: 0.0793, z: 0.151}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: -90, y: 180, z: 0}
-  m_Children: []
-  m_Father: {fileID: 1958232684}
-  m_RootOrder: 5
---- !u!114 &1916846892
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1916846890}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91596b955124c8e48bd73bdc50fec278, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  udp:
-    port: 8002
-    replayMode: 2
-    dumpFilename: laser_xy_body.bin
-  module:
-    autostart: 1
-    priority: 9
-    creationDelayMs: 0
-    laserDevice: /dev/tty_in2
-    motorPort: outB
-    laserDutyCycle: 45
-  plot:
-    plotType: 2
-    distanceLimit: 2
-    laserPointCloud: {fileID: 11479396, guid: 75d3c019fe7a50e4ea1ae9dd76497287, type: 2}
-    map3D: {fileID: 11403926, guid: dba6fdbd023254042881c4c4b042be2f, type: 2}
-  laserUI: {fileID: 11490632, guid: f02fc234c332ace49aa53ed0d036aa03, type: 2}
 --- !u!1001 &1925637239
 Prefab:
   m_ObjectHideFlags: 0
@@ -1058,60 +831,7 @@ Prefab:
       propertyPath: m_RootOrder
       value: 4
       objectReference: {fileID: 0}
-    - target: {fileID: 11431270, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
-      propertyPath: udp.dumpFilename
-      value: odometry_body.bin
-      objectReference: {fileID: 0}
-    - target: {fileID: 11431270, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
-      propertyPath: udp.replayMode
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 11462416, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
-      propertyPath: udp.replayMode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 11462416, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
-      propertyPath: udp.dumpFilename
-      value: laser_xz3.bin
-      objectReference: {fileID: 0}
-    - target: {fileID: 11427138, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
-      propertyPath: udp.dumpFilename
-      value: laser_xy_body.bin
-      objectReference: {fileID: 0}
-    - target: {fileID: 11427138, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
-      propertyPath: udp.replayMode
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 11469240, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
-      propertyPath: udp.replayMode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 11469240, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
-      propertyPath: udp.dumpFilename
-      value: drive_ncbj1.bin
-      objectReference: {fileID: 0}
-    - target: {fileID: 11427138, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
-      propertyPath: module.laserDutyCycle
-      value: 45
-      objectReference: {fileID: 0}
-    - target: {fileID: 11462416, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
-      propertyPath: module.autostart
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11427138, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
-      propertyPath: plot.distanceLimit
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 11491674, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
-      propertyPath: properties.positionsKept
-      value: 512
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 11462416, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
-    - {fileID: 11427138, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
-    - {fileID: 11431270, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
-    - {fileID: 11469240, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
-    - {fileID: 11466588, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
+    m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &1951258155
@@ -1143,10 +863,6 @@ Transform:
   - {fileID: 2108288795}
   m_Father: {fileID: 0}
   m_RootOrder: 5
---- !u!4 &1958232684 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 401170, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
-  m_PrefabInternal: {fileID: 1925637239}
 --- !u!114 &1958999387 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 11409934, guid: f1c965012d5aeb44b9488089e600e3ad,
@@ -1329,56 +1045,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 0
---- !u!1 &2054566680
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 2054566681}
-  - 114: {fileID: 2054566682}
-  m_Layer: 0
-  m_Name: Odometry
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2054566681
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2054566680}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_Children: []
-  m_Father: {fileID: 1958232684}
-  m_RootOrder: 3
---- !u!114 &2054566682
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2054566680}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 586a5475d09a52245ba1b55de8588ffd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  udp:
-    port: 8000
-    replayMode: 2
-    dumpFilename: odometry_body.bin
-  motionModel: {fileID: 11490698, guid: 6c6c735fc1c0f3b4fbcf7ab857899140, type: 2}
-  odometryUI: {fileID: 11400002, guid: 035f27fd694ed5440ae5ec3d36c6299d, type: 2}
-  module:
-    autostart: 1
-    priority: 0
-    creationDelayMs: 1000
 --- !u!1001 &2065968506
 Prefab:
   m_ObjectHideFlags: 0

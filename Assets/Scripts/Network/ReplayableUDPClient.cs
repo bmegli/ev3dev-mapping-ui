@@ -19,6 +19,7 @@ public abstract class ReplayableUDPClient<DATAGRAM> : MonoBehaviour, IReplayable
 {
 	public UDPProperties udp;
 
+	protected RobotRequired robot;
 	protected Network network;
 	protected Replay replay;
 
@@ -43,6 +44,7 @@ public abstract class ReplayableUDPClient<DATAGRAM> : MonoBehaviour, IReplayable
 
 	protected virtual void Awake()
 	{
+		robot = GetComponentInParent<RobotRequired>().DeepCopy();
 		network = GetComponentInParent<Network>().DeepCopy();
 		replay = GetComponentInParent<Replay>().DeepCopy();
 
@@ -50,21 +52,21 @@ public abstract class ReplayableUDPClient<DATAGRAM> : MonoBehaviour, IReplayable
 
 		if (replay.RecordOutbound()) 
 		{
-			print(GetUniqueName() + " - dumping packets to '" + Config.DumpPath(replay.directory, GetUniqueName()) + "'");
-			Directory.CreateDirectory(Config.DumpPath(replay.directory));
-			client = new UDPClient<DATAGRAM>(network.robotIp, udp.port, Config.DumpPath(replay.directory, GetUniqueName()), true);
+			print(GetUniqueName() + " - dumping packets to '" + Config.DumpPath(robot.sessionDirectory, GetUniqueName()) + "'");
+			Directory.CreateDirectory(Config.DumpPath(robot.sessionDirectory));
+			client = new UDPClient<DATAGRAM>(network.robotIp, udp.port, Config.DumpPath(robot.sessionDirectory, GetUniqueName()), true);
 		} 
 		else if (replay.ReplayOutbound()) //the client reading from dump & sending
 		{
-			print(GetUniqueName() + " - replay from '" + Config.DumpPath(replay.directory, GetUniqueName()) + "'");
+			print(GetUniqueName() + " - replay from '" + Config.DumpPath(robot.sessionDirectory, GetUniqueName()) + "'");
 
 			try
 			{
-				client = new UDPClient<DATAGRAM>(network.robotIp, udp.port, Config.DumpPath(replay.directory, GetUniqueName()), false);
+				client = new UDPClient<DATAGRAM>(network.robotIp, udp.port, Config.DumpPath(robot.sessionDirectory, GetUniqueName()), false);
 			}
 			catch
 			{
-				print(GetUniqueName() + " - replay disabled (can't initialize from '" + Config.DumpPath(replay.directory, GetUniqueName()) + "' on port " + udp.port + ")");
+				print(GetUniqueName() + " - replay disabled (can't initialize from '" + Config.DumpPath(robot.sessionDirectory, GetUniqueName()) + "' on port " + udp.port + ")");
 				replay.mode = UDPReplayMode.None;
 				enabled = false;
 			}

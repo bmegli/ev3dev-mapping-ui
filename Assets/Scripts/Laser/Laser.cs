@@ -13,6 +13,8 @@
 using UnityEngine;
 using System.Collections;
 using System;
+using System.IO;
+
 public enum PlaneType {XZ, XY}
 public enum PlotType {Local, Global, Map, GlobalWithMap}
 
@@ -312,10 +314,12 @@ public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
 			return;
 		}
 
-		string filename = GetUniqueName() + ".ply";
-		print("saving map to file \"" + filename + "\"");
+		Directory.CreateDirectory(Config.MAPS_DIRECTORY);
+		Directory.CreateDirectory(Config.MapPath(robot.sessionDirectory));
 
-		map3D.SaveToPlyPolygonFileFormat(Config.MapPath(filename), "created with ev3dev-mapping");
+		print("saving map to file \"" + Config.MapPath(robot.sessionDirectory, GetUniqueName()) + "\"");
+
+		map3D.SaveToPlyPolygonFileFormat(Config.MapPath(robot.sessionDirectory, GetUniqueName()), "created with ev3dev-mapping");
 	}
 
 	#endregion

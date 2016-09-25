@@ -26,11 +26,14 @@ public class Config
 	{
 		return DUMPS_DIRECTORY + "/" + dump_dir + "/" + dump_file + ".bin";
 	}
-
-
-	public static string MapPath(string map_file)
+		
+	public static string MapPath(string map_dir)
 	{
-		return MAPS_DIRECTORY + map_file;
+		return MAPS_DIRECTORY + "/" + map_dir;
+	}
+	public static string MapPath(string map_dir, string map_file)
+	{
+		return MAPS_DIRECTORY + "/" + map_dir + "/" + map_file + ".ply";
 	}
 
 

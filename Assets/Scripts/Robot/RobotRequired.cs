@@ -6,4 +6,12 @@ using System.Collections;
 [RequireComponent (typeof (PositionHistory))]
 public class RobotRequired : MonoBehaviour
 {
+	public string sessionDirectory="Mapping1";
+
+	public RobotRequired DeepCopy()
+	{
+		RobotRequired other = (RobotRequired) this.MemberwiseClone();
+		other.sessionDirectory = string.Copy(sessionDirectory);
+		return other;
+	}
 }

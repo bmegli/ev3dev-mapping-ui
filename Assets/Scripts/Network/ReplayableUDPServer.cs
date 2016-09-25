@@ -52,6 +52,7 @@ public abstract class ReplayableUDPServer<DATAGRAM> : MonoBehaviour, IReplayable
 		if(replay.RecordInbound()) 
 		{
 			print(GetUniqueName() + " - dumping packets to '" + Config.DumpPath(robot.sessionDirectory, GetUniqueName()) + "'");
+			Directory.CreateDirectory(Config.DUMPS_DIRECTORY);
 			Directory.CreateDirectory(Config.DumpPath(robot.sessionDirectory));
 			server = new UDPServer<DATAGRAM>(udp.port, Config.DumpPath(robot.sessionDirectory, GetUniqueName()) );
 		} 

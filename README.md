@@ -11,11 +11,6 @@ This is Unity project. In theory it should work on platforms ranging from deskto
 See [Unity platforms](https://unity3d.com/unity/multiplatform) for the full list. Note that currently only some desktops were tested.
 Other platforms may not work, need some tweaking or disabling some functionality.
 
-## State of the Project
-
-This is preliminary version. It's functional and stable but all programming interfaces are subject to change.
-Some architectural changes are also on the way and Control component/ev3control module are currently rewritten for TCP/IP.
-
 ## Installation Instructions
 
 Required Unity Version: 5.4 or newer

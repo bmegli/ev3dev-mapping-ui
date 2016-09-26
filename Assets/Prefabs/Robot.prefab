@@ -271,7 +271,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ff0d11dd54c26442835bbf9be65c986, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  directory: Body
   mode: 2
   direction: 0
 --- !u!114 &114000010652711978
@@ -403,6 +402,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b6f228208324a94c9fa6a198527051e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sessionDirectory: Body
 --- !u!114 &114000013934419876
 MonoBehaviour:
   m_ObjectHideFlags: 1

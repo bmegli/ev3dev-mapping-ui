@@ -32,7 +32,13 @@ The easiest way to start is working with recorded UDP communication:
 
 If all went well you should see a moving yellow brick (yes, this is the robot for now) and the readings as they are collected. 
 
-## Hardware Requirements
+## Hardware
+
+### Getting Started - LIDAR
+
+Follow [Using the XV11 LIDAR ](http://www.ev3dev.org/docs/tutorials/using-xv11-lidar/)
+
+### Other Hardware
 
 Preliminary!
 
@@ -47,16 +53,10 @@ If you want to use it with different hardware (for now) you have to modify exist
 or write your own and its counterpart in UI.
 
 
-## Further Steps
-
-Select the `Robot` Game Object in the hierarchy window. See it's children components (Odometry, Laser, Drive, Control).
-See the components configuration (e.g. drive models, udp parameters, laser plot, etc.)
-Try to change the replay folder to some other from UDP directory.
-Build the ev3drive module, configure Drive component accordingly and try to control robot with 2 engines from within Unity.
-
 ## Troubleshooting
 
 1. If you have a laptop with both integrated and dedicated GPU make sure Unity is using the dedicated one. Unity likes to use the first if not forced.
 2. If you want to build the project as standalone copy UDP folder to you build location (for replays)
 3. If you have some problems read the Unity console output
 4. If in Base scene floor and background are white instead of black make sure you are using Unity 5.4 or newer
+5. If laser (hardware) fails just after starting let it spin for 15 seconds and warmup (from ssh) and only later hit "play".

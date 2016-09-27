@@ -358,7 +358,7 @@ MonoBehaviour:
     creationDelayMs: 0
     laserDevice: /dev/tty_in1
     motorPort: outC
-    laserDutyCycle: -44
+    laserDutyCycle: 44
   plot:
     plotType: 1
     distanceLimit: 10

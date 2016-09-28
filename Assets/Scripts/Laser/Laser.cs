@@ -84,12 +84,12 @@ class LaserThreadInternalData
 		t_to = time_to;
 	}
 }
-	
+
+[RequireComponent (typeof (LaserUI))]
 public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
 {
 	public LaserModuleProperties module;
 	public LaserPlotProperties plot;
-	public LaserUI laserUI;
 
 	private PointCloud laserPointCloud;
 	private Map3D map3D;
@@ -124,8 +124,6 @@ public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
 		laserPointCloud = SafeInstantiate<PointCloud> (plot.laserPointCloud);
 		map3D = SafeInstantiate<Map3D> (plot.map3D);
 		base.Awake();
-		SafeInstantiate<LaserUI>(laserUI).SetModuleDataSource(this);
-
 		laserTRS =  Matrix4x4.TRS (transform.localPosition, transform.localRotation, Vector3.one);
 	}
 

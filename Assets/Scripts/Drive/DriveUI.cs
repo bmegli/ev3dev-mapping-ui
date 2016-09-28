@@ -33,12 +33,12 @@ public class DriveUI : ModuleUI
 	{
 		base.Awake();
 
-		GameObject speedDistanceLayout = SafeInstantiateGameObject(SpeedDistanceLayout, transform);
+		GameObject speedDistanceLayout = SafeInstantiateGameObject(SpeedDistanceLayout, uiTransform);
 		distanceInputField = SafeInstantiate<InputField> (DistanceInputField, speedDistanceLayout.transform);
 		SafeInstantiateText (DistanceUnitText, speedDistanceLayout.transform, "cm");
 		speedInputField = SafeInstantiate<InputField> (SpeedInputField, speedDistanceLayout.transform);
 		SafeInstantiateText (SpeedUnitText, speedDistanceLayout.transform, "cm/s");
-		goButton = SafeInstantiate<Button> (GoButton, transform);
+		goButton = SafeInstantiate<Button> (GoButton, uiTransform);
 		goButton.onClick.AddListener (OnGoButtonClicked);
 	}
 

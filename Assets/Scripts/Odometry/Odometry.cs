@@ -14,6 +14,7 @@ using UnityEngine;
 using System.Collections;
 using System;
 	
+[RequireComponent (typeof (OdometryUI))]
 public class Odometry : ReplayableUDPServer<OdometryPacket>, IRobotModule
 {
 	public MotionModel motionModel;
@@ -47,7 +48,6 @@ public class Odometry : ReplayableUDPServer<OdometryPacket>, IRobotModule
 		base.Awake();
 		model = SafeInstantiate<MotionModel>(motionModel);
 		model.transform.parent = transform;
-		SafeInstantiate<OdometryUI>(odometryUI).SetModuleDataSource(this);
 	}
 
 	protected override void Start ()

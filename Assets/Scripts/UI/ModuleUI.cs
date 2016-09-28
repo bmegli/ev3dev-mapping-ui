@@ -16,31 +16,30 @@ using UnityEngine.UI;
 
 public class ModuleUI : MonoBehaviour
 {
+	public Transform UiTransform;
 	public Text ModuleName;
 	public Text ModuleText;
 	public Toggle EnabledToggle;
 
+	protected Transform uiTransform;
 	private Text moduleName;
 	private Text moduleState;
 	private Toggle enabledToggle;
 
 	protected IRobotModule module;
 
-	public void SetModuleDataSource(IRobotModule m)
-	{
-		module = m;
-	}
-
 	protected virtual void Awake()
 	{
-		moduleName = SafeInstantiateText(ModuleName, transform, "module");
-		moduleState = SafeInstantiateText(ModuleText, transform, ModuleState.Offline.ToString().ToLower());
-		enabledToggle = SafeInstantiate<Toggle>(EnabledToggle, transform);
+		uiTransform = Instantiate<Transform>(UiTransform);
+		moduleName = SafeInstantiateText(ModuleName, uiTransform, "module");
+		moduleState = SafeInstantiateText(ModuleText, uiTransform, ModuleState.Offline.ToString().ToLower());
+		enabledToggle = SafeInstantiate<Toggle>(EnabledToggle, uiTransform);
 		enabledToggle.onValueChanged.AddListener(SetEnable);
 	}
 
 	protected virtual void Start ()
 	{
+		module = GetComponent<IRobotModule> ();
 		if (module == null)
 		{
 			print("Module not set!");
@@ -48,7 +47,7 @@ public class ModuleUI : MonoBehaviour
 			return;
 		}
 		moduleName.text = module.GetUniqueName();
-		transform.SetParent(SceneManager.ModulesPanel.transform, false);
+		uiTransform.SetParent (SceneManager.ModulesPanel.transform, false);
 	}
 
 	protected virtual void Update ()

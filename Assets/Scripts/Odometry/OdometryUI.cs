@@ -25,9 +25,9 @@ public class OdometryUI : ModuleUI
 	protected override void Awake()
 	{
 		base.Awake();
-		ppsText = SafeInstantiateText(ModuleText, transform, "pps 00 ms 00");
-		positionText = SafeInstantiateText(ModuleText, transform, "x +0.00 y +00.0");
-		headingText = SafeInstantiateText(ModuleText, transform, "head 000.0");
+		ppsText = SafeInstantiateText(ModuleText, uiTransform, "pps 00 ms 00");
+		positionText = SafeInstantiateText(ModuleText, uiTransform, "x +0.00 y +00.0");
+		headingText = SafeInstantiateText(ModuleText, uiTransform, "head 000.0");
 	}
 
 	protected override void Start ()

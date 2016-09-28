@@ -21,6 +21,7 @@ public class DriveModuleProperties : ModuleProperties
 
 enum DriveMode {Manual, Auto};
 
+[RequireComponent (typeof (LaserUI))]
 public class Drive : ReplayableUDPClient<DrivePacket>, IRobotModule
 {
 	public int packetDelayMs=50;
@@ -48,7 +49,6 @@ public class Drive : ReplayableUDPClient<DrivePacket>, IRobotModule
 	protected override void Awake()
 	{		
 		base.Awake ();
-		SafeInstantiate<DriveUI>(driveUI).SetModuleDataSource(this);
 	}
 
 	protected override void Start ()

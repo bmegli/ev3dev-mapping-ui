@@ -484,6 +484,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1810892782}
   - 114: {fileID: 1810892783}
+  - 114: {fileID: 1810892784}
   m_Layer: 0
   m_Name: LaserXZ
   m_TagString: Untagged
@@ -531,7 +532,22 @@ MonoBehaviour:
     distanceLimit: 10
     laserPointCloud: {fileID: 11479396, guid: 75d3c019fe7a50e4ea1ae9dd76497287, type: 2}
     map3D: {fileID: 11403926, guid: dba6fdbd023254042881c4c4b042be2f, type: 2}
-  laserUI: {fileID: 11490632, guid: f02fc234c332ace49aa53ed0d036aa03, type: 2}
+--- !u!114 &1810892784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1810892781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 692979d5adc42e9438d117f6c0d3d5d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UiTransform: {fileID: 224000014143048226, guid: 65f13ffe83a96c346a20799a371253c3,
+    type: 2}
+  ModuleName: {fileID: 11445212, guid: f4343af0dd1752d4dbeedd72c0ab47cd, type: 2}
+  ModuleText: {fileID: 11476718, guid: b3cd24b3fd3c11f468cca498f15db4ce, type: 2}
+  EnabledToggle: {fileID: 11469012, guid: 24eba0bcd1d1ad543b88447b9a715f6d, type: 2}
 --- !u!1001 &1812185952
 Prefab:
   m_ObjectHideFlags: 0

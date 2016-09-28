@@ -18,14 +18,13 @@ public class LaserUI : ModuleUI
 {
 	private Text ppsText;
 	private Text laserSpeedText;
-
 	private Laser laser;
 
 	protected override void Awake()
 	{
 		base.Awake();
-		ppsText = SafeInstantiateText(ModuleText, transform, "pps 00 ms 00");
-		laserSpeedText = SafeInstantiateText(ModuleText, transform, "rpm 000");
+		ppsText = SafeInstantiateText(ModuleText, uiTransform, "pps 00 ms 00");
+		laserSpeedText = SafeInstantiateText(ModuleText, uiTransform, "rpm 000");
 	}
 
 	protected override void Start ()

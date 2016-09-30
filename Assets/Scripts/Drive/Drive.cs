@@ -50,6 +50,7 @@ public class Drive : ReplayableUDPClient<DrivePacket>, IRobotModule
 		base.Awake ();
 		physics = SafeGetComponentInParent<Physics>().DeepCopy();
 		limits = SafeGetComponentInParent<Limits>().DeepCopy();
+		CheckLimits();
 	}
 
 	protected override void Start ()
@@ -169,6 +170,28 @@ public class Drive : ReplayableUDPClient<DrivePacket>, IRobotModule
 
 	#region Logic
 
+	//move this to design time later
+	private void CheckLimits()
+	{	
+		short left, right;
+		InputToEngineSpeeds (1.0f, 1.0f, 1.0f, out left, out right);
+		InputToEngineSpeeds (0.0f, 1.0f, 1.0f, out left, out right);	
+	}
+
+	private void Clamp(ref short value, short min, short max)
+	{
+		if (value < min)
+		{
+			Debug.LogWarning ("Limits of differential drive exceed physical capabilities: leads to " + value + " speed where theorethical limit is " + min);	
+			value = min;
+		}
+		else if (value > max)
+		{
+			Debug.LogWarning ("Limits of differential drive exceed physical capabilities: leads to " + value + " speed where theorethical limit is " + max);	
+			value = max;
+		}
+	}
+
 	public void InputToEngineSpeeds(float in_hor, float in_ver, float in_scale,out short left_counts_s,out short right_counts_s)
 	{
 		float maxAngularSpeedContributionMmPerS = limits.MaxAngularSpeedRadPerS() * physics.wheelbaseMm / 2.0f;
@@ -187,6 +210,9 @@ public class Drive : ReplayableUDPClient<DrivePacket>, IRobotModule
 
 		left_counts_s = (short)(VL_counts_s * scale);
 		right_counts_s = (short)(VR_counts_s * scale);
+
+		Clamp(ref left_counts_s, (short)-physics.maxEncoderCountsPerSecond, (short)physics.maxEncoderCountsPerSecond);
+		Clamp(ref right_counts_s, (short)-physics.maxEncoderCountsPerSecond, (short)physics.maxEncoderCountsPerSecond);
 	}
 	public void DistanceAndSpeedToEngineCountsAndSpeed(float distance_cm, float speed_cm_per_s, out short l_counts_s, out short r_counts_s, out short l_counts, out short r_counts)
 	{		

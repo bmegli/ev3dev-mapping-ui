@@ -181,7 +181,8 @@ public class Odometry : ReplayableUDPServer<OdometryPacket>, IRobotModule
 
 	public string ModuleCall()
 	{
-		return "odometry " + network.hostIp + " " + udp.port ;
+		//for now poll at fixed 10 ms
+		return "odometry " + network.hostIp + " " + udp.port + " 10" ;
 	}
 	public int ModulePriority()
 	{
@@ -200,12 +201,7 @@ public class Odometry : ReplayableUDPServer<OdometryPacket>, IRobotModule
 	{
 		return ModulePriority().CompareTo( other.ModulePriority() );
 	}
-
-	public Control GetControl()
-	{
-		return GetComponent<Control>();
-	}
-
+		
 	#endregion
 
 	public Vector3 GetPosition()

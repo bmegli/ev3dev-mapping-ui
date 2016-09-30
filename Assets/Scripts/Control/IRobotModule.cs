@@ -32,7 +32,5 @@ public interface IRobotModule : IComparable<IRobotModule>
 
 	ModuleState GetState();
 	void SetState(ModuleState state);
-
-	Control GetControl();
 }
 

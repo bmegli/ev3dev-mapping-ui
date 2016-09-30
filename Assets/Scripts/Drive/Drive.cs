@@ -145,12 +145,7 @@ public class Drive : ReplayableUDPClient<DrivePacket>, IRobotModule
 	{
 		return ModulePriority().CompareTo( other.ModulePriority() );
 	}
-
-	public Control GetControl()
-	{
-		return GetComponent<Control>();
-	}
-		
+				
 	#endregion
 
 	private T SafeInstantiate<T>(T original) where T : MonoBehaviour

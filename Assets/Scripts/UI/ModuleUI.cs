@@ -25,6 +25,7 @@ public class ModuleUI : MonoBehaviour
 	private Text moduleName;
 	private Text moduleState;
 	private Toggle enabledToggle;
+	private Control control;
 
 	protected IRobotModule module;
 
@@ -35,6 +36,7 @@ public class ModuleUI : MonoBehaviour
 		moduleState = SafeInstantiateText(ModuleText, uiTransform, ModuleState.Offline.ToString().ToLower());
 		enabledToggle = SafeInstantiate<Toggle>(EnabledToggle, uiTransform);
 		enabledToggle.onValueChanged.AddListener(SetEnable);
+		control = transform.parent.GetComponentInChildren<Control> ();
 	}
 
 	protected virtual void Start ()
@@ -62,13 +64,7 @@ public class ModuleUI : MonoBehaviour
 
 	public void SetEnable(bool enable)
 	{
-		Control c = module.GetControl();
-		if (c == null)
-		{
-			print("No Control component, can't change enable state");
-			return;
-		}
-		c.EnableDisableModule(module.GetUniqueName(), enable);
+		control.EnableDisableModule(module.GetUniqueName(), enable);
 	}
 
 	protected Text SafeInstantiateText(Text original, Transform parent, string initial_text) 

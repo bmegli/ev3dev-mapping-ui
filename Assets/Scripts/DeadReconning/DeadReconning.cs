@@ -198,12 +198,7 @@ public class DeadReconning : ReplayableUDPServer<DeadReconningPacket>, IRobotMod
 	{
 		return ModulePriority().CompareTo( other.ModulePriority() );
 	}
-
-	public Control GetControl()
-	{
-		return GetComponent<Control>();
-	}
-
+		
 	#endregion
 
 	public Vector3 GetPosition()

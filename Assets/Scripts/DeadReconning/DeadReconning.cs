@@ -14,8 +14,8 @@ using UnityEngine;
 using System.Collections;
 using System;
 
-[RequireComponent (typeof (OdometryUI))]
-public class Odometry : ReplayableUDPServer<OdometryPacket>, IRobotModule
+[RequireComponent (typeof (DeadReconningUI))]
+public class DeadReconning : ReplayableUDPServer<DeadReconningPacket>, IRobotModule
 {	
 	public ModuleProperties module;
 
@@ -25,12 +25,12 @@ public class Odometry : ReplayableUDPServer<OdometryPacket>, IRobotModule
 	private float averagedPacketTimeMs;
 
 	#region UDP Thread Only Data
-	private OdometryPacket lastPacket=new OdometryPacket();
+	private DeadReconningPacket lastPacket=new DeadReconningPacket();
 	private PositionData lastPosition=new PositionData();
 	#endregion
 
 	#region Thread Shared Data
-	private object odometryLock=new object();
+	private object deadReconningLock=new object();
 	private PositionData thread_shared_position=new PositionData();
 	private float thread_shared_averaged_packet_time_ms;
 	#endregion
@@ -59,7 +59,7 @@ public class Odometry : ReplayableUDPServer<OdometryPacket>, IRobotModule
 
 	void Update ()
 	{
-		lock (odometryLock)
+		lock (deadReconningLock)
 		{
 			actualPosition = thread_shared_position;
 			averagedPacketTimeMs = thread_shared_averaged_packet_time_ms;
@@ -71,7 +71,7 @@ public class Odometry : ReplayableUDPServer<OdometryPacket>, IRobotModule
 
 	#region UDP Thread Only Functions
 
-	protected override void ProcessPacket(OdometryPacket packet)
+	protected override void ProcessPacket(DeadReconningPacket packet)
 	{
 		//First call - set first udp packet with reference encoder positions
 		if (lastPacket.timestamp_us == 0)
@@ -83,16 +83,16 @@ public class Odometry : ReplayableUDPServer<OdometryPacket>, IRobotModule
 		// UDP doesn't guarantee ordering of packets, if previous odometry is newer ignore the received
 		if (packet.timestamp_us <= lastPacket.timestamp_us)
 		{
-			print("odometry - ignoring out of time packet (previous, now):" + Environment.NewLine + lastPacket.ToString() + Environment.NewLine + packet.ToString());
+			print("dead-reconning - ignoring out of time packet (previous, now):" + Environment.NewLine + lastPacket.ToString() + Environment.NewLine + packet.ToString());
 			return;
 		}
-
-		//this is the actual work
+			
+		//this is the actual work	
 		lastPosition=EstimatePosition(lastPosition, lastPacket, packet);
 		lastPacket.CloneFrom(packet);
 
 		// Share the new calculated position estimate with Unity thread
-		lock (odometryLock)
+		lock (deadReconningLock)
 		{
 			thread_shared_position=lastPosition;
 			thread_shared_averaged_packet_time_ms = AveragedPacketTimeMs();
@@ -102,7 +102,7 @@ public class Odometry : ReplayableUDPServer<OdometryPacket>, IRobotModule
 
 	}
 
-	private PositionData EstimatePosition(PositionData lastPosition, OdometryPacket lastPacket, OdometryPacket packet)
+	private PositionData EstimatePosition(PositionData lastPosition, DeadReconningPacket lastPacket, DeadReconningPacket packet)
 	{
 		// Calculate the linear displacement since last packet
 		float distance_per_encoder_count_mm = Mathf.PI * physics.wheelDiameterMm / physics.encoderCountsPerRotation;
@@ -113,17 +113,14 @@ public class Odometry : ReplayableUDPServer<OdometryPacket>, IRobotModule
 		if (physics.reverseMotorPolarity)
 			displacement_m = -displacement_m;
 
-
-		float angle_start_deg = lastPosition.heading;
-		float angle_difference_deg = (rdiff - ldiff) * distance_per_encoder_count_mm / physics.wheelbaseMm;
-		if (physics.reverseMotorPolarity)
-			angle_difference_deg = -angle_difference_deg;
+		// Calculate the average heading from previous and current packet
+		float angle_start_deg = lastPacket.HeadingInDegrees;
+		float angle_end_deg = packet.HeadingInDegrees;
+		float angle_difference_deg = angle_end_deg - angle_start_deg;
 
 		// The tricky case when we cross 0 or -180/180 in packets has to be handled separately
 		if (Mathf.Abs(angle_difference_deg) > 180.0f)
 			angle_difference_deg = angle_difference_deg -  Mathf.Sign(angle_difference_deg) * 360.0f;
-
-		float angle_end_deg = angle_start_deg + angle_difference_deg;
 
 		float average_heading_rad = (angle_start_deg + angle_difference_deg / 2.0f) * Constants.DEG2RAD;
 
@@ -134,7 +131,8 @@ public class Odometry : ReplayableUDPServer<OdometryPacket>, IRobotModule
 
 		return lastPosition;
 	}
-		
+
+
 	#endregion
 
 	#region Init
@@ -181,8 +179,7 @@ public class Odometry : ReplayableUDPServer<OdometryPacket>, IRobotModule
 
 	public string ModuleCall()
 	{
-		//for now poll at fixed 10 ms
-		return "odometry " + network.hostIp + " " + udp.port + " 10" ;
+		return "ev3dead-reconning " + network.hostIp + " " + udp.port ;
 	}
 	public int ModulePriority()
 	{

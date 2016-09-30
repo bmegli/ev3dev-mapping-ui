@@ -71,13 +71,17 @@ public class SceneManager : MonoBehaviour
 		replayStarted = true;
 		Control[] controls = FindObjectsOfType<Control> ();
 		Odometry[] odometry = FindObjectsOfType<Odometry> ();
+		DeadReconning[] deadr = FindObjectsOfType<DeadReconning> ();
 		Laser[] lasers=FindObjectsOfType<Laser>();
 		Drive[] drives = FindObjectsOfType<Drive> ();
+
 
 		foreach (Control c in controls)
 			c.StartReplay ();
 		foreach (Odometry o in odometry)
 			o.StartReplay ();
+		foreach (DeadReconning dr in deadr)
+			dr.StartReplay ();
 		foreach (Laser l in lasers)
 			l.StartReplay ();
 		foreach (Drive d in drives)

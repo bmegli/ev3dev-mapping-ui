@@ -356,12 +356,7 @@ public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
 	{
 		return ModulePriority().CompareTo( other.ModulePriority() );
 	}
-
-	public Control GetControl()
-	{
-		return GetComponent<Control>();
-	}
-		
+				
 	#endregion
 
 

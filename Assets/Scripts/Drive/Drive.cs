@@ -25,11 +25,10 @@ enum DriveMode {Manual, Auto};
 public class Drive : ReplayableUDPClient<DrivePacket>, IRobotModule
 {
 	public int packetDelayMs=50;
-	public DriveUI driveUI;
-	public DifferentialDrive driveModel;
 	public DriveModuleProperties module;
 
-	private DifferentialDrive drive;
+	private Physics physics;
+	private Limits limits;
 
 	private DrivePacket packet = new DrivePacket();
 	private float timeSinceLastPacketMs;
@@ -49,17 +48,12 @@ public class Drive : ReplayableUDPClient<DrivePacket>, IRobotModule
 	protected override void Awake()
 	{		
 		base.Awake ();
+		physics = SafeGetComponentInParent<Physics>().DeepCopy();
+		limits = SafeGetComponentInParent<Limits>().DeepCopy();
 	}
 
 	protected override void Start ()
 	{
-		if (driveModel == null)
-		{
-			Debug.LogWarning("Drive Model not set for Drive Component!");
-			enabled = false;
-			return;
-		}
-		drive = Instantiate<DifferentialDrive>(driveModel);
 	}
 
 	public void StartReplay()
@@ -92,7 +86,7 @@ public class Drive : ReplayableUDPClient<DrivePacket>, IRobotModule
 		if (mode == DriveMode.Manual)
 		{
 			packet.command = (short)DrivePacket.Commands.SET_SPEED;
-			drive.InputToEngineSpeeds (Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0.2f + 0.8f*Input.GetAxis("Acceleration"), out packet.param1,out packet.param2);
+			InputToEngineSpeeds (Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0.2f + 0.8f*Input.GetAxis("Acceleration"), out packet.param1,out packet.param2);
 		}
 
 		Send(packet);	
@@ -112,7 +106,7 @@ public class Drive : ReplayableUDPClient<DrivePacket>, IRobotModule
 		mode = DriveMode.Auto;
 		packet.timestamp_us = Timestamp.TimestampUs();
 		packet.command = (short)DrivePacket.Commands.TO_POSITION_WITH_SPEED;
-		drive.DistanceAndSpeedToEngineCountsAndSpeed (distance_cm, speed_cm_per_sec, out packet.param1, out packet.param2, out packet.param3, out packet.param4);
+		DistanceAndSpeedToEngineCountsAndSpeed (distance_cm, speed_cm_per_sec, out packet.param1, out packet.param2, out packet.param3, out packet.param4);
 		Send(packet);	
 		timeSinceLastPacketMs = 0.0f;
 	}
@@ -151,12 +145,7 @@ public class Drive : ReplayableUDPClient<DrivePacket>, IRobotModule
 	{
 		return ModulePriority().CompareTo( other.ModulePriority() );
 	}
-
-	public Control GetControl()
-	{
-		return GetComponent<Control>();
-	}
-		
+				
 	#endregion
 
 	private T SafeInstantiate<T>(T original) where T : MonoBehaviour
@@ -168,6 +157,49 @@ public class Drive : ReplayableUDPClient<DrivePacket>, IRobotModule
 		}
 		return Instantiate<T>(original);
 	}
+	private T SafeGetComponentInParent<T>() where T : MonoBehaviour
+	{
+		T component = GetComponentInParent<T> ();
 
+		if (component == null)
+			Debug.LogError ("Expected to find component of type " + typeof(T) + " but found none");
+
+		return component;
+	}
+
+	#region Logic
+
+	public void InputToEngineSpeeds(float in_hor, float in_ver, float in_scale,out short left_counts_s,out short right_counts_s)
+	{
+		float maxAngularSpeedContributionMmPerS = limits.MaxAngularSpeedRadPerS() * physics.wheelbaseMm / 2.0f;
+		float countsPerMM = physics.CountsPerMM ();
+
+		float V_mm_s = in_ver * limits.MaxLinearSpeedMmPerSec;
+		float angular_speed_contrib_mm_s = maxAngularSpeedContributionMmPerS * in_hor;
+
+		float VL_mm_s = V_mm_s + angular_speed_contrib_mm_s;
+		float VR_mm_s = V_mm_s - angular_speed_contrib_mm_s;
+
+		float VL_counts_s = VL_mm_s * countsPerMM;
+		float VR_counts_s = VR_mm_s * countsPerMM;
+
+		float scale = in_scale * ( (physics.reverseMotorPolarity) ? -1.0f : 1.0f );
+
+		left_counts_s = (short)(VL_counts_s * scale);
+		right_counts_s = (short)(VR_counts_s * scale);
+	}
+	public void DistanceAndSpeedToEngineCountsAndSpeed(float distance_cm, float speed_cm_per_s, out short l_counts_s, out short r_counts_s, out short l_counts, out short r_counts)
+	{		
+		float counts = distance_cm * 10.0f * physics.CountsPerMM();
+		float counts_per_s = speed_cm_per_s * 10.0f * physics.CountsPerMM();
+
+		float scale = ((physics.reverseMotorPolarity) ? -1.0f : 1.0f);
+		l_counts = r_counts = (short)(scale * counts);
+		l_counts_s = r_counts_s =(short)(counts_per_s * scale);
+		//TO DO - check limits!
+	}
+
+
+	#endregion
 
 }

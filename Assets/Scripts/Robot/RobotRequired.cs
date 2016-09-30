@@ -4,6 +4,8 @@ using System.Collections;
 [RequireComponent (typeof (Network))]
 [RequireComponent (typeof (Replay))]
 [RequireComponent (typeof (PositionHistory))]
+[RequireComponent (typeof (Physics))]
+[RequireComponent (typeof (Limits))]
 public class RobotRequired : MonoBehaviour
 {
 	public string sessionDirectory="Mapping1";

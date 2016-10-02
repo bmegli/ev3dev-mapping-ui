@@ -31,6 +31,7 @@ GameObject:
   - 114: {fileID: 114000013934419876}
   - 114: {fileID: 114000012465450012}
   - 114: {fileID: 114000013339424578}
+  - 114: {fileID: 114000010204285062}
   m_Layer: 0
   m_Name: Robot
   m_TagString: Player
@@ -288,6 +289,20 @@ MonoBehaviour:
   SpeedInputField: {fileID: 11492832, guid: eb6397386ccea74449f248523cdb552b, type: 2}
   SpeedUnitText: {fileID: 11444408, guid: 3baaab142a995ce479a36c89cbee1e27, type: 2}
   GoButton: {fileID: 11447058, guid: 6822615a4e0993a4fad061940a39a276, type: 2}
+--- !u!114 &114000010204285062
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 133554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c2a17d7eb04d9f4d82b30f91de7f093, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  horizontal: Horizontal
+  vertical: Vertical
+  acceleration: Acceleration
 --- !u!114 &114000010387767330
 MonoBehaviour:
   m_ObjectHideFlags: 1

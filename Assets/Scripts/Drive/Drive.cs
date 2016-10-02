@@ -29,6 +29,7 @@ public class Drive : ReplayableUDPClient<DrivePacket>, IRobotModule
 
 	private Physics physics;
 	private Limits limits;
+	private UserInput input;
 
 	private DrivePacket packet = new DrivePacket();
 	private float timeSinceLastPacketMs;
@@ -50,6 +51,7 @@ public class Drive : ReplayableUDPClient<DrivePacket>, IRobotModule
 		base.Awake ();
 		physics = SafeGetComponentInParent<Physics>().DeepCopy();
 		limits = SafeGetComponentInParent<Limits>().DeepCopy();
+		input = SafeGetComponentInParent<UserInput>().DeepCopy();
 		CheckLimits();
 	}
 
@@ -87,7 +89,7 @@ public class Drive : ReplayableUDPClient<DrivePacket>, IRobotModule
 		if (mode == DriveMode.Manual)
 		{
 			packet.command = (short)DrivePacket.Commands.SET_SPEED;
-			InputToEngineSpeeds (Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0.2f + 0.8f*Input.GetAxis("Acceleration"), out packet.param1,out packet.param2);
+			InputToEngineSpeeds (Input.GetAxis(input.horizontal), Input.GetAxis(input.vertical), 0.2f + 0.8f*Input.GetAxis(input.acceleration), out packet.param1,out packet.param2);
 		}
 
 		Send(packet);	

@@ -6,6 +6,7 @@ using System.Collections;
 [RequireComponent (typeof (PositionHistory))]
 [RequireComponent (typeof (Physics))]
 [RequireComponent (typeof (Limits))]
+[RequireComponent (typeof (UserInput))]
 public class RobotRequired : MonoBehaviour
 {
 	public string sessionDirectory="Mapping1";

@@ -115,7 +115,7 @@ public class Odometry : ReplayableUDPServer<OdometryPacket>, IRobotModule
 
 
 		float angle_start_deg = lastPosition.heading;
-		float angle_difference_deg = (rdiff - ldiff) * distance_per_encoder_count_mm / physics.wheelbaseMm;
+		float angle_difference_deg = (ldiff - rdiff) * distance_per_encoder_count_mm / physics.wheelbaseMm * Constants.RAD2DEG;
 		if (physics.reverseMotorPolarity)
 			angle_difference_deg = -angle_difference_deg;
 

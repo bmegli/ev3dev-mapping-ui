@@ -350,7 +350,7 @@ Prefab:
     - target: {fileID: 114000013339424578, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
       propertyPath: MaxLinearSpeedMmPerSec
-      value: 400
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 114000010431501252, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}

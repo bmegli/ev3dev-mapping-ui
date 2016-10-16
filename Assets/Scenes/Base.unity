@@ -347,19 +347,63 @@ Prefab:
       propertyPath: m_RootOrder
       value: 4
       objectReference: {fileID: 0}
-    - target: {fileID: 114000013339424578, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
+    - target: {fileID: 114000012923201532, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
-      propertyPath: MaxLinearSpeedMmPerSec
-      value: 200
+      propertyPath: signalMeter.maxValueDbm
+      value: -45
       objectReference: {fileID: 0}
-    - target: {fileID: 114000010431501252, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
-        type: 2}
-      propertyPath: mode
-      value: 2
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 114000013072444412, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
+    - {fileID: 114000012923201532, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &515788134 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1000013297951816, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
+    type: 2}
+  m_PrefabInternal: {fileID: 515788133}
+--- !u!114 &515788135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 515788134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f08c69115b8acd940a519b32f96fe3c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  udp:
+    port: 8006
+  module:
+    autostart: 1
+    priority: 10
+    creationDelayMs: 0
+    wirelessDevice: wlan0
+    pollMs: 100
+--- !u!114 &515788136
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 515788134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e90b26f5327568a4c93db9cd6bd3905d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UiTransform: {fileID: 224000014143048226, guid: 65f13ffe83a96c346a20799a371253c3,
+    type: 2}
+  ModuleName: {fileID: 11445212, guid: f4343af0dd1752d4dbeedd72c0ab47cd, type: 2}
+  ModuleText: {fileID: 11476718, guid: b3cd24b3fd3c11f468cca498f15db4ce, type: 2}
+  EnabledToggle: {fileID: 11469012, guid: 24eba0bcd1d1ad543b88447b9a715f6d, type: 2}
+  SignalSlider: {fileID: 114000013491019610, guid: 8fb691da3ec61fd4bb4873e5976e537e,
+    type: 2}
+  signalMeter:
+    minValueDbm: -100
+    maxValueDbm: -45
+    warningLevelDbm: -60
+    criticalLevelDbm: -70
 --- !u!1 &533093403
 GameObject:
   m_ObjectHideFlags: 0

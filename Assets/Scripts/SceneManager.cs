@@ -69,11 +69,13 @@ public class SceneManager : MonoBehaviour
 		if (replayStarted)
 			return;
 		replayStarted = true;
+
 		Control[] controls = FindObjectsOfType<Control> ();
 		Odometry[] odometry = FindObjectsOfType<Odometry> ();
 		DeadReconning[] deadr = FindObjectsOfType<DeadReconning> ();
 		Laser[] lasers=FindObjectsOfType<Laser>();
 		Drive[] drives = FindObjectsOfType<Drive> ();
+		Wifi[] wifis = FindObjectsOfType<Wifi>();
 
 
 		foreach (Control c in controls)
@@ -84,9 +86,10 @@ public class SceneManager : MonoBehaviour
 			dr.StartReplay ();
 		foreach (Laser l in lasers)
 			l.StartReplay ();
+		foreach (Wifi w in wifis)
+			w.StartReplay ();		
 		foreach (Drive d in drives)
 			d.StartReplay ();
-
 	}
 	public void ToggleShowUI()
 	{

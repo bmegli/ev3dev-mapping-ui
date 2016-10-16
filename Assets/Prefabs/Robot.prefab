@@ -56,6 +56,7 @@ Transform:
   - {fileID: 4000013608905806}
   - {fileID: 4000013121608044}
   - {fileID: 4000010463103654}
+  - {fileID: 4000012582937028}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!4 &401802
@@ -168,6 +169,23 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1000013297951816
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 4000012582937028}
+  - 114: {fileID: 114000012923201532}
+  - 114: {fileID: 114000013072444412}
+  m_Layer: 0
+  m_Name: Wifi
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1000013759948782
 GameObject:
   m_ObjectHideFlags: 0
@@ -241,6 +259,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 401170}
   m_RootOrder: 1
+--- !u!4 &4000012582937028
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013297951816}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 401170}
+  m_RootOrder: 6
 --- !u!4 &4000013121608044
 Transform:
   m_ObjectHideFlags: 1
@@ -413,6 +444,41 @@ MonoBehaviour:
   encoderCountsPerRotation: 360
   maxEncoderCountsPerSecond: 1000
   reverseMotorPolarity: 1
+--- !u!114 &114000012923201532
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013297951816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e90b26f5327568a4c93db9cd6bd3905d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UiTransform: {fileID: 224000014143048226, guid: 65f13ffe83a96c346a20799a371253c3,
+    type: 2}
+  ModuleName: {fileID: 11445212, guid: f4343af0dd1752d4dbeedd72c0ab47cd, type: 2}
+  ModuleText: {fileID: 11476718, guid: b3cd24b3fd3c11f468cca498f15db4ce, type: 2}
+  EnabledToggle: {fileID: 11469012, guid: 24eba0bcd1d1ad543b88447b9a715f6d, type: 2}
+--- !u!114 &114000013072444412
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013297951816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f08c69115b8acd940a519b32f96fe3c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  udp:
+    port: 8006
+  module:
+    autostart: 1
+    priority: 10
+    creationDelayMs: 0
+    wirelessDevice: wlan0
+    pollMs: 100
 --- !u!114 &114000013339424578
 MonoBehaviour:
   m_ObjectHideFlags: 1

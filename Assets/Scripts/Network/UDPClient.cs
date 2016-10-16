@@ -103,7 +103,9 @@ public class UDPClient<DATAGRAM>
 			throw new InvalidOperationException("Received datagram of incorrect size, different remote?");
 
 		//process datagram
+
 		datagram.FromBinary(new System.IO.BinaryReader(new System.IO.MemoryStream(data)));
+
 		return true;
 	//	if (dumpWriter!=null)
 	//		datagram.ToBinary(dumpWriter);
@@ -157,6 +159,7 @@ public class UDPClient<DATAGRAM>
 					Thread.Sleep( (int)(packet.GetTimestampUs()/1000 - elapsed_ms) );
 
 				Send(packet);
+
 				packet.FromBinary(dumpReader);
 			}
 		}

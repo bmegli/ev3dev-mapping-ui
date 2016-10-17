@@ -504,7 +504,7 @@ MonoBehaviour:
   signalMeter:
     minValueDbm: -100
     maxValueDbm: -45
-    warningLevelDbm: -60
+    warningLevelDbm: -67
     criticalLevelDbm: -70
 --- !u!1 &1952588912
 GameObject:

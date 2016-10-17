@@ -20,8 +20,8 @@ using UnityEngine.UI;
 public class SignalMeterProperties
 {
 	public int minValueDbm=-100;
-	public int maxValueDbm=-30;
-	public int warningLevelDbm=-60;
+	public int maxValueDbm=-45;
+	public int warningLevelDbm=-67;
 	public int criticalLevelDbm=-70;
 }
 
@@ -51,6 +51,8 @@ public class WifiUI : ModuleUI
 		signalSlider.maxValue = signalMeter.maxValueDbm;
 		signalFill = signalSlider.fillRect.GetComponentInChildren<Image>();
 		signalSlider.value = signalMeter.minValueDbm;
+		RectTransform r = signalFill.GetComponent<RectTransform>();
+		r.offsetMax = r.offsetMin = new Vector2(0, 0);
 	}
 
 	protected override void Start ()

@@ -177,8 +177,8 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000012582937028}
-  - 114: {fileID: 114000012923201532}
-  - 114: {fileID: 114000013072444412}
+  - 114: {fileID: 114000010445054316}
+  - 114: {fileID: 114000012265126690}
   m_Layer: 0
   m_Name: Wifi
   m_TagString: Untagged
@@ -364,6 +364,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mode: 2
   direction: 0
+--- !u!114 &114000010445054316
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013297951816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f08c69115b8acd940a519b32f96fe3c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  udp:
+    port: 8006
+  module:
+    autostart: 1
+    priority: 10
+    creationDelayMs: 0
+    wirelessDevice: wlan0
+    pollMs: 100
 --- !u!114 &114000010555960272
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -428,6 +447,29 @@ MonoBehaviour:
   ModuleName: {fileID: 11445212, guid: f4343af0dd1752d4dbeedd72c0ab47cd, type: 2}
   ModuleText: {fileID: 11476718, guid: b3cd24b3fd3c11f468cca498f15db4ce, type: 2}
   EnabledToggle: {fileID: 11469012, guid: 24eba0bcd1d1ad543b88447b9a715f6d, type: 2}
+--- !u!114 &114000012265126690
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013297951816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e90b26f5327568a4c93db9cd6bd3905d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UiTransform: {fileID: 224000014143048226, guid: 65f13ffe83a96c346a20799a371253c3,
+    type: 2}
+  ModuleName: {fileID: 11445212, guid: f4343af0dd1752d4dbeedd72c0ab47cd, type: 2}
+  ModuleText: {fileID: 11476718, guid: b3cd24b3fd3c11f468cca498f15db4ce, type: 2}
+  EnabledToggle: {fileID: 11469012, guid: 24eba0bcd1d1ad543b88447b9a715f6d, type: 2}
+  SignalSlider: {fileID: 114000013491019610, guid: 8fb691da3ec61fd4bb4873e5976e537e,
+    type: 2}
+  signalMeter:
+    minValueDbm: -100
+    maxValueDbm: -45
+    warningLevelDbm: -68
+    criticalLevelDbm: -71
 --- !u!114 &114000012465450012
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -444,41 +486,6 @@ MonoBehaviour:
   encoderCountsPerRotation: 360
   maxEncoderCountsPerSecond: 1000
   reverseMotorPolarity: 1
---- !u!114 &114000012923201532
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000013297951816}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e90b26f5327568a4c93db9cd6bd3905d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UiTransform: {fileID: 224000014143048226, guid: 65f13ffe83a96c346a20799a371253c3,
-    type: 2}
-  ModuleName: {fileID: 11445212, guid: f4343af0dd1752d4dbeedd72c0ab47cd, type: 2}
-  ModuleText: {fileID: 11476718, guid: b3cd24b3fd3c11f468cca498f15db4ce, type: 2}
-  EnabledToggle: {fileID: 11469012, guid: 24eba0bcd1d1ad543b88447b9a715f6d, type: 2}
---- !u!114 &114000013072444412
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000013297951816}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f08c69115b8acd940a519b32f96fe3c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  udp:
-    port: 8006
-  module:
-    autostart: 1
-    priority: 10
-    creationDelayMs: 0
-    wirelessDevice: wlan0
-    pollMs: 100
 --- !u!114 &114000013339424578
 MonoBehaviour:
   m_ObjectHideFlags: 1

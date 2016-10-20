@@ -14,6 +14,8 @@ using UnityEngine;
 using System.Collections;
 using System;
 
+public enum WifiPlotType {None, Map}
+
 [Serializable]
 public class WifiModuleProperties : ModuleProperties
 {
@@ -21,24 +23,85 @@ public class WifiModuleProperties : ModuleProperties
 	public uint pollMs = 100;
 }
 
+[Serializable]
+public class WifiPlotProperties
+{
+	public WifiPlotType plotType = WifiPlotType.None;
+	public int minValueDbm=-100;
+	public int maxValueDbm=-45;
+	public float minHeight = 0.0f;
+	public float maxHeight = 1.0f;
+}
+
+class WifiThreadSharedData
+{ 
+	public Vector3[] readings=new Vector3[10]; //this currenlty uses only readings[0]
+	public int from = -1;
+	public int length = -1;
+	public bool consumed = true;
+	public float averagedPacketTimeMs;
+
+	public void CopyNewDataFrom(WifiThreadSharedData other)
+	{
+		// Copy only the data that changed since last call
+		from = other.from;
+		length = other.length;
+		averagedPacketTimeMs = other.averagedPacketTimeMs;
+
+		for (int i = from; i < from + length; ++i)
+		{
+			int ind = i % readings.Length;
+			readings[ind] = other.readings[ind];
+		}
+	}
+}
+
+class WifiThreadInternalData
+{
+	public Vector3[] readings = new Vector3[10];
+	public ulong[] timestamps = new ulong[10];
+
+	public int next=0;
+	public bool pending=false;
+	public int pending_from=0;
+	public int pending_length=0;
+	public ulong t_from=0;
+	public ulong t_to=0;
+
+	public void SetPending(int from, int length, ulong time_from, ulong time_to)
+	{
+		pending = true;
+		pending_from = from;
+		pending_length = length;
+		t_from = time_from;
+		t_to = time_to;
+	}
+}
+
+
+	
 [RequireComponent (typeof (WifiUI))]
+[RequireComponent (typeof (Map3D))]
 public class Wifi : ReplayableUDPServer<WifiPacket>, IRobotModule
 {	
 	public WifiModuleProperties module;
+	public WifiPlotProperties plot;
 
 	private WifiPacket packet=new WifiPacket();
+	private Map3D map3D;
 	private PositionHistory positionHistory;
 	private float averagedPacketTimeMs;
 
+	private Vector3 wifiPosition; //where is Wifi adapter placed in robot reference frame
 
 	#region UDP Thread Only Data
+	private WifiThreadInternalData threadInternal = new WifiThreadInternalData ();
 	private WifiPacket lastPacket=new WifiPacket();
 	#endregion
 
 	#region Thread Shared Data
-	private object wifiLock=new object();
+	private WifiThreadSharedData threadShared=new WifiThreadSharedData();
 	private WifiPacket thread_shared_packet=new WifiPacket();
-	private float thread_shared_averaged_packet_time_ms;
 	#endregion
 
 	protected override void OnDestroy()
@@ -49,11 +112,13 @@ public class Wifi : ReplayableUDPServer<WifiPacket>, IRobotModule
 	protected override void Awake()
 	{
 		base.Awake();
+		wifiPosition = transform.localPosition;
 	}
 
 	protected override void Start ()
 	{
 		positionHistory = SafeGetComponentInParent<PositionHistory>();
+		map3D = GetComponent<Map3D>();
 		base.Start();
 	}
 
@@ -64,10 +129,10 @@ public class Wifi : ReplayableUDPServer<WifiPacket>, IRobotModule
 
 	void Update ()
 	{
-		lock (wifiLock)
+		lock (threadShared)
 		{
 			packet = thread_shared_packet;
-			averagedPacketTimeMs = thread_shared_averaged_packet_time_ms;
+			averagedPacketTimeMs = threadShared.averagedPacketTimeMs;
 		}
 	}
 
@@ -81,15 +146,87 @@ public class Wifi : ReplayableUDPServer<WifiPacket>, IRobotModule
 			print(name + " ignoring out of time packet (previous, now):" + Environment.NewLine + lastPacket.ToString() + Environment.NewLine + packet.ToString());
 			return;
 		}
+
+		// if we had unprocessed packet last time do it now
+		if (plot.plotType != WifiPlotType.None && threadInternal.pending)
+		{
+			int i = threadInternal.pending_from;
+			ulong t = threadInternal.t_from;
+			if (TranslateReadingToGlobalReferenceFrame (i, t))
+				PushCalculatedReadingsThreadSafe(i);
+		}
 			
+		CalculateReadingsInLocalReferenceFrame (packet);
+		if (plot.plotType != WifiPlotType.None)
+			if (!TranslateReadingToGlobalReferenceFrame (threadInternal.next, threadInternal.timestamps[threadInternal.next]) )
+				return; //don't use the readings yet (or at all), no position data in this timeframe
+		
 		lastPacket = packet.DeepCopy();
 
-		lock (wifiLock)
+		PushCalculatedReadingsThreadSafe (threadInternal.next);
+	}
+
+	public void PushCalculatedReadingsThreadSafe(int at)
+	{
+		lock (threadShared)
 		{
-			thread_shared_packet = lastPacket; //just pass the reference!
-			thread_shared_averaged_packet_time_ms = AveragedPacketTimeMs();
+			threadShared.readings [at] = threadInternal.readings [at];
+
+			if (threadShared.consumed)
+			{
+				threadShared.from = at;
+				threadShared.length = 1;
+			}
+			else //data was not consumed yet
+				threadShared.length += 1;
+
+			threadShared.consumed = false;
+			threadShared.averagedPacketTimeMs = AveragedPacketTimeMs();
+			thread_shared_packet = lastPacket;
 		}
-		//we no longer can use last packet here, reference passed to other thread
+
+	}
+		
+	private void CalculateReadingsInLocalReferenceFrame(WifiPacket packet)
+	{
+		Vector3[] readings = threadInternal.readings;
+		ulong[] timestamps = threadInternal.timestamps;
+		int next = threadInternal.next;
+
+		float height01 = (packet.signal_dbm - plot.minValueDbm) / (plot.maxValueDbm-plot.minValueDbm);
+		float heightm = Mathf.LerpUnclamped (plot.minHeight, plot.maxHeight, height01);			
+		readings[next]= new Vector3 (wifiPosition.x, heightm , wifiPosition.z);
+		timestamps [next] = packet.timestamp_us;
+	}
+
+	private bool TranslateReadingToGlobalReferenceFrame(int at, ulong timestamp)
+	{
+		bool not_in_history, not_yet;
+		PositionHistory.PositionSnapshot snapshot= positionHistory.GetPositionSnapshotThreadSafe(timestamp, timestamp, out not_yet, out not_in_history);
+		threadInternal.pending = false;
+
+		if (not_in_history)
+		{
+			print("wifi - ignoring packet (position data not in history) with timestamp " + timestamp);
+			return false;
+		}
+		if (not_yet)
+		{
+			threadInternal.SetPending (at, 1, timestamp, timestamp);
+			return false;
+		}
+			
+		Matrix4x4 robotToGlobal = new Matrix4x4();
+
+		Vector3 scale = Vector3.one;
+		PositionData pos = snapshot.PositionAt(timestamp);
+
+		Vector3[] readings = threadInternal.readings;
+
+		robotToGlobal.SetTRS(pos.position, Quaternion.Euler(0.0f, pos.heading, 0.0f), scale);
+		readings[at] = robotToGlobal.MultiplyPoint3x4 (readings [at]);
+
+		return true;
 	}
 
 

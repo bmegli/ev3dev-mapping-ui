@@ -15,7 +15,6 @@ using System.Collections;
 using System;
 using System.IO;
 
-public enum PlaneType {XZ, XY}
 public enum PlotType {Local, Global, Map, GlobalWithMap}
 
 [Serializable]
@@ -97,16 +96,14 @@ public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
 
 	private LaserThreadSharedData data=new LaserThreadSharedData();
 
-	Matrix4x4 laserTRS;
-	private Vector3 laserPosition;
-	private Vector3 laserRotation;
+	private Matrix4x4 laserTRS;
 
 	#region UDP Thread Only Data
 	private LaserThreadInternalData threadInternal = new LaserThreadInternalData ();
 	#endregion
 
 	#region Thread Shared Data
-	private LaserThreadSharedData threadShared=new LaserThreadSharedData();
+	private LaserThreadSharedData threadShared = new LaserThreadSharedData();
 	#endregion
 
 	public override string GetUniqueName ()

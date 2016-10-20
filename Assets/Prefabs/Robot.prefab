@@ -196,6 +196,7 @@ GameObject:
   - 4: {fileID: 4000010463103654}
   - 114: {fileID: 114000013608529052}
   - 114: {fileID: 114000012167743368}
+  - 114: {fileID: 114000013899257226}
   m_Layer: 0
   m_Name: LaserXY
   m_TagString: Untagged
@@ -213,6 +214,7 @@ GameObject:
   - 4: {fileID: 4000013121608044}
   - 114: {fileID: 114000013585239938}
   - 114: {fileID: 114000013461082344}
+  - 114: {fileID: 114000010904566416}
   m_Layer: 0
   m_Name: LaserXZ
   m_TagString: Untagged
@@ -418,6 +420,18 @@ MonoBehaviour:
     priority: 10
     creationDelayMs: 0
     timeoutMs: 500
+--- !u!114 &114000010904566416
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013886380694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fab4e6923a60ed49a0a454749c06e88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mapPointCloud: {fileID: 11486970, guid: e5911229d848865438b855227af02ff5, type: 2}
 --- !u!114 &114000011824091780
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -468,8 +482,8 @@ MonoBehaviour:
   signalMeter:
     minValueDbm: -100
     maxValueDbm: -45
-    warningLevelDbm: -68
-    criticalLevelDbm: -71
+    warningLevelDbm: -67
+    criticalLevelDbm: -70
 --- !u!114 &114000012465450012
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -552,7 +566,6 @@ MonoBehaviour:
     plotType: 1
     distanceLimit: 10
     laserPointCloud: {fileID: 11479396, guid: 75d3c019fe7a50e4ea1ae9dd76497287, type: 2}
-    map3D: {fileID: 11403926, guid: dba6fdbd023254042881c4c4b042be2f, type: 2}
 --- !u!114 &114000013608529052
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -577,7 +590,6 @@ MonoBehaviour:
     plotType: 2
     distanceLimit: 2
     laserPointCloud: {fileID: 11479396, guid: 75d3c019fe7a50e4ea1ae9dd76497287, type: 2}
-    map3D: {fileID: 11403926, guid: dba6fdbd023254042881c4c4b042be2f, type: 2}
 --- !u!114 &114000013788507174
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -590,6 +602,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sessionDirectory: Body
+--- !u!114 &114000013899257226
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013759948782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fab4e6923a60ed49a0a454749c06e88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mapPointCloud: {fileID: 11486970, guid: e5911229d848865438b855227af02ff5, type: 2}
 --- !u!114 &114000013934419876
 MonoBehaviour:
   m_ObjectHideFlags: 1

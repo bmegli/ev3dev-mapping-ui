@@ -80,6 +80,29 @@ public class PointCloud : MonoBehaviour
 		assignedPoints = data.Length;
 	}
 
+	public int AssignVertices(Vector3[] data, int len)
+	{
+		Vector3[] vertices = mesh.vertices;
+		int assigned = 0;
+		int unassigned = UnassignedCount();
+
+		//this can be simplified to copy
+		for (int i = 0; i < len && assigned < unassigned; ++i)
+		{
+			vertices[assignedPoints + assigned] = data[i];
+			++assigned;
+		}
+
+		mesh.vertices = vertices;
+
+		//if this happens to be time consuming we can keep the bounds and update if they change while adding
+		mesh.RecalculateBounds(); 
+		assignedPoints += assigned;
+
+		return assigned;
+	}
+
+
 	public int AssignVertices(Vector3[] data, int i_from, int len, bool[] is_invalid)
 	{
 		Vector3[] vertices = mesh.vertices;

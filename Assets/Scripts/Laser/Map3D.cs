@@ -35,6 +35,21 @@ public class Map3D : MonoBehaviour
 
 		return pc.AssignVertices(data, i_from, len, is_invalid);
 	}
+	public int AssignVertices(Vector3[] data, int len)
+	{
+		PointCloud pc;
+		if (mapPointClouds.Count == 0 || mapPointClouds[mapPointClouds.Count - 1].UnassignedCount() < len)
+		{			
+			pc = Instantiate<PointCloud>(mapPointCloud);
+			pc.transform.parent = SceneManager.DynamicObjects;
+			mapPointClouds.Add(pc);
+		}
+		else
+			pc = mapPointClouds[mapPointClouds.Count - 1];
+
+		return pc.AssignVertices(data, len);
+	}
+
 
 	public int VertexCount()
 	{

@@ -178,11 +178,11 @@ public class Wifi : ReplayableUDPServer<WifiPacket>, IRobotModule
 
 			float height01 = ((float)reading.signal_dbm - (float)signal.minValueDbm) / ((float)signal.maxValueDbm-(float)signal.minValueDbm);
 			float heightm = Mathf.LerpUnclamped(plot.minHeight, plot.maxHeight, height01);	
-			Vector3 localPosition = new Vector3(wifiPosition.x, heightm, wifiPosition.z);
-			Vector3 position = snapshot.PositionAt (reading.timestamp_us).position; 
+			Vector3 position = new Vector3(wifiPosition.x, heightm, wifiPosition.z);
+			PositionData pos = snapshot.PositionAt (reading.timestamp_us); 
 
-			robotToGlobal.SetTRS(position, Quaternion.identity, Vector3.one);
-			position = robotToGlobal.MultiplyPoint3x4(localPosition);
+			robotToGlobal.SetTRS(pos.position,  Quaternion.Euler(0.0f, pos.heading, 0.0f), Vector3.one);
+			position = robotToGlobal.MultiplyPoint3x4(position);
 			wifiReadingsCB.Put (position);
 		}			
 	}

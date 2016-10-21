@@ -15,7 +15,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
-[RequireComponent(typeof(Transform))]
 public class Map3D : MonoBehaviour
 {
 	public PointCloud mapPointCloud;
@@ -28,7 +27,7 @@ public class Map3D : MonoBehaviour
 		if (mapPointClouds.Count == 0 || mapPointClouds[mapPointClouds.Count - 1].UnassignedCount() < len)
 		{			
 			pc = Instantiate<PointCloud>(mapPointCloud);
-			pc.transform.parent = transform;
+			pc.transform.parent = SceneManager.DynamicObjects;
 			mapPointClouds.Add(pc);
 		}
 		else
@@ -36,6 +35,21 @@ public class Map3D : MonoBehaviour
 
 		return pc.AssignVertices(data, i_from, len, is_invalid);
 	}
+	public int AssignVertices(Vector3[] data, int len)
+	{
+		PointCloud pc;
+		if (mapPointClouds.Count == 0 || mapPointClouds[mapPointClouds.Count - 1].UnassignedCount() < len)
+		{			
+			pc = Instantiate<PointCloud>(mapPointCloud);
+			pc.transform.parent = SceneManager.DynamicObjects;
+			mapPointClouds.Add(pc);
+		}
+		else
+			pc = mapPointClouds[mapPointClouds.Count - 1];
+
+		return pc.AssignVertices(data, len);
+	}
+
 
 	public int VertexCount()
 	{
@@ -58,15 +72,15 @@ public class Map3D : MonoBehaviour
 
 		bw.Close();
 	}
-		
+	/*
 	// Use this for initialization
 	void Start ()
-	{
-		transform.parent = SceneManager.DynamicObjects;
+	{		
 	}
 	
 	// Update is called once per frame
 	void Update ()
 	{
 	}
+	*/
 }

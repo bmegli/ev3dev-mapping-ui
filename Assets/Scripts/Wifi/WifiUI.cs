@@ -15,20 +15,11 @@ using System;
 using System.Collections;
 using UnityEngine.UI;
 
-
-[Serializable]
-public class SignalMeterProperties
-{
-	public int minValueDbm=-100;
-	public int maxValueDbm=-45;
-	public int warningLevelDbm=-67;
-	public int criticalLevelDbm=-70;
-}
-
 public class WifiUI : ModuleUI
 {
 	public Slider SignalSlider;
-	public SignalMeterProperties signalMeter;
+
+	private WifiSignalProperties signal;
 	private Slider signalSlider;
 	private Image signalFill;
 
@@ -47,10 +38,7 @@ public class WifiUI : ModuleUI
 		bssidText = SafeInstantiateText(ModuleText, uiTransform, "bssid");
 		rxTxText = SafeInstantiateText(ModuleText, uiTransform, "rx 0 tx 0");
 		signalSlider = SafeInstantiate<Slider>(SignalSlider, uiTransform);
-		signalSlider.minValue = signalMeter.minValueDbm;
-		signalSlider.maxValue = signalMeter.maxValueDbm;
 		signalFill = signalSlider.fillRect.GetComponentInChildren<Image>();
-		signalSlider.value = signalMeter.minValueDbm;
 		RectTransform r = signalFill.GetComponent<RectTransform>();
 		r.offsetMax = r.offsetMin = new Vector2(0, 0);
 	}
@@ -59,15 +47,19 @@ public class WifiUI : ModuleUI
 	{
 		base.Start();
 		wifi = module as Wifi;
+		signal = wifi.signal;
+		signalSlider.minValue = signal.minValueDbm;
+		signalSlider.maxValue = signal.maxValueDbm;
+		signalSlider.value = signal.minValueDbm;
 	
 
 	}
 
 	private void SetSignalSliderFillColor(int signalDbm)
 	{
-		if (signalDbm > signalMeter.warningLevelDbm)
+		if (signalDbm > signal.warningLevelDbm)
 			signalFill.color = Color.green;
-		else if (signalDbm > signalMeter.criticalLevelDbm)
+		else if (signalDbm > signal.criticalLevelDbm)
 			signalFill.color = Color.yellow;
 		else
 			signalFill.color = Color.red;	

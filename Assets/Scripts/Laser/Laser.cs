@@ -15,7 +15,6 @@ using System.Collections;
 using System;
 using System.IO;
 
-public enum PlaneType {XZ, XY}
 public enum PlotType {Local, Global, Map, GlobalWithMap}
 
 [Serializable]
@@ -32,7 +31,6 @@ public class LaserPlotProperties
 	public PlotType plotType;
 	public float distanceLimit=10.0f;
 	public PointCloud laserPointCloud;
-	public Map3D map3D;
 }
 	
 class LaserThreadSharedData
@@ -86,6 +84,7 @@ class LaserThreadInternalData
 }
 
 [RequireComponent (typeof (LaserUI))]
+[RequireComponent (typeof (Map3D))]
 public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
 {
 	public LaserModuleProperties module;
@@ -97,16 +96,14 @@ public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
 
 	private LaserThreadSharedData data=new LaserThreadSharedData();
 
-	Matrix4x4 laserTRS;
-	private Vector3 laserPosition;
-	private Vector3 laserRotation;
+	private Matrix4x4 laserTRS;
 
 	#region UDP Thread Only Data
 	private LaserThreadInternalData threadInternal = new LaserThreadInternalData ();
 	#endregion
 
 	#region Thread Shared Data
-	private LaserThreadSharedData threadShared=new LaserThreadSharedData();
+	private LaserThreadSharedData threadShared = new LaserThreadSharedData();
 	#endregion
 
 	public override string GetUniqueName ()
@@ -122,7 +119,6 @@ public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
 	protected override void Awake()
 	{
 		laserPointCloud = SafeInstantiate<PointCloud> (plot.laserPointCloud);
-		map3D = SafeInstantiate<Map3D> (plot.map3D);
 		base.Awake();
 		laserTRS =  Matrix4x4.TRS (transform.localPosition, transform.localRotation, Vector3.one);
 	}
@@ -130,6 +126,7 @@ public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
 	protected override void Start ()
 	{
 		positionHistory = SafeGetComponentInParent<PositionHistory>();	
+		map3D = GetComponent<Map3D> ();
 		base.Start();
 	}
 	public void StartReplay()
@@ -153,7 +150,7 @@ public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
 		if(plot.plotType!=PlotType.Map)
 			laserPointCloud.SetVertices(data.readings);
 
-		if(plot.plotType==PlotType.Map || plot.plotType==PlotType.GlobalWithMap)
+		if(map3D!=null && plot.plotType==PlotType.Map || plot.plotType==PlotType.GlobalWithMap)
 			map3D.AssignVertices (data.readings, data.from, data.length, data.invalid_data);
 
 	}

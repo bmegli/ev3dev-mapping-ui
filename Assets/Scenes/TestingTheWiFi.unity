@@ -441,6 +441,7 @@ GameObject:
   - 4: {fileID: 1904955188}
   - 114: {fileID: 1904955190}
   - 114: {fileID: 1904955189}
+  - 114: {fileID: 1904955191}
   m_Layer: 0
   m_Name: Wifi
   m_TagString: Untagged
@@ -482,6 +483,14 @@ MonoBehaviour:
     creationDelayMs: 0
     wirelessDevice: wlan0
     pollMs: 100
+  plot:
+    plotType: 0
+    minValueDbm: -100
+    maxValueDbm: -45
+    minHeight: 0
+    maxHeight: 1
+  properties:
+    maxPendingReadings: 10
 --- !u!114 &1904955190
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -506,6 +515,19 @@ MonoBehaviour:
     maxValueDbm: -45
     warningLevelDbm: -67
     criticalLevelDbm: -70
+--- !u!114 &1904955191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1904955187}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fab4e6923a60ed49a0a454749c06e88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mapPointCloud: {fileID: 114000012045895920, guid: 79567bf5404538846a09dbc1401e4391,
+    type: 2}
 --- !u!1 &1952588912
 GameObject:
   m_ObjectHideFlags: 0

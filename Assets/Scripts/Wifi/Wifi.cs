@@ -20,6 +20,16 @@ using System;
 public enum WifiPlotType {None, Map}
 
 [Serializable]
+public class WifiSignalProperties
+{
+	public int minValueDbm=-100;
+	public int maxValueDbm=-45;
+	public int warningLevelDbm=-67;
+	public int criticalLevelDbm=-70;
+}
+
+
+[Serializable]
 public class WifiModuleProperties : ModuleProperties
 {
 	public string wirelessDevice = "wlan0";
@@ -30,8 +40,6 @@ public class WifiModuleProperties : ModuleProperties
 public class WifiPlotProperties
 {
 	public WifiPlotType plotType = WifiPlotType.None;
-	public int minValueDbm=-100;
-	public int maxValueDbm=-45;
 	public float minHeight = 0.0f;
 	public float maxHeight = 1.0f;
 }
@@ -54,6 +62,7 @@ public struct WifiReading
 public class Wifi : ReplayableUDPServer<WifiPacket>, IRobotModule
 {	
 	public WifiModuleProperties module;
+	public WifiSignalProperties signal;
 	public WifiPlotProperties plot;
 	public WifiProperties properties;
 
@@ -115,7 +124,8 @@ public class Wifi : ReplayableUDPServer<WifiPacket>, IRobotModule
 				readings_count = thread_shared_readings_CB.Get (readings, 0, thread_shared_readings_CB.Size);		
 		}
 
-
+		if (readings_count > 0 && map3D != null)
+			map3D.AssignVertices(readings, readings_count);
 
 		readings_count = 0;
 	}
@@ -142,7 +152,6 @@ public class Wifi : ReplayableUDPServer<WifiPacket>, IRobotModule
 			if (wifiReadingsCB.Size > 0) //unoptimal!
 				thread_shared_readings_CB.Put(wifiReadingsCB.Get (wifiReadingsCB.Size));
 		}
-
 	}
 
 	private void ProcessReadings(WifiPacket packet)
@@ -167,15 +176,13 @@ public class Wifi : ReplayableUDPServer<WifiPacket>, IRobotModule
 
 			readingsToProcess.Dequeue();
 
+			float height01 = ((float)reading.signal_dbm - (float)signal.minValueDbm) / ((float)signal.maxValueDbm-(float)signal.minValueDbm);
+			float heightm = Mathf.LerpUnclamped(plot.minHeight, plot.maxHeight, height01);	
+			Vector3 localPosition = new Vector3(wifiPosition.x, heightm, wifiPosition.z);
 			Vector3 position = snapshot.PositionAt (reading.timestamp_us).position; 
 
-			float height01 = (reading.signal_dbm - plot.minValueDbm) / (plot.maxValueDbm-plot.minValueDbm);
-			float heightm = Mathf.LerpUnclamped (plot.minHeight, plot.maxHeight, height01);			
-			position.y = heightm;
-		
-
 			robotToGlobal.SetTRS(position, Quaternion.identity, Vector3.one);
-			position = robotToGlobal.MultiplyPoint3x4(position);
+			position = robotToGlobal.MultiplyPoint3x4(localPosition);
 			wifiReadingsCB.Put (position);
 		}			
 	}

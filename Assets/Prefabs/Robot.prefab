@@ -386,10 +386,13 @@ MonoBehaviour:
     creationDelayMs: 0
     wirelessDevice: wlan0
     pollMs: 100
-  plot:
-    plotType: 1
+  signal:
     minValueDbm: -100
     maxValueDbm: -45
+    warningLevelDbm: -67
+    criticalLevelDbm: -70
+  plot:
+    plotType: 1
     minHeight: 0
     maxHeight: 1
   properties:
@@ -501,11 +504,6 @@ MonoBehaviour:
   EnabledToggle: {fileID: 11469012, guid: 24eba0bcd1d1ad543b88447b9a715f6d, type: 2}
   SignalSlider: {fileID: 114000013491019610, guid: 8fb691da3ec61fd4bb4873e5976e537e,
     type: 2}
-  signalMeter:
-    minValueDbm: -100
-    maxValueDbm: -45
-    warningLevelDbm: -67
-    criticalLevelDbm: -70
 --- !u!114 &114000012465450012
 MonoBehaviour:
   m_ObjectHideFlags: 1

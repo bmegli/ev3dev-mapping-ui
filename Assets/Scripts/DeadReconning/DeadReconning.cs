@@ -14,10 +14,16 @@ using UnityEngine;
 using System.Collections;
 using System;
 
+[Serializable]
+public class DeadReconningModuleProperties : ModuleProperties
+{
+	public int pollMs=10;
+}
+
 [RequireComponent (typeof (DeadReconningUI))]
 public class DeadReconning : ReplayableUDPServer<DeadReconningPacket>, IRobotModule
 {	
-	public ModuleProperties module;
+	public DeadReconningModuleProperties module;
 
 	private Physics physics;
 	private PositionHistory positionHistory;
@@ -179,7 +185,7 @@ public class DeadReconning : ReplayableUDPServer<DeadReconningPacket>, IRobotMod
 
 	public string ModuleCall()
 	{
-		return "ev3dead-reconning " + network.hostIp + " " + udp.port ;
+		return "ev3dead-reconning " + network.hostIp + " " + udp.port + " " + module.pollMs;
 	}
 	public int ModulePriority()
 	{

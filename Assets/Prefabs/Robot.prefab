@@ -354,6 +354,7 @@ MonoBehaviour:
     autostart: 1
     priority: 0
     creationDelayMs: 1000
+    pollMs: 10
 --- !u!114 &114000010431501252
 MonoBehaviour:
   m_ObjectHideFlags: 1

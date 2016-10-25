@@ -14,10 +14,17 @@ using UnityEngine;
 using System.Collections;
 using System;
 
+[Serializable]
+public class OdometryModuleProperties : ModuleProperties
+{
+	public int pollMs=10;
+}
+
+
 [RequireComponent (typeof (OdometryUI))]
 public class Odometry : ReplayableUDPServer<OdometryPacket>, IRobotModule
 {	
-	public ModuleProperties module;
+	public OdometryModuleProperties module;
 
 	private Physics physics;
 	private PositionHistory positionHistory;
@@ -181,8 +188,7 @@ public class Odometry : ReplayableUDPServer<OdometryPacket>, IRobotModule
 
 	public string ModuleCall()
 	{
-		//for now poll at fixed 10 ms
-		return "ev3odometry " + network.hostIp + " " + udp.port + " 10" ;
+		return "ev3odometry " + network.hostIp + " " + udp.port + " " + module.pollMs;
 	}
 	public int ModulePriority()
 	{

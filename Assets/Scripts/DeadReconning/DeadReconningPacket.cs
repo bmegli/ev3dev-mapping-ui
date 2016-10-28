@@ -17,10 +17,7 @@ public class DeadReconningPacket : IDatagram
 	public ulong timestamp_us;
 	public int position_left;
 	public int position_right;
-	public int speed_left;
-	public int speed_right;
 	public short heading;
-	public short angular_speed;
 
 	public float HeadingInDegrees
 	{
@@ -29,7 +26,7 @@ public class DeadReconningPacket : IDatagram
 
 	public override string ToString()
 	{
-		return string.Format("[timestamp={0} pl={1} pr={2} sl={3}, sr={4} h={5} as={6}]", timestamp_us, position_left, position_right, speed_left, speed_right, heading, angular_speed);
+		return string.Format("[timestamp={0} pl={1} pr={2} h={3}]", timestamp_us, position_left, position_right, heading);
 	}
 
 	public void FromBinary(System.IO.BinaryReader reader)
@@ -37,25 +34,19 @@ public class DeadReconningPacket : IDatagram
 		timestamp_us = (ulong)IPAddress.NetworkToHostOrder(reader.ReadInt64());
 		position_left = IPAddress.NetworkToHostOrder(reader.ReadInt32());
 		position_right = IPAddress.NetworkToHostOrder(reader.ReadInt32());
-		speed_left = IPAddress.NetworkToHostOrder(reader.ReadInt32());
-		speed_right = IPAddress.NetworkToHostOrder(reader.ReadInt32());
 		heading = IPAddress.NetworkToHostOrder(reader.ReadInt16());
-		angular_speed = IPAddress.NetworkToHostOrder(reader.ReadInt16());
 	}
 	public void ToBinary(System.IO.BinaryWriter writer)
 	{
 		writer.Write(IPAddress.HostToNetworkOrder((long)timestamp_us));
 		writer.Write(IPAddress.HostToNetworkOrder(position_left));
 		writer.Write(IPAddress.HostToNetworkOrder(position_right));
-		writer.Write(IPAddress.HostToNetworkOrder(speed_left));
-		writer.Write(IPAddress.HostToNetworkOrder(speed_right));
 		writer.Write(IPAddress.HostToNetworkOrder(heading));
-		writer.Write(IPAddress.HostToNetworkOrder(angular_speed));
 	}
 
 	public int BinarySize()
 	{
-		return 28; // 8+ 4*4 +2*2
+		return 18; // 8+ 2*4 +2
 	}
 
 	public void CloneFrom(DeadReconningPacket p)
@@ -63,10 +54,7 @@ public class DeadReconningPacket : IDatagram
 		timestamp_us = p.timestamp_us;
 		position_left = p.position_left;
 		position_right = p.position_right;
-		speed_left = p.speed_left;
-		speed_right = p.speed_right;
 		heading = p.heading;
-		angular_speed = p.angular_speed;
 	}
 
 	public ulong GetTimestampUs()

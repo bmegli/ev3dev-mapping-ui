@@ -17,10 +17,7 @@ public class DeadReconningPacket : IDatagram
 	public ulong timestamp_us;
 	public int position_left;
 	public int position_right;
-	public int speed_left;
-	public int speed_right;
 	public short heading;
-	public short angular_speed;
 
 	public float HeadingInDegrees
 	{
@@ -29,7 +26,7 @@ public class DeadReconningPacket : IDatagram
 
 	public override string ToString()
 	{
-		return string.Format("[timestamp={0} pl={1} pr={2} sl={3}, sr={4} h={5} as={6}]", timestamp_us, position_left, position_right, speed_left, speed_right, heading, angular_speed);
+		return string.Format("[timestamp={0} pl={1} pr={2} h={3}]", timestamp_us, position_left, position_right, heading);
 	}
 
 	public void FromBinary(System.IO.BinaryReader reader)
@@ -57,10 +54,7 @@ public class DeadReconningPacket : IDatagram
 		timestamp_us = p.timestamp_us;
 		position_left = p.position_left;
 		position_right = p.position_right;
-		speed_left = p.speed_left;
-		speed_right = p.speed_right;
 		heading = p.heading;
-		angular_speed = p.angular_speed;
 	}
 
 	public ulong GetTimestampUs()

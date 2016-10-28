@@ -388,7 +388,7 @@ MonoBehaviour:
     wirelessDevice: wlan0
     pollMs: 100
   signal:
-    minValueDbm: -100
+    minValueDbm: -80
     maxValueDbm: -45
     warningLevelDbm: -67
     criticalLevelDbm: -70

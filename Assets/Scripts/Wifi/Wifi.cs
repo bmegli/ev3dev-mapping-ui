@@ -22,7 +22,7 @@ public enum WifiPlotType {None, Map}
 [Serializable]
 public class WifiSignalProperties
 {
-	public int minValueDbm=-100;
+	public int minValueDbm=-80;
 	public int maxValueDbm=-45;
 	public int warningLevelDbm=-67;
 	public int criticalLevelDbm=-70;

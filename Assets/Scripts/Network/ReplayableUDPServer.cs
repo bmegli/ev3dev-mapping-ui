@@ -14,59 +14,48 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.IO;
 
-public abstract class ReplayableUDPServer<DATAGRAM> : MonoBehaviour, IReplayableUDPServer
+public abstract class ReplayableUDPServer<DATAGRAM> : RobotModule, IReplayableUDPServer
 	where DATAGRAM : IDatagram, new()
 {
 	public UDPProperties udp;
 
-	protected RobotRequired robot;
-	protected Network network;
-	protected Replay replay;
-
 	private UDPServer<DATAGRAM> server;
 	private UDPClient<DATAGRAM> client;
-
-	public virtual string GetUniqueName()
-	{
-		return "udp";
-	}
 
 	protected abstract void ProcessPacket (DATAGRAM packet);
 
 	protected virtual void OnDestroy()
 	{
-		print(GetUniqueName() + " - stop server");
+		print(name + " - stop server");
 		server.Stop();
 		if (client!=null)
 			client.Stop();
 	}
 		
-	protected virtual void Awake()
+	protected override void Awake()
 	{
-		robot = GetComponentInParent<RobotRequired>().DeepCopy();
-		network = GetComponentInParent<Network>().DeepCopy();
-		replay = GetComponentInParent<Replay>().DeepCopy();
+		base.Awake ();
 
-		print(GetUniqueName() + " port: " + udp.port);
+		print(name + " port: " + udp.port);
 
 		if(replay.RecordInbound()) 
 		{
-			print(GetUniqueName() + " - dumping packets to '" + Config.DumpPath(robot.sessionDirectory, GetUniqueName()) + "'");
+			print(name + " - dumping packets to '" + Config.DumpPath(robot.sessionDirectory, name) + "'");
 			Directory.CreateDirectory(Config.DUMPS_DIRECTORY);
 			Directory.CreateDirectory(Config.DumpPath(robot.sessionDirectory));
-			server = new UDPServer<DATAGRAM>(udp.port, Config.DumpPath(robot.sessionDirectory, GetUniqueName()) );
+			server = new UDPServer<DATAGRAM>(udp.port, Config.DumpPath(robot.sessionDirectory, name) );
 		} 
 		else if (replay.ReplayInbound()) //the server and client reading from dump & sending
 		{
-			print(GetUniqueName() + " - replay from '" + Config.DumpPath(robot.sessionDirectory, GetUniqueName()) + "'");
+			print(name + " - replay from '" + Config.DumpPath(robot.sessionDirectory, name) + "'");
 			server = new UDPServer<DATAGRAM>(udp.port);
 			try
 			{
-				client = new UDPClient<DATAGRAM>("localhost", udp.port, Config.DumpPath(robot.sessionDirectory, GetUniqueName()), false );
+				client = new UDPClient<DATAGRAM>("localhost", udp.port, Config.DumpPath(robot.sessionDirectory, name), false );
 			}
 			catch
 			{
-				print(GetUniqueName() + " - replay disabled (can't initialize from '" + Config.DumpPath(robot.sessionDirectory, GetUniqueName()) + "' on port " + udp.port + ")");
+				print(name + " - replay disabled (can't initialize from '" + Config.DumpPath(robot.sessionDirectory, name) + "' on port " + udp.port + ")");
 				replay.mode = UDPReplayMode.None;
 			}
 		}
@@ -76,7 +65,7 @@ public abstract class ReplayableUDPServer<DATAGRAM> : MonoBehaviour, IReplayable
 
 	protected virtual void Start()
 	{
-		print(GetUniqueName() + " - starting server thread");
+		print(name + " - starting server thread");
 		server.Start(ProcessPacket);
 	}
 

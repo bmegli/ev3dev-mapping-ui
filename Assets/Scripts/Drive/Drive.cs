@@ -22,24 +22,15 @@ public class DriveModuleProperties : ModuleProperties
 enum DriveMode {Manual, Auto};
 
 [RequireComponent (typeof (LaserUI))]
-public class Drive : ReplayableUDPClient<DrivePacket>, IRobotModule
+public class Drive : ReplayableUDPClient<DrivePacket>
 {
 	public int packetDelayMs=50;
 	public DriveModuleProperties module;
-
-	private Physics physics;
-	private Limits limits;
-	private UserInput input;
 
 	private DrivePacket packet = new DrivePacket();
 	private float timeSinceLastPacketMs;
 
 	private DriveMode mode=DriveMode.Manual;
-
-	public override string GetUniqueName()
-	{
-		return name;
-	}
 
 	protected override void OnDestroy()
 	{
@@ -49,9 +40,6 @@ public class Drive : ReplayableUDPClient<DrivePacket>, IRobotModule
 	protected override void Awake()
 	{		
 		base.Awake ();
-		physics = SafeGetComponentInParent<Physics>().DeepCopy();
-		limits = SafeGetComponentInParent<Limits>().DeepCopy();
-		input = SafeGetComponentInParent<UserInput>().DeepCopy();
 		CheckLimits();
 	}
 
@@ -113,63 +101,7 @@ public class Drive : ReplayableUDPClient<DrivePacket>, IRobotModule
 		Send(packet);	
 		timeSinceLastPacketMs = 0.0f;
 	}
-
-	#region IRobotModule 
-
-	private ModuleState moduleState=ModuleState.Offline;
-
-	public ModuleState GetState()
-	{
-		return moduleState;
-	}
-	public void SetState(ModuleState state)
-	{
-		moduleState = state;
-	}
-
-	public string ModuleCall()
-	{
-		return "ev3drive " + udp.port + " " + module.timeoutMs;
-	}
-	public int ModulePriority()
-	{
-		return module.priority;
-	}
-	public bool ModuleAutostart()
-	{
-		return module.autostart;
-	}
-	public int CreationDelayMs()
-	{
-		return module.creationDelayMs;
-	}
-
-	public int CompareTo(IRobotModule other)
-	{
-		return ModulePriority().CompareTo( other.ModulePriority() );
-	}
-				
-	#endregion
-
-	private T SafeInstantiate<T>(T original) where T : MonoBehaviour
-	{
-		if (original == null)
-		{
-			Debug.LogError ("Expected to find prefab of type " + typeof(T) + " but it was not set");
-			return default(T);
-		}
-		return Instantiate<T>(original);
-	}
-	private T SafeGetComponentInParent<T>() where T : MonoBehaviour
-	{
-		T component = GetComponentInParent<T> ();
-
-		if (component == null)
-			Debug.LogError ("Expected to find component of type " + typeof(T) + " but found none");
-
-		return component;
-	}
-
+		
 	#region Logic
 
 	//move this to design time later
@@ -227,6 +159,27 @@ public class Drive : ReplayableUDPClient<DrivePacket>, IRobotModule
 		//TO DO - check limits!
 	}
 
+
+	#endregion
+
+	#region RobotModule 
+
+	public override string ModuleCall()
+	{
+		return "ev3drive " + udp.port + " " + module.timeoutMs;
+	}
+	public override int ModulePriority()
+	{
+		return module.priority;
+	}
+	public override bool ModuleAutostart()
+	{
+		return module.autostart;
+	}
+	public override int CreationDelayMs()
+	{
+		return module.creationDelayMs;
+	}
 
 	#endregion
 

@@ -14,6 +14,10 @@ using UnityEngine;
 using System.Collections;
 using System;
 
+// we want to keep binary compatiblity between DeadReconning and Odometry
+// so that we can rebuild recorded DeadReconning as Odometry (skipping information about heading)
+using OdometryPacket = DeadReconningPacket;
+
 [Serializable]
 public class OdometryModuleProperties : ModuleProperties
 {
@@ -22,12 +26,10 @@ public class OdometryModuleProperties : ModuleProperties
 
 
 [RequireComponent (typeof (OdometryUI))]
-public class Odometry : ReplayableUDPServer<OdometryPacket>, IRobotModule
+public class Odometry : ReplayableUDPServer<OdometryPacket>
 {	
 	public OdometryModuleProperties module;
 
-	private Physics physics;
-	private PositionHistory positionHistory;
 	private PositionData actualPosition;
 	private float averagedPacketTimeMs;
 
@@ -54,8 +56,6 @@ public class Odometry : ReplayableUDPServer<OdometryPacket>, IRobotModule
 
 	protected override void Start ()
 	{
-		physics = SafeGetComponentInParent<Physics>().DeepCopy();
-		positionHistory = SafeGetComponentInParent<PositionHistory>();
 		base.Start();
 	}
 
@@ -144,72 +144,6 @@ public class Odometry : ReplayableUDPServer<OdometryPacket>, IRobotModule
 		
 	#endregion
 
-	#region Init
-
-	private T SafeInstantiate<T>(T original) where T : MonoBehaviour
-	{
-		if (original == null)
-		{
-			Debug.LogError ("Expected to find prefab of type " + typeof(T) + " but it was not set");
-			return default(T);
-		}
-		return Instantiate<T>(original);
-	}
-
-	private T SafeGetComponentInParent<T>() where T : MonoBehaviour
-	{
-		T component = GetComponentInParent<T> ();
-
-		if (component == null)
-			Debug.LogError ("Expected to find component of type " + typeof(T) + " but found none");
-
-		return component;
-	}
-
-	#endregion
-
-	#region IRobotModule 
-
-	private ModuleState moduleState=ModuleState.Offline;
-
-	public ModuleState GetState()
-	{
-		return moduleState;
-	}
-	public void SetState(ModuleState state)
-	{
-		moduleState = state;
-	}
-
-	public override string GetUniqueName ()
-	{
-		return name;
-	}
-
-	public string ModuleCall()
-	{
-		return "ev3odometry " + network.hostIp + " " + udp.port + " " + module.pollMs;
-	}
-	public int ModulePriority()
-	{
-		return module.priority;
-	}
-	public bool ModuleAutostart()
-	{
-		return module.autostart && !replay.ReplayInbound();
-	}
-	public int CreationDelayMs()
-	{
-		return module.creationDelayMs;
-	}
-
-	public int CompareTo(IRobotModule other)
-	{
-		return ModulePriority().CompareTo( other.ModulePriority() );
-	}
-		
-	#endregion
-
 	public Vector3 GetPosition()
 	{
 		return actualPosition.position;
@@ -223,4 +157,25 @@ public class Odometry : ReplayableUDPServer<OdometryPacket>, IRobotModule
 	{
 		return averagedPacketTimeMs;
 	}
+
+	#region RobotModule 
+
+	public override string ModuleCall()
+	{
+		return "ev3odometry " + network.hostIp + " " + udp.port + " " + module.pollMs;
+	}
+	public override int ModulePriority()
+	{
+		return module.priority;
+	}
+	public override bool ModuleAutostart()
+	{
+		return module.autostart && !replay.ReplayInbound();
+	}
+	public override int CreationDelayMs()
+	{
+		return module.creationDelayMs;
+	}
+
+	#endregion
 }

@@ -85,14 +85,13 @@ class LaserThreadInternalData
 
 [RequireComponent (typeof (LaserUI))]
 [RequireComponent (typeof (Map3D))]
-public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
+public class Laser : ReplayableUDPServer<LaserPacket>
 {
 	public LaserModuleProperties module;
 	public LaserPlotProperties plot;
 
 	private PointCloud laserPointCloud;
 	private Map3D map3D;
-	private PositionHistory positionHistory;
 
 	private LaserThreadSharedData data=new LaserThreadSharedData();
 
@@ -105,12 +104,7 @@ public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
 	#region Thread Shared Data
 	private LaserThreadSharedData threadShared = new LaserThreadSharedData();
 	#endregion
-
-	public override string GetUniqueName ()
-	{
-		return name;
-	}
-		
+			
 	protected override void OnDestroy()
 	{
 		base.OnDestroy ();
@@ -118,14 +112,13 @@ public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
 
 	protected override void Awake()
 	{
-		laserPointCloud = SafeInstantiate<PointCloud> (plot.laserPointCloud);
 		base.Awake();
+		laserPointCloud = SafeInstantiate<PointCloud> (plot.laserPointCloud);
 		laserTRS =  Matrix4x4.TRS (transform.localPosition, transform.localRotation, Vector3.one);
 	}
 
 	protected override void Start ()
 	{
-		positionHistory = SafeGetComponentInParent<PositionHistory>();	
 		map3D = GetComponent<Map3D> ();
 		base.Start();
 	}
@@ -276,29 +269,6 @@ public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
 
 	#endregion
 
-	#region Init
-
-	private T SafeInstantiate<T>(T original) where T : MonoBehaviour
-	{
-		if (original == null)
-		{
-			Debug.LogError ("Expected to find prefab of type " + typeof(T) + " but it was not set");
-			return default(T);
-		}
-		return Instantiate<T>(original);
-	}
-
-	private T SafeGetComponentInParent<T>() where T : MonoBehaviour
-	{
-		T component = GetComponentInParent<T> ();
-
-		if (component == null)
-			Debug.LogError ("Expected to find component of type " + typeof(T) + " but found none");
-
-		return component;
-	}
-	#endregion
-
 	#region UI reactions
 
 	public void SaveMap()
@@ -312,50 +282,12 @@ public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
 		Directory.CreateDirectory(Config.MAPS_DIRECTORY);
 		Directory.CreateDirectory(Config.MapPath(robot.sessionDirectory));
 
-		print("saving map to file \"" + Config.MapPath(robot.sessionDirectory, GetUniqueName()) + "\"");
+		print("saving map to file \"" + Config.MapPath(robot.sessionDirectory, name) + "\"");
 
-		map3D.SaveToPlyPolygonFileFormat(Config.MapPath(robot.sessionDirectory, GetUniqueName()), "created with ev3dev-mapping");
+		map3D.SaveToPlyPolygonFileFormat(Config.MapPath(robot.sessionDirectory, name), "created with ev3dev-mapping");
 	}
 
 	#endregion
-
-	#region IRobotModule 
-
-	private ModuleState moduleState=ModuleState.Offline;
-
-	public ModuleState GetState()
-	{
-		return moduleState;
-	}
-	public void SetState(ModuleState state)
-	{
-		moduleState = state;
-	}
-		
-	public string ModuleCall()
-	{
-		return "ev3laser " + module.laserDevice + " " + module.motorPort + " " + network.hostIp + " " + udp.port + " " + module.laserDutyCycle;
-	}
-	public int ModulePriority()
-	{
-		return module.priority;
-	}
-	public bool ModuleAutostart()
-	{
-		return module.autostart && !replay.ReplayInbound();
-	}
-	public int CreationDelayMs()
-	{
-		return module.creationDelayMs;
-	}
-
-	public int CompareTo(IRobotModule other)
-	{
-		return ModulePriority().CompareTo( other.ModulePriority() );
-	}
-				
-	#endregion
-
 
 	public float GetAveragedPacketTimeMs()
 	{
@@ -365,4 +297,26 @@ public class Laser : ReplayableUDPServer<LaserPacket>, IRobotModule
 	{
 		return data.laserRPM;
 	}
+
+	#region RobotModule
+
+	public override string ModuleCall()
+	{
+		return "ev3laser " + module.laserDevice + " " + module.motorPort + " " + network.hostIp + " " + udp.port + " " + module.laserDutyCycle;
+	}
+	public override int ModulePriority()
+	{
+		return module.priority;
+	}
+	public override bool ModuleAutostart()
+	{
+		return module.autostart && !replay.ReplayInbound();
+	}
+	public override int CreationDelayMs()
+	{
+		return module.creationDelayMs;
+	}
+
+	#endregion
+
 }

@@ -27,7 +27,7 @@ public class ModuleUI : MonoBehaviour
 	private Toggle enabledToggle;
 	private Control control;
 
-	protected IRobotModule module;
+	protected RobotModule module;
 
 	protected virtual void Awake()
 	{
@@ -41,14 +41,14 @@ public class ModuleUI : MonoBehaviour
 
 	protected virtual void Start ()
 	{
-		module = GetComponent<IRobotModule> ();
+		module = GetComponent<RobotModule> ();
 		if (module == null)
 		{
 			print("Module not set!");
 			enabled = false;
 			return;
 		}
-		moduleName.text = module.GetUniqueName();
+		moduleName.text = module.name;
 		uiTransform.SetParent (SceneManager.ModulesPanel.transform, false);
 	}
 
@@ -64,7 +64,7 @@ public class ModuleUI : MonoBehaviour
 
 	public void SetEnable(bool enable)
 	{
-		control.EnableDisableModule(module.GetUniqueName(), enable);
+		control.EnableDisableModule(module.name, enable);
 	}
 
 	protected Text SafeInstantiateText(Text original, Transform parent, string initial_text) 

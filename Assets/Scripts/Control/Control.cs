@@ -19,12 +19,7 @@ public class Control : ReplayableUDPClient<ControlPacket>
 {
 	private ControlPacket packet = new ControlPacket();
 
-	private List<IRobotModule> modules=new List<IRobotModule>();
-
-	public override string GetUniqueName()
-	{
-		return name;
-	}
+	private List<RobotModule> modules=new List<RobotModule>();
 
 	protected override void OnDestroy()
 	{
@@ -39,13 +34,12 @@ public class Control : ReplayableUDPClient<ControlPacket>
 
 	protected override void Start ()
 	{
-		modules.AddRange(transform.parent.GetComponentsInChildren<IRobotModule>());
+		modules.AddRange(transform.parent.GetComponentsInChildren<RobotModule>());
 		modules.Sort();
+		modules.Remove (this);
 		EnableModules();
 	}
-
-
-
+		
 	public void StartReplay()
 	{
 		base.StartReplay(0);
@@ -68,10 +62,10 @@ public class Control : ReplayableUDPClient<ControlPacket>
 
 	void ProcessPacket(ControlPacket packet)
 	{
-		IRobotModule mod = modules.Find(m => (m.GetUniqueName() == packet.unique_name));
+		RobotModule mod = modules.Find(m => (m.name == packet.unique_name));
 
 		print(name + ": " + packet.unique_name);
-		print(name + ": " + mod.GetUniqueName() + " state changed to " + ((ControlPacket.Commands)packet.command).ToString());
+		print(name + ": " + mod.name + " state changed to " + ((ControlPacket.Commands)packet.command).ToString());
 	
 		if (packet.command == (int)ControlPacket.Commands.Enabled)
 			mod.SetState(ModuleState.Online);
@@ -90,7 +84,7 @@ public class Control : ReplayableUDPClient<ControlPacket>
 
 	public void EnableDisableModule(string unique_module_name, bool enable)
 	{
-		IRobotModule mod = modules.Find(m => (m.GetUniqueName() == unique_module_name));
+		RobotModule mod = modules.Find(m => (m.name == unique_module_name));
 
 		if(enable)
 			EnableModule(mod);
@@ -100,7 +94,7 @@ public class Control : ReplayableUDPClient<ControlPacket>
 
 	}
 
-	public void EnableModule(IRobotModule m)
+	public void EnableModule(RobotModule m)
 	{
 		if (replay.mode == UDPReplayMode.Replay)
 			return; //we just replay
@@ -110,12 +104,12 @@ public class Control : ReplayableUDPClient<ControlPacket>
 		packet.timestamp_us = GetTimestampUs();
 		packet.command = (short)ControlPacket.Commands.Enable;
 		packet.creation_delay_ms = (short)m.CreationDelayMs();
-		packet.unique_name = m.GetUniqueName();
+		packet.unique_name = m.name;
 		packet.call = m.ModuleCall();
 		Send(packet);
-		print(name + " - enable module " + m.GetUniqueName());
+		print(name + " - enable module " + m.name);
 	}
-	public void DisableModule(IRobotModule m)
+	public void DisableModule(RobotModule m)
 	{
 		if (replay.mode == UDPReplayMode.Replay)
 			return; //we just replay
@@ -125,16 +119,16 @@ public class Control : ReplayableUDPClient<ControlPacket>
 		packet.timestamp_us = GetTimestampUs();
 		packet.command = (short)ControlPacket.Commands.Disable;
 		packet.creation_delay_ms = (short)m.CreationDelayMs();
-		packet.unique_name = m.GetUniqueName();
+		packet.unique_name = m.name;
 		packet.call = m.ModuleCall();
 		Send(packet);
-		print(name + " - disable module " + m.GetUniqueName());
+		print(name + " - disable module " + m.name);
 	}
 
 
 	public void EnableModules()
 	{		
-		foreach (IRobotModule module in modules)
+		foreach (RobotModule module in modules)
 		{
 			if (!module.ModuleAutostart())
 				continue;
@@ -145,8 +139,32 @@ public class Control : ReplayableUDPClient<ControlPacket>
 
 	public void DisableModules()
 	{
-		foreach (IRobotModule module in modules)
+		foreach (RobotModule module in modules)
 			DisableModule(module);
 		
 	}
+
+	#region RobotModule 
+
+	//This module is exception, it controls other modules and has to be started on robot by other means (e.g. manually)
+	//For now it's derived from ReplayableUDPClient and RobotModule but it's going to be rewritten for TCP/IP at some point
+
+	public override string ModuleCall()
+	{
+		throw new NotImplementedException (name + " this should never happen");
+	}
+	public override int ModulePriority()
+	{
+		throw new NotImplementedException (name + " this should never happen");
+	}
+	public override bool ModuleAutostart()
+	{
+		throw new NotImplementedException (name + " this should never happen");
+	}
+	public override int CreationDelayMs()
+	{
+		throw new NotImplementedException (name + " this should never happen");
+	}
+
+	#endregion
 }

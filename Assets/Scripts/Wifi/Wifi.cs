@@ -59,7 +59,7 @@ public struct WifiReading
 
 [RequireComponent (typeof (WifiUI))]
 [RequireComponent (typeof (Map3D))]
-public class Wifi : ReplayableUDPServer<WifiPacket>, IRobotModule
+public class Wifi : ReplayableUDPServer<WifiPacket>
 {	
 	public WifiModuleProperties module;
 	public WifiSignalProperties signal;
@@ -68,7 +68,6 @@ public class Wifi : ReplayableUDPServer<WifiPacket>, IRobotModule
 
 	private WifiPacket packet=new WifiPacket();
 	private Map3D map3D;
-	private PositionHistory positionHistory;
 	private float averagedPacketTimeMs;
 	private Vector3[] readings;
 	private int readings_count=0;
@@ -104,7 +103,6 @@ public class Wifi : ReplayableUDPServer<WifiPacket>, IRobotModule
 
 	protected override void Start ()
 	{
-		positionHistory = SafeGetComponentInParent<PositionHistory>();
 		map3D = GetComponent<Map3D>();
 		base.Start();
 	}
@@ -189,72 +187,6 @@ public class Wifi : ReplayableUDPServer<WifiPacket>, IRobotModule
 		
 	#endregion
 
-	#region Init
-
-	private T SafeInstantiate<T>(T original) where T : MonoBehaviour
-	{
-		if (original == null)
-		{
-			Debug.LogError ("Expected to find prefab of type " + typeof(T) + " but it was not set");
-			return default(T);
-		}
-		return Instantiate<T>(original);
-	}
-
-	private T SafeGetComponentInParent<T>() where T : MonoBehaviour
-	{
-		T component = GetComponentInParent<T> ();
-
-		if (component == null)
-			Debug.LogError ("Expected to find component of type " + typeof(T) + " but found none");
-
-		return component;
-	}
-
-	#endregion
-
-	#region IRobotModule 
-
-	private ModuleState moduleState=ModuleState.Offline;
-
-	public ModuleState GetState()
-	{
-		return moduleState;
-	}
-	public void SetState(ModuleState state)
-	{
-		moduleState = state;
-	}
-
-	public override string GetUniqueName ()
-	{
-		return name;
-	}
-
-	public string ModuleCall()
-	{
-		return "ev3wifi " + network.hostIp + " " + udp.port + " " + module.wirelessDevice + " " + module.pollMs;
-	}
-	public int ModulePriority()
-	{
-		return module.priority;
-	}
-	public bool ModuleAutostart()
-	{
-		return module.autostart && !replay.ReplayInbound();
-	}
-	public int CreationDelayMs()
-	{
-		return module.creationDelayMs;
-	}
-
-	public int CompareTo(IRobotModule other)
-	{
-		return ModulePriority().CompareTo( other.ModulePriority() );
-	}
-
-	#endregion
-
 	public float GetAveragedPacketTimeMs()
 	{
 		return averagedPacketTimeMs;
@@ -280,5 +212,26 @@ public class Wifi : ReplayableUDPServer<WifiPacket>, IRobotModule
 	{
 		return packet.tx_packets;
 	}
+
+	#region RobotModule 
+
+	public override string ModuleCall()
+	{
+		return "ev3wifi " + network.hostIp + " " + udp.port + " " + module.wirelessDevice + " " + module.pollMs;
+	}
+	public override int ModulePriority()
+	{
+		return module.priority;
+	}
+	public override bool ModuleAutostart()
+	{
+		return module.autostart && !replay.ReplayInbound();
+	}
+	public override int CreationDelayMs()
+	{
+		return module.creationDelayMs;
+	}
+
+	#endregion
 
 }

@@ -53,10 +53,24 @@ public class DeadReconningPacket : IDatagram
 		writer.Write(IPAddress.HostToNetworkOrder(angular_speed));
 	}
 
+	public void ToBinaryNew(System.IO.BinaryWriter writer)
+	{
+		writer.Write(IPAddress.HostToNetworkOrder((long)timestamp_us));
+		writer.Write(IPAddress.HostToNetworkOrder(position_left));
+		writer.Write(IPAddress.HostToNetworkOrder(position_right));
+		writer.Write(IPAddress.HostToNetworkOrder(heading));
+	}
+
+
 	public int BinarySize()
 	{
 		return 28; // 8+ 4*4 +2*2
 	}
+	public int BinarySizeNew()
+	{
+		return 18; // 8+ 4*4 +2*2
+	}
+
 
 	public void CloneFrom(DeadReconningPacket p)
 	{

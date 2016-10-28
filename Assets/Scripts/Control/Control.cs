@@ -35,8 +35,8 @@ public class Control : ReplayableUDPClient<ControlPacket>
 	protected override void Start ()
 	{
 		modules.AddRange(transform.parent.GetComponentsInChildren<RobotModule>());
+		modules.Remove(this);
 		modules.Sort();
-		modules.Remove (this);
 		EnableModules();
 	}
 		

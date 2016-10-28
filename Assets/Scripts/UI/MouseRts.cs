@@ -48,8 +48,8 @@ public class MouseRts : MonoBehaviour
 			yrotation -=  Input.GetAxis("Mouse X") * RotationSpeed * Time.deltaTime;
 
 		// Start panning camera if zooming in close to the ground or if just zooming out.
-		Vector3 forward = GetComponent<Camera>().transform.forward;
-		Vector3 right = GetComponent<Camera> ().transform.right;
+//		Vector3 forward = GetComponent<Camera>().transform.forward;
+//		Vector3 right = GetComponent<Camera> ().transform.right;
 			
 		GetComponent<Camera>().transform.eulerAngles = new Vector3(0, yrotation, 0);
 

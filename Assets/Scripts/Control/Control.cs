@@ -15,10 +15,8 @@ using System;
 using System.Collections.Generic;
 
 //this class has temp implementation!
-public class Control : ReplayableUDPClient<ControlPacket>
+public class Control : ReplayableTCPClient<ControlMessage>
 {
-	private ControlPacket packet = new ControlPacket();
-
 	private List<RobotModule> modules=new List<RobotModule>();
 
 	protected override void OnDestroy()
@@ -42,7 +40,7 @@ public class Control : ReplayableUDPClient<ControlPacket>
 		
 	public void StartReplay()
 	{
-		base.StartReplay(0);
+		//base.StartReplay(0);
 	}
 		
 	void Update ()
@@ -50,16 +48,17 @@ public class Control : ReplayableUDPClient<ControlPacket>
 		if (replay.mode == UDPReplayMode.Replay)
 			return; //do nothing, we replay previous communication
 
-
+		/*
 		while (IsPacketWaiting())
 		{
 			print("Packet waiting, processing");
 			ReceiveOne(packet);
 			ProcessPacket(packet);
 		}
+		*/
 
 	}
-
+	/*
 	void ProcessPacket(ControlPacket packet)
 	{
 		RobotModule mod = modules.Find(m => (m.name == packet.unique_name));
@@ -76,11 +75,7 @@ public class Control : ReplayableUDPClient<ControlPacket>
 		else
 			print("Unknown control packet command received");
 	}
-
-	private ulong GetTimestampUs()
-	{
-		return (ulong)(DateTime.Now.Ticks / 10);
-	}
+	*/
 
 	public void EnableDisableModule(string unique_module_name, bool enable)
 	{
@@ -101,13 +96,11 @@ public class Control : ReplayableUDPClient<ControlPacket>
 		
 		m.SetState(ModuleState.Initializing);
 
-		packet.timestamp_us = GetTimestampUs();
-		packet.command = (short)ControlPacket.Commands.Enable;
-		packet.creation_delay_ms = (short)m.CreationDelayMs();
-		packet.unique_name = m.name;
-		packet.call = m.ModuleCall();
-		Send(packet);
+		ControlMessage msg = ControlMessage.EnableMessage (m.name, m.ModuleCall (), (ushort)m.CreationDelayMs ());
+
 		print(name + " - enable module " + m.name);
+		Send (msg);
+
 	}
 	public void DisableModule(RobotModule m)
 	{
@@ -116,12 +109,9 @@ public class Control : ReplayableUDPClient<ControlPacket>
 		
 		m.SetState(ModuleState.Shutdown);
 
-		packet.timestamp_us = GetTimestampUs();
-		packet.command = (short)ControlPacket.Commands.Disable;
-		packet.creation_delay_ms = (short)m.CreationDelayMs();
-		packet.unique_name = m.name;
-		packet.call = m.ModuleCall();
-		Send(packet);
+		ControlMessage msg = ControlMessage.DisableMessage (m.name);
+
+		Send (msg);
 		print(name + " - disable module " + m.name);
 	}
 
@@ -137,11 +127,17 @@ public class Control : ReplayableUDPClient<ControlPacket>
 		}
 	}
 
-	public void DisableModules()
-	{
+	private void DisableModules()
+	{ 
+		// maybe check some connected state etc
+
 		foreach (RobotModule module in modules)
-			DisableModule(module);
-		
+			if(module.GetState() == ModuleState.Initializing || module.GetState() == ModuleState.Online)
+				module.SetState (ModuleState.Shutdown);
+
+		ControlMessage msg = ControlMessage.DisableAllMessage();
+		Send (msg);
+		print(name + " - disable all modules");
 	}
 
 	#region RobotModule 

@@ -71,8 +71,8 @@ public class UDPClient<DATAGRAM>
 		writer.Flush();
 		udpClient.Send(packet_data, packet_data.Length);
 
-		if (dumpWriter!=null)
-			datagram.ToBinary(dumpWriter);
+		if (dumpWriter != null)
+			dumpWriter.Write(packet_data);
 	}
 
 	public bool IsPacketWaiting()

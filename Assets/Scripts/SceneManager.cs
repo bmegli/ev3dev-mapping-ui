@@ -96,13 +96,17 @@ public class SceneManager : MonoBehaviour
 		uiCanvas.SetActive(!uiCanvas.activeSelf);
 	}
 		
+	/*
 	public void EnableModules()
 	{
 		robotControl.EnableModules();
 	}
+	*/
+	/*
 	public void DisableModules()
 	{		
 		robotControl.DisableModules();
 	}
+	*/
 }
 	

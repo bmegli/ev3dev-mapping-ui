@@ -27,6 +27,7 @@ public abstract class ReplayableTCPClient<MESSAGE> : RobotModule
 
 		print(name + " - host: " + network.hostIp  + " port: " + udp.port);
 		client = new TCPClient<MESSAGE>(network.robotIp, udp.port);
+		client.Connect();
 	}
 
 	protected virtual void OnDestroy()
@@ -43,6 +44,7 @@ public abstract class ReplayableTCPClient<MESSAGE> : RobotModule
 		
 	protected void Send(MESSAGE message)
 	{
+
 		client.Send(message);
 	}
 

@@ -27,11 +27,16 @@ public enum ControlAttributes : byte {UNIQUE_NAME=0, CALL=1, CRATION_DELAY_MS=2,
 	
 public class ControlMessage : IMessage
 {
-	public const int CONTROL_PROTOCOL_VERSION=1;
+	public const byte CONTROL_PROTOCOL_VERSION=1;
 	public const int CONTROL_MAX_PAYLOAD_LENGTH = 65535;
 
 	private ControlHeader header = new ControlHeader();
 	private List<ControlAttribute> attributes = new List<ControlAttribute> ();
+
+	public override string ToString()
+	{
+		return "t=" + " v=" + header.protocol_version + " c=" + header.command + " p=" + header.payload_length; 
+	}
 
 	public ulong GetTimestampUs()
 	{
@@ -114,7 +119,7 @@ public class ControlMessage : IMessage
 		
 	public class ControlHeader
 	{
-		public const int CONTROL_HEADER_BYTES = 8;
+		public const int CONTROL_HEADER_BYTES = 12;
 
 		public ulong timestamp_us;
 		public byte protocol_version;

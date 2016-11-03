@@ -17,6 +17,8 @@ public interface IMessage
 {
 	void FromBinary(System.IO.BinaryReader reader);
 	int ToBinary(System.IO.BinaryWriter writer);
+	int HeaderSize ();
+	int PayloadSize (System.IO.BinaryReader header);
 	ulong GetTimestampUs();
 }
 

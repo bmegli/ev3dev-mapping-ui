@@ -25,9 +25,11 @@ public class TCPClient<MESSAGE>
 	private string remoteHost;
 	private int remotePort;
 
-	private MemoryStream messageMemoryStream;
+	private MemoryStream outMemoryStream;
+	private MemoryStream inMemoryStream;
 
 	private BinaryWriter writer;
+	private BinaryReader reader;
 
 //	private BinaryReader dumpReader;
 //	private BinaryWriter dumpWriter;
@@ -37,11 +39,16 @@ public class TCPClient<MESSAGE>
 
 //	private System.Diagnostics.Stopwatch stopwatch;
 
+	private bool receivedHeader=false;
+	private int receivedPayloadSize = 0;
+
 	public TCPClient(string host, int port)
 	{
 		tcpClient = new TcpClient ();
-		messageMemoryStream = new MemoryStream (INITIAL_BUFFER_SIZE);
-		writer = new BinaryWriter(messageMemoryStream); 
+		outMemoryStream = new MemoryStream (INITIAL_BUFFER_SIZE);
+		inMemoryStream = new MemoryStream (INITIAL_BUFFER_SIZE);
+		writer = new BinaryWriter(outMemoryStream); 
+		reader = new BinaryReader (inMemoryStream);
 		remoteHost = host;
 		remotePort = port;
 	}
@@ -69,12 +76,43 @@ public class TCPClient<MESSAGE>
 		*/
 	}
 
+	public bool ReceiveOne(MESSAGE msg)
+	{
+		if (!receivedHeader)
+		{
+			if (tcpClient.Available < msg.HeaderSize ())
+				return false;
+
+			if(inMemoryStream.Capacity < msg.HeaderSize())
+				inMemoryStream.Capacity = msg.HeaderSize();
+
+			stream.Read(inMemoryStream.GetBuffer(), 0, msg.HeaderSize());
+			reader.BaseStream.Position = 0;
+			receivedPayloadSize=msg.PayloadSize (reader);
+
+			if (inMemoryStream.Capacity < msg.HeaderSize () + receivedPayloadSize)
+				inMemoryStream.Capacity = msg.HeaderSize () + receivedPayloadSize;
+
+			reader.BaseStream.Position = msg.HeaderSize ();
+		}
+
+		if (tcpClient.Available < receivedPayloadSize)
+			return false;
+
+		stream.Read (inMemoryStream.GetBuffer (), msg.HeaderSize (), receivedPayloadSize);
+		reader.BaseStream.Position = 0;
+		reader.BaseStream.SetLength (msg.HeaderSize () + receivedPayloadSize);
+		msg.FromBinary (reader);
+
+		return true;
+	}
+
 	public void Send(MESSAGE message)
 	{
 		writer.Seek(0, SeekOrigin.Begin);
 		int packet_length=message.ToBinary(writer);
 		writer.Flush();
-		stream.Write (messageMemoryStream.GetBuffer(), 0, packet_length);
+		stream.Write (outMemoryStream.GetBuffer(), 0, packet_length);
 	
 //		if (dumpWriter != null)
 //			dumpWriter.Write (messageMemoryStream.GetBuffer(), 0, packet_length);

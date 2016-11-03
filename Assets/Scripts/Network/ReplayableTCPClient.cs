@@ -39,12 +39,12 @@ public abstract class ReplayableTCPClient<MESSAGE> : RobotModule
 	}
 
 
+
 	protected abstract void Start();
 
-		
+
 	protected void Send(MESSAGE message)
 	{
-
 		client.Send(message);
 	}
 

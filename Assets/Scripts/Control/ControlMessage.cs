@@ -21,6 +21,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using System.Net;
+using System.IO;
 
 public enum ControlCommands : sbyte {KEEPALIVE=0, ENABLE=1, DISABLE=2, DISABLE_ALL=3, ENABLED=-1, DISABLED=-2, FAILED=-3 };
 public enum ControlAttributes : byte {UNIQUE_NAME=0, CALL=1, CRATION_DELAY_MS=2, RETURN_VALUE=3};
@@ -32,6 +33,18 @@ public class ControlMessage : IMessage
 
 	private ControlHeader header = new ControlHeader();
 	private List<ControlAttribute> attributes = new List<ControlAttribute> ();
+
+	public int HeaderSize()
+	{
+		return ControlHeader.CONTROL_HEADER_BYTES;
+	}
+
+	public int PayloadSize(BinaryReader header_data)
+	{
+		header.FromBinary (header_data);
+		return header.payload_length;
+
+	}
 
 	public override string ToString()
 	{
@@ -104,11 +117,26 @@ public class ControlMessage : IMessage
 	}
 
 
-	public void FromBinary(System.IO.BinaryReader reader)
+	public void FromBinary(BinaryReader reader)
 	{
-		throw new NotImplementedException ();
+		attributes.Clear ();
+		header.FromBinary (reader);
+		if (header.payload_length == 0)
+			return;
+
+		int remaining = header.payload_length;
+
+		while (remaining > 0)
+		{
+			if (remaining < ControlAttribute.CONTROL_ATTRIBUTE_HEADER_BYTES)
+				throw new ArgumentException ("Incorrect payload - not enough data for attribute header");
+			#warning work in progress
+		}
+
+
+
 	}
-	public int ToBinary(System.IO.BinaryWriter writer)
+	public int ToBinary(BinaryWriter writer)
 	{
 		int written = 0;
 		written +=header.ToBinary(writer); 
@@ -126,14 +154,14 @@ public class ControlMessage : IMessage
 		public ControlCommands command;
 		public ushort payload_length;
 
-		public void FromBinary(System.IO.BinaryReader reader)
+		public void FromBinary(BinaryReader reader)
 		{
 			timestamp_us = (ulong)IPAddress.NetworkToHostOrder(reader.ReadInt64());
 			protocol_version = reader.ReadByte ();
 			command = (ControlCommands) reader.ReadSByte ();
 			payload_length = (ushort)IPAddress.NetworkToHostOrder(reader.ReadInt16());
 		}
-		public int ToBinary(System.IO.BinaryWriter writer)
+		public int ToBinary(BinaryWriter writer)
 		{
 			writer.Write(IPAddress.HostToNetworkOrder((long)timestamp_us));
 			writer.Write(protocol_version);

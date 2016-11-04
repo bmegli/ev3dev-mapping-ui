@@ -10,6 +10,13 @@
  * GNU General Public License for more details.
  */
 
+/*
+*  For functional requirements see:
+*  https://github.com/bmegli/ev3dev-mapping-ui/issues/26
+* 
+*/
+
+
 using UnityEngine;
 using System;
 using System.Collections.Generic;
@@ -36,7 +43,6 @@ public class Control : ReplayableTCPClient<ControlMessage>
 		modules.AddRange(transform.parent.GetComponentsInChildren<RobotModule>());
 		modules.Remove(this);
 		modules.Sort();
-		EnableModules();
 	}
 		
 	public void StartReplay()
@@ -49,9 +55,51 @@ public class Control : ReplayableTCPClient<ControlMessage>
 		if (replay.mode == UDPReplayMode.Replay)
 			return; //do nothing, we replay previous communication
 
-		while (ReceiveOne(msg))
-			ProcessMessage(msg);
+		switch (GetState ())
+		{
+		case ModuleState.Offline:
+			StartConnectingIfAutostartAndDisconnected ();
+			break;
+		case ModuleState.Initializing:
+			StartConnectingIfAutostartAndDisconnected ();
+			if (TCPClientState == TCPClientState.Idle)
+				SetState (ModuleState.Failed);
+			if (TCPClientState == TCPClientState.Connected)
+			{
+				SetState (ModuleState.Online);
+				EnableModules ();
+			}
+			break;
+		case ModuleState.Online:
+			if (TCPClientState == TCPClientState.Idle)
+			{
+				SetState (ModuleState.Failed);
+				return;
+			}
+			while (ReceiveOne (msg))
+				ProcessMessage (msg);
+			//LastSeen + Keepalive
+			break;
+		case ModuleState.Shutdown:
+			while (ReceiveOne (msg))
+				ProcessMessage (msg);
+			//all all disabled go offline, disconnect
+			break;
+		case ModuleState.Failed:
+			break;
+		}
+
 	}
+
+	private void StartConnectingIfAutostartAndDisconnected()
+	{		
+		if (TCPClientState == TCPClientState.Disconnected && ModuleAutostart ())
+		{
+			StartConnecting ();
+			SetState (ModuleState.Initializing);
+		}
+	}
+
 
 	private ModuleState ModuleStateFromControlCommand(ControlCommands cmd)
 	{
@@ -164,7 +212,7 @@ public class Control : ReplayableTCPClient<ControlMessage>
 	}
 	public override bool ModuleAutostart()
 	{
-		throw new NotImplementedException (name + " this should never happen");
+		return true;
 	}
 	public override int CreationDelayMs()
 	{

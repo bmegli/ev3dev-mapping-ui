@@ -14,14 +14,24 @@ using System.Collections;
 using System.Net;
 using System.Net.Sockets;
 using System.IO;
+using System;
+
+public enum TCPClientState {Disconnected, Connecting, Connected, Idle};
 
 public class TCPClient<MESSAGE> 
 	where MESSAGE : IMessage
 {
 	const int INITIAL_BUFFER_SIZE = 256;
 
+	public TCPClientState State
+	{
+		get;
+		private set;
+	}
+
 	private TcpClient tcpClient;
 	private NetworkStream stream;
+
 	private string remoteHost;
 	private int remotePort;
 
@@ -42,6 +52,8 @@ public class TCPClient<MESSAGE>
 	private bool receivedHeader=false;
 	private int receivedPayloadSize = 0;
 
+	private AsyncCallback onConnectCallback;
+
 	public TCPClient(string host, int port)
 	{
 		tcpClient = new TcpClient ();
@@ -52,7 +64,30 @@ public class TCPClient<MESSAGE>
 		remoteHost = host;
 		remotePort = port;
 	}
-		
+
+	private void OnConnect(IAsyncResult result)
+	{
+		if (tcpClient.Connected)
+		{
+			stream = tcpClient.GetStream ();
+			State = TCPClientState.Connected;
+		}
+		else
+		{
+			State = TCPClientState.Idle;
+		}
+	}
+
+	public void StartConnecting()
+	{
+		if (State == TCPClientState.Connected || State == TCPClientState.Connected)
+			throw new InvalidOperationException ("Unable to start connecting, already connected or connecting");
+		onConnectCallback = new AsyncCallback (OnConnect);
+		tcpClient.BeginConnect (remoteHost, remotePort, onConnectCallback, tcpClient);
+
+		State = TCPClientState.Connecting;
+	}
+
 	public void Connect()
 	{		
 		tcpClient.Connect (remoteHost, remotePort);

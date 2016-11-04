@@ -21,15 +21,19 @@ public abstract class ReplayableTCPClient<MESSAGE> : RobotModule
 
 	private TCPClient<MESSAGE> client;
 
+	protected TCPClientState TCPClientState
+	{
+		get {return client.State;}
+	}
+		
 	protected override void Awake()
 	{
 		base.Awake ();
 
-		print(name + " - connecting to: " + network.robotIp  + " port: " + udp.port);
+		print(name + " - address " + network.robotIp  + " port: " + udp.port);
 		client = new TCPClient<MESSAGE>(network.robotIp, udp.port);
-		client.Connect();
 	}
-
+		
 	protected virtual void OnDestroy()
 	{
 		print(name + " - stop client");
@@ -37,15 +41,20 @@ public abstract class ReplayableTCPClient<MESSAGE> : RobotModule
 			client.Stop();
 
 	}
-
-
+				
 	protected abstract void Start();
 
+	protected void StartConnecting()
+	{
+		print(name + " - connecting to " + network.robotIp  + " port: " + udp.port);
+		client.StartConnecting ();
+	}
+		
 	protected void Send(MESSAGE message)
 	{
 		client.Send(message);
 	}
-
+		
 	protected bool ReceiveOne(MESSAGE msg)
 	{
 		try

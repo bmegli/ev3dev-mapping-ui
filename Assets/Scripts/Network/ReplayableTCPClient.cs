@@ -39,13 +39,24 @@ public abstract class ReplayableTCPClient<MESSAGE> : RobotModule
 	}
 
 
-
 	protected abstract void Start();
-
 
 	protected void Send(MESSAGE message)
 	{
 		client.Send(message);
+	}
+
+	protected bool ReceiveOne(MESSAGE msg)
+	{
+		try
+		{
+			return client.ReceiveOne(msg);
+		}
+		catch(System.ArgumentException exc)
+		{
+			print (name + " - ignoring malformed message " + exc.Message);
+		}
+		return false;
 	}
 
 }

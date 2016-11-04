@@ -18,6 +18,7 @@ using System.Collections.Generic;
 public class Control : ReplayableTCPClient<ControlMessage>
 {
 	private List<RobotModule> modules=new List<RobotModule>();
+	private ControlMessage msg=new ControlMessage();
 
 	protected override void OnDestroy()
 	{
@@ -48,6 +49,11 @@ public class Control : ReplayableTCPClient<ControlMessage>
 		if (replay.mode == UDPReplayMode.Replay)
 			return; //do nothing, we replay previous communication
 
+
+		while (ReceiveOne (msg))
+		{
+			print(name + " - received: " + msg.ToString ());
+		}
 		/*
 		while (IsPacketWaiting())
 		{

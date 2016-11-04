@@ -102,6 +102,10 @@ public class TCPClient<MESSAGE>
 		stream.Read (inMemoryStream.GetBuffer (), msg.HeaderSize (), receivedPayloadSize);
 		reader.BaseStream.Position = 0;
 		reader.BaseStream.SetLength (msg.HeaderSize () + receivedPayloadSize);
+
+		receivedHeader = false;
+		receivedPayloadSize = 0;
+
 		msg.FromBinary (reader);
 
 		return true;

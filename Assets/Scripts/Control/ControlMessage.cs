@@ -25,12 +25,23 @@ using System.IO;
 
 public enum ControlCommands : sbyte {KEEPALIVE=0, ENABLE=1, DISABLE=2, DISABLE_ALL=3, ENABLED=-1, DISABLED=-2, FAILED=-3 };
 public enum ControlAttributes : byte {UNIQUE_NAME=0, CALL=1, CRATION_DELAY_MS=2, RETURN_VALUE=3};
-	
+
 public class ControlMessage : IMessage
 {
 	public const byte CONTROL_PROTOCOL_VERSION=1;
 	public const int CONTROL_MAX_PAYLOAD_LENGTH = 65535;
 
+	public const sbyte MIN_SUPPORTED_COMMAND=(sbyte)ControlCommands.FAILED;
+	public const sbyte MAX_SUPPORTED_COMMAND=(sbyte)ControlCommands.KEEPALIVE;
+
+
+	public readonly ControlAttributes[][] NEGATIVE_COMMANDS_ATTRIBUTES = {
+		new ControlAttributes[] {},
+		new ControlAttributes[] {ControlAttributes.UNIQUE_NAME},
+		new ControlAttributes[] {ControlAttributes.UNIQUE_NAME},
+		new ControlAttributes[] {ControlAttributes.UNIQUE_NAME, ControlAttributes.RETURN_VALUE}
+	};
+		
 	private ControlHeader header = new ControlHeader();
 	private List<ControlAttribute> attributes = new List<ControlAttribute> ();
 
@@ -130,12 +141,31 @@ public class ControlMessage : IMessage
 		{
 			if (remaining < ControlAttribute.CONTROL_ATTRIBUTE_HEADER_BYTES)
 				throw new ArgumentException ("Incorrect payload - not enough data for attribute header");
-			#warning work in progress
-		}
 
-
-
+			ControlAttribute attribute = ControlAttribute.FromBinary (reader);
+			remaining -= attribute.GetTotalLength ();
+			attributes.Add (attribute);
+		}			
+		Validate();
 	}
+
+	private void Validate()
+	{
+		if ((sbyte)header.command > MAX_SUPPORTED_COMMAND || (sbyte)header.command < MIN_SUPPORTED_COMMAND)
+			throw new ArgumentException ("Command not supported: " + header.command);
+
+		ControlAttributes[] expected = NEGATIVE_COMMANDS_ATTRIBUTES [-(sbyte)header.command];
+		if(attributes.Count < expected.Length)
+			throw new ArgumentException ("Incorrect number of attributes in command " + header.command + " ," + attributes.Count + " expected: " + expected.Length);
+
+		for (int i = 0; i < expected.Length; ++i)
+		{
+			if(attributes[i].GetAttribute() != expected[i])
+				throw new ArgumentException ("Incorrect attribute in command " + header.command + " at position " + i + " is " + attributes[i].GetAttribute() + " expected: " + expected[i]);
+		}
+			
+	}
+		
 	public int ToBinary(BinaryWriter writer)
 	{
 		int written = 0;
@@ -177,8 +207,14 @@ public abstract class ControlAttribute
 	public const int CONTROL_ATTRIBUTE_HEADER_BYTES = 2;
 	public const int CONTROL_MAX_ATTRIBUTE_DATA_LENGTH = 255;
 
+
 	private ControlAttributes attribute;
 	protected byte length;
+
+	public ControlAttributes GetAttribute()
+	{
+		return attribute;
+	}
 
 	public ushort GetTotalLength()
 	{
@@ -191,11 +227,25 @@ public abstract class ControlAttribute
 		length = len;
 	}
 
-	public virtual void FromBinary(System.IO.BinaryReader reader)
+	public static ControlAttribute FromBinary(BinaryReader reader)
 	{
-		attribute = (ControlAttributes) reader.ReadByte ();
-		length = reader.ReadByte ();
+		ControlAttributes attribute = (ControlAttributes) reader.ReadByte ();
+		byte length = reader.ReadByte ();
+
+		switch (attribute)
+		{
+		case ControlAttributes.UNIQUE_NAME:
+		case ControlAttributes.CALL:
+			return ControlAttributeString.FromBinary (attribute, length, reader);
+		case ControlAttributes.CRATION_DELAY_MS:
+			return ControlAttributeU16.FromBinary (attribute, length, reader);
+		case ControlAttributes.RETURN_VALUE:
+			return ControlAttributeI32.FromBinary (attribute, length, reader);
+		default:
+			return ControlAttributeUnknown.FromBinary (attribute, length, reader);
+		}			
 	}
+
 	public virtual int ToBinary(System.IO.BinaryWriter writer)
 	{
 		writer.Write ((byte)attribute);
@@ -208,6 +258,12 @@ public class ControlAttributeString : ControlAttribute
 {
 	private string data;
 
+	private ControlAttributeString(ControlAttributes attr, byte len, BinaryReader reader) : base(attr, len)
+	{
+		byte[] ascii_data=reader.ReadBytes (length);
+		data=System.Text.Encoding.ASCII.GetString(ascii_data, 0 , length-1);
+	}
+
 	public ControlAttributeString(ControlAttributes attr, string text) : base(attr, (byte)(System.Text.Encoding.ASCII.GetByteCount(text)+1))
 	{
 		data = text;
@@ -215,13 +271,11 @@ public class ControlAttributeString : ControlAttribute
 			throw new ArgumentException ("The string data is too long to encode in attribute");	
 	}
 
-	public override void FromBinary(System.IO.BinaryReader reader)
+	public static ControlAttributeString FromBinary(ControlAttributes attr, byte len, BinaryReader reader)
 	{
-		base.FromBinary(reader);
-		byte[] ascii_data=reader.ReadBytes (length);
-		data=System.Text.Encoding.ASCII.GetString(ascii_data, 0 , length-1);
-
+		return new ControlAttributeString (attr, len, reader);
 	}
+
 	public override int ToBinary(System.IO.BinaryWriter writer)
 	{
 		byte[] ascii_data = System.Text.ASCIIEncoding.ASCII.GetBytes (data);						
@@ -237,17 +291,25 @@ public class ControlAttributeU16 : ControlAttribute
 {
 	private ushort data;
 
+	private ControlAttributeU16(ControlAttributes attr, byte len, BinaryReader reader) : base(attr, 2)
+	{
+		if (len != 2)
+			throw new ArgumentException ("Incorrect length for U16 attribute");
+
+		data=(ushort)IPAddress.NetworkToHostOrder(reader.ReadInt16());
+	}
+
 	public ControlAttributeU16(ControlAttributes attr, ushort value) : base(attr, 2)
 	{
 		data = value;
 	}
 
-	public override void FromBinary(System.IO.BinaryReader reader)
+	public static ControlAttributeU16 FromBinary(ControlAttributes attr, byte len, BinaryReader reader)
 	{
-		base.FromBinary(reader);
-		data=(ushort)IPAddress.NetworkToHostOrder(reader.ReadInt16());
-
+		return new ControlAttributeU16 (attr, len, reader);
 	}
+
+
 	public override int ToBinary(System.IO.BinaryWriter writer)
 	{
 		base.ToBinary (writer);
@@ -261,17 +323,24 @@ public class ControlAttributeI32 : ControlAttribute
 {
 	private int data;
 
+	private ControlAttributeI32(ControlAttributes attr, byte len, BinaryReader reader) : base(attr, 4)
+	{
+		if (len != 4)
+			throw new ArgumentException ("Incorrect length for I32 attribute");
+
+		data = IPAddress.NetworkToHostOrder(reader.ReadInt32());
+	}
 	public ControlAttributeI32(ControlAttributes attr, int value) : base(attr, 4)
 	{
 		data = value;
 	}
 
-	public override void FromBinary(System.IO.BinaryReader reader)
+	public static ControlAttributeI32 FromBinary(ControlAttributes attr, byte len, BinaryReader reader)
 	{
-		base.FromBinary(reader);
-		data = IPAddress.NetworkToHostOrder(reader.ReadInt32());
-
+		return new ControlAttributeI32 (attr, len, reader);
 	}
+
+
 	public override int ToBinary(System.IO.BinaryWriter writer)
 	{
 		base.ToBinary (writer);
@@ -281,3 +350,25 @@ public class ControlAttributeI32 : ControlAttribute
 	}		
 }
 
+public class ControlAttributeUnknown : ControlAttribute
+{
+	private byte[] data;
+
+	private ControlAttributeUnknown(ControlAttributes attr, byte len, BinaryReader reader) : base(attr, len)
+	{
+		data = reader.ReadBytes (len);
+	}
+
+	public static ControlAttributeUnknown FromBinary(ControlAttributes attr, byte len, BinaryReader reader)
+	{
+		return new ControlAttributeUnknown (attr, len, reader);
+	}
+		
+	public override int ToBinary(System.IO.BinaryWriter writer)
+	{
+		base.ToBinary (writer);
+		writer.Write (data);
+
+		return CONTROL_ATTRIBUTE_HEADER_BYTES + length;
+	}		
+}

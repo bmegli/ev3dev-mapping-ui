@@ -66,6 +66,10 @@ public class TCPClient<MESSAGE>
 			tcpClient.Close ();
 		if (stream != null)
 			stream.Close ();
+		if (reader != null)
+			reader.Close();
+		if (writer != null)
+			writer.Close();
 		/*
 		if (dumpReader != null)
 			dumpReader.Close ();
@@ -88,20 +92,23 @@ public class TCPClient<MESSAGE>
 
 			stream.Read(inMemoryStream.GetBuffer(), 0, msg.HeaderSize());
 			reader.BaseStream.Position = 0;
+			reader.BaseStream.SetLength(msg.HeaderSize());
+		
 			receivedPayloadSize=msg.PayloadSize (reader);
 
 			if (inMemoryStream.Capacity < msg.HeaderSize () + receivedPayloadSize)
 				inMemoryStream.Capacity = msg.HeaderSize () + receivedPayloadSize;
 
-			reader.BaseStream.Position = msg.HeaderSize ();
+			reader.BaseStream.SetLength(msg.HeaderSize() + receivedPayloadSize);
 		}
 
 		if (tcpClient.Available < receivedPayloadSize)
 			return false;
 
-		stream.Read (inMemoryStream.GetBuffer (), msg.HeaderSize (), receivedPayloadSize);
+		if (receivedPayloadSize > 0)
+			stream.Read(inMemoryStream.GetBuffer(), msg.HeaderSize(), receivedPayloadSize);
+
 		reader.BaseStream.Position = 0;
-		reader.BaseStream.SetLength (msg.HeaderSize () + receivedPayloadSize);
 
 		receivedHeader = false;
 		receivedPayloadSize = 0;

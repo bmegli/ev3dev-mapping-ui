@@ -16,7 +16,6 @@
 * 
 */
 
-using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
@@ -66,7 +65,16 @@ public class ControlMessage : IMessage
 	{
 		return header.timestamp_us;
 	}
-		
+
+	public ControlCommands GetCommand()
+	{
+		return header.command;
+	}
+
+	public VALUE Attribute<VALUE>(int index)
+	{
+		return (VALUE)attributes[index].Value();
+	}
 	public void NewMessage(ControlCommands command)
 	{
 		header.timestamp_us = Timestamp.TimestampUs ();
@@ -107,14 +115,14 @@ public class ControlMessage : IMessage
 
 		return msg;
 	}
-
+		
 	public static ControlMessage DisableMessage(string unique_name)
 	{
 		ControlMessage msg = new ControlMessage ();
 
 		msg.NewMessage (ControlCommands.DISABLE);
 		msg.PutString (ControlAttributes.UNIQUE_NAME, unique_name);
-
+	
 		return msg;
 	}
 
@@ -126,12 +134,12 @@ public class ControlMessage : IMessage
 
 		return msg;
 	}
-
-
+		
 	public void FromBinary(BinaryReader reader)
 	{
 		attributes.Clear ();
 		header.FromBinary (reader);
+
 		if (header.payload_length == 0)
 			return;
 
@@ -207,7 +215,6 @@ public abstract class ControlAttribute
 	public const int CONTROL_ATTRIBUTE_HEADER_BYTES = 2;
 	public const int CONTROL_MAX_ATTRIBUTE_DATA_LENGTH = 255;
 
-
 	private ControlAttributes attribute;
 	protected byte length;
 
@@ -221,6 +228,8 @@ public abstract class ControlAttribute
 		return (ushort)(CONTROL_ATTRIBUTE_HEADER_BYTES + length);
 	}
 
+	public abstract object Value();
+
 	public ControlAttribute(ControlAttributes attr, byte len)
 	{
 		attribute = attr;
@@ -231,6 +240,7 @@ public abstract class ControlAttribute
 	{
 		ControlAttributes attribute = (ControlAttributes) reader.ReadByte ();
 		byte length = reader.ReadByte ();
+
 
 		switch (attribute)
 		{
@@ -260,8 +270,8 @@ public class ControlAttributeString : ControlAttribute
 
 	private ControlAttributeString(ControlAttributes attr, byte len, BinaryReader reader) : base(attr, len)
 	{
-		byte[] ascii_data=reader.ReadBytes (length);
-		data=System.Text.Encoding.ASCII.GetString(ascii_data, 0 , length-1);
+		byte[] ascii_data=reader.ReadBytes (len);
+		data=System.Text.Encoding.ASCII.GetString(ascii_data, 0 , len-1);
 	}
 
 	public ControlAttributeString(ControlAttributes attr, string text) : base(attr, (byte)(System.Text.Encoding.ASCII.GetByteCount(text)+1))
@@ -285,6 +295,11 @@ public class ControlAttributeString : ControlAttribute
 
 		return CONTROL_ATTRIBUTE_HEADER_BYTES + length;
 	}		
+
+	public override object Value()
+	{
+		return data;
+	}
 }
 
 public class ControlAttributeU16 : ControlAttribute
@@ -316,7 +331,13 @@ public class ControlAttributeU16 : ControlAttribute
 		writer.Write (IPAddress.HostToNetworkOrder ((short)data));
 
 		return CONTROL_ATTRIBUTE_HEADER_BYTES + length;
-	}		
+	}
+
+	public override object Value()
+	{
+		return data;
+	}
+
 }
 
 public class ControlAttributeI32 : ControlAttribute
@@ -348,6 +369,11 @@ public class ControlAttributeI32 : ControlAttribute
 
 		return CONTROL_ATTRIBUTE_HEADER_BYTES + length;
 	}		
+
+	public override object Value()
+	{
+		return data;
+	}
 }
 
 public class ControlAttributeUnknown : ControlAttribute
@@ -370,5 +396,10 @@ public class ControlAttributeUnknown : ControlAttribute
 		writer.Write (data);
 
 		return CONTROL_ATTRIBUTE_HEADER_BYTES + length;
-	}		
+	}
+
+	public override object Value()
+	{
+		return data;
+	}
 }

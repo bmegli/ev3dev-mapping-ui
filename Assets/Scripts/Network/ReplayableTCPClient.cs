@@ -25,7 +25,7 @@ public abstract class ReplayableTCPClient<MESSAGE> : RobotModule
 	{
 		base.Awake ();
 
-		print(name + " - host: " + network.hostIp  + " port: " + udp.port);
+		print(name + " - connecting to: " + network.robotIp  + " port: " + udp.port);
 		client = new TCPClient<MESSAGE>(network.robotIp, udp.port);
 		client.Connect();
 	}
@@ -54,7 +54,7 @@ public abstract class ReplayableTCPClient<MESSAGE> : RobotModule
 		}
 		catch(System.ArgumentException exc)
 		{
-			print (name + " - ignoring malformed message " + exc.Message);
+			print (name + " - ignoring malformed message " + exc.ToString());
 		}
 		return false;
 	}

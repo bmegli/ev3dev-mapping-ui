@@ -49,40 +49,43 @@ public class Control : ReplayableTCPClient<ControlMessage>
 		if (replay.mode == UDPReplayMode.Replay)
 			return; //do nothing, we replay previous communication
 
-
-		while (ReceiveOne (msg))
-		{
-			print(name + " - received: " + msg.ToString ());
-		}
-		/*
-		while (IsPacketWaiting())
-		{
-			print("Packet waiting, processing");
-			ReceiveOne(packet);
-			ProcessPacket(packet);
-		}
-		*/
-
+		while (ReceiveOne(msg))
+			ProcessMessage(msg);
 	}
-	/*
-	void ProcessPacket(ControlPacket packet)
+
+	private ModuleState ModuleStateFromControlCommand(ControlCommands cmd)
 	{
-		RobotModule mod = modules.Find(m => (m.name == packet.unique_name));
-
-		print(name + ": " + packet.unique_name);
-		print(name + ": " + mod.name + " state changed to " + ((ControlPacket.Commands)packet.command).ToString());
-	
-		if (packet.command == (int)ControlPacket.Commands.Enabled)
-			mod.SetState(ModuleState.Online);
-		else if (packet.command == (int)ControlPacket.Commands.Disabled)
-			mod.SetState(ModuleState.Offline);
-		else if (packet.command == (int)ControlPacket.Commands.Failed)
-			mod.SetState(ModuleState.Failed);
-		else
-			print("Unknown control packet command received");
+		if (cmd == ControlCommands.ENABLED)
+			return ModuleState.Online;
+		if (cmd == ControlCommands.DISABLED)
+			return ModuleState.Offline;
+		if (cmd == ControlCommands.FAILED)
+			return ModuleState.Failed;
+		throw new ArgumentException("Unable to convert command " + cmd.ToString() + " to ModuleState");	
 	}
-	*/
 
+	void ProcessMessage(ControlMessage message)
+	{
+		RobotModule module;
+		ControlCommands cmd = message.GetCommand();
+
+		switch (cmd)
+		{
+			case ControlCommands.KEEPALIVE:
+				break;
+			case ControlCommands.ENABLED:				
+			case ControlCommands.DISABLED:
+			case ControlCommands.FAILED: //failed has additional information on error code
+				module = modules.Find(m => (m.name == message.Attribute<string>(0)));
+				print(name + " - " + module.name + " state changed to " + cmd.ToString());
+				module.SetState(ModuleStateFromControlCommand(cmd));
+				break;
+			default:
+				print(name + " - ignoring unknown command " + message.GetType());
+				break;
+		}
+	}
+		
 	public void EnableDisableModule(string unique_module_name, bool enable)
 	{
 		RobotModule mod = modules.Find(m => (m.name == unique_module_name));
@@ -115,7 +118,7 @@ public class Control : ReplayableTCPClient<ControlMessage>
 		
 		m.SetState(ModuleState.Shutdown);
 
-		ControlMessage msg = ControlMessage.DisableMessage (m.name);
+		ControlMessage msg = ControlMessage.DisableMessage(m.name);
 
 		Send (msg);
 		print(name + " - disable module " + m.name);

@@ -265,7 +265,6 @@ public class TCPClient<MESSAGE>
 		}
 
 		Debug.Log("Replay - finished");
-		Stop();
 	}
 }
 

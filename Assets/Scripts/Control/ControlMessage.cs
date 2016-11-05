@@ -30,8 +30,8 @@ public class ControlMessage : IMessage
 	public const byte CONTROL_PROTOCOL_VERSION=1;
 	public const int CONTROL_MAX_PAYLOAD_LENGTH = 65535;
 
-	public const sbyte MIN_SUPPORTED_COMMAND=(sbyte)ControlCommands.FAILED;
-	public const sbyte MAX_SUPPORTED_COMMAND=(sbyte)ControlCommands.KEEPALIVE;
+	public const sbyte MIN_KNOWN_COMMAND=(sbyte)ControlCommands.FAILED;
+	public const sbyte MAX_KNOWN_COMMAND=(sbyte)ControlCommands.DISABLE_ALL;
 
 
 	public readonly ControlAttributes[][] NEGATIVE_COMMANDS_ATTRIBUTES = {
@@ -40,7 +40,15 @@ public class ControlMessage : IMessage
 		new ControlAttributes[] {ControlAttributes.UNIQUE_NAME},
 		new ControlAttributes[] {ControlAttributes.UNIQUE_NAME, ControlAttributes.RETURN_VALUE}
 	};
-		
+
+	public readonly ControlAttributes[][] POSITIVE_COMMANDS_ATTRIBUTES = {
+		new ControlAttributes[] {},
+		new ControlAttributes[] {ControlAttributes.UNIQUE_NAME, ControlAttributes.CALL, ControlAttributes.CRATION_DELAY_MS},
+		new ControlAttributes[] {ControlAttributes.UNIQUE_NAME},
+		new ControlAttributes[] {}
+	};
+
+
 	private ControlHeader header = new ControlHeader();
 	private List<ControlAttribute> attributes = new List<ControlAttribute> ();
 
@@ -55,7 +63,7 @@ public class ControlMessage : IMessage
 		return header.payload_length;
 
 	}
-
+		
 	public override string ToString()
 	{
 		return "t=" + " v=" + header.protocol_version + " c=" + header.command + " p=" + header.payload_length; 
@@ -166,10 +174,15 @@ public class ControlMessage : IMessage
 
 	private void Validate()
 	{
-		if ((sbyte)header.command > MAX_SUPPORTED_COMMAND || (sbyte)header.command < MIN_SUPPORTED_COMMAND)
+		if ((sbyte)header.command > MAX_KNOWN_COMMAND || (sbyte)header.command < MIN_KNOWN_COMMAND)
 			throw new ArgumentException ("Command not supported: " + header.command);
-
-		ControlAttributes[] expected = NEGATIVE_COMMANDS_ATTRIBUTES [-(sbyte)header.command];
+	
+		ControlAttributes[] expected;
+		if (header.command <= 0)
+			expected = NEGATIVE_COMMANDS_ATTRIBUTES[-(sbyte)header.command];
+		else
+			expected = POSITIVE_COMMANDS_ATTRIBUTES[(sbyte)header.command];
+		
 		if(attributes.Count < expected.Length)
 			throw new ArgumentException ("Incorrect number of attributes in command " + header.command + " ," + attributes.Count + " expected: " + expected.Length);
 
@@ -178,7 +191,6 @@ public class ControlMessage : IMessage
 			if(attributes[i].GetAttribute() != expected[i])
 				throw new ArgumentException ("Incorrect attribute in command " + header.command + " at position " + i + " is " + attributes[i].GetAttribute() + " expected: " + expected[i]);
 		}
-			
 	}
 		
 	public int ToBinary(BinaryWriter writer)

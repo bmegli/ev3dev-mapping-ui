@@ -527,8 +527,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 680e70490318a1241a2a64052386af7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  udp:
+  moduleNetwork:
     port: 8004
+  module:
+    timeoutMs: 1000
+    autostart: 1
 --- !u!1 &1810892781
 GameObject:
   m_ObjectHideFlags: 0
@@ -574,7 +577,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91596b955124c8e48bd73bdc50fec278, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  udp:
+  moduleNetwork:
     port: 8001
   module:
     autostart: 1

@@ -129,6 +129,36 @@ Prefab:
       propertyPath: m_RootOrder
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 114000013441249424, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
+        type: 2}
+      propertyPath: moduleNetwork.port
+      value: 8004
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000010387767330, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
+        type: 2}
+      propertyPath: moduleNetwork.port
+      value: 8000
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000010667919226, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
+        type: 2}
+      propertyPath: moduleNetwork.port
+      value: 8003
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000013585239938, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
+        type: 2}
+      propertyPath: moduleNetwork.port
+      value: 8001
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000013608529052, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
+        type: 2}
+      propertyPath: moduleNetwork.port
+      value: 8002
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000010445054316, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
+        type: 2}
+      propertyPath: moduleNetwork.port
+      value: 8006
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
   m_IsPrefabParent: 0

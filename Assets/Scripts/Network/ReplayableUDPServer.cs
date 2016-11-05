@@ -14,11 +14,9 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.IO;
 
-public abstract class ReplayableUDPServer<DATAGRAM> : RobotModule, IReplayableUDPServer
+public abstract class ReplayableUDPServer<DATAGRAM> : ReplayableServer
 	where DATAGRAM : IDatagram, new()
 {
-	public NetworkProperties udp;
-
 	private UDPServer<DATAGRAM> server;
 	private UDPClient<DATAGRAM> client;
 
@@ -36,31 +34,31 @@ public abstract class ReplayableUDPServer<DATAGRAM> : RobotModule, IReplayableUD
 	{
 		base.Awake ();
 
-		print(name + " port: " + udp.port);
+		print(name + " port: " + moduleNetwork.port);
 
 		if(replay.RecordInbound()) 
 		{
 			print(name + " - dumping packets to '" + Config.DumpPath(robot.sessionDirectory, name) + "'");
 			Directory.CreateDirectory(Config.DUMPS_DIRECTORY);
 			Directory.CreateDirectory(Config.DumpPath(robot.sessionDirectory));
-			server = new UDPServer<DATAGRAM>(udp.port, Config.DumpPath(robot.sessionDirectory, name) );
+			server = new UDPServer<DATAGRAM>(moduleNetwork.port, Config.DumpPath(robot.sessionDirectory, name) );
 		} 
 		else if (replay.ReplayInbound()) //the server and client reading from dump & sending
 		{
 			print(name + " - replay from '" + Config.DumpPath(robot.sessionDirectory, name) + "'");
-			server = new UDPServer<DATAGRAM>(udp.port);
+			server = new UDPServer<DATAGRAM>(moduleNetwork.port);
 			try
 			{
-				client = new UDPClient<DATAGRAM>("localhost", udp.port, Config.DumpPath(robot.sessionDirectory, name), false );
+				client = new UDPClient<DATAGRAM>("localhost", moduleNetwork.port, Config.DumpPath(robot.sessionDirectory, name), false );
 			}
 			catch
 			{
-				print(name + " - replay disabled (can't initialize from '" + Config.DumpPath(robot.sessionDirectory, name) + "' on port " + udp.port + ")");
-				replay.mode = UDPReplayMode.None;
+				print(name + " - replay disabled (can't initialize from '" + Config.DumpPath(robot.sessionDirectory, name) + "' on port " + moduleNetwork.port + ")");
+				replay.mode = ReplayMode.None;
 			}
 		}
 		else
-			server = new UDPServer<DATAGRAM>(udp.port);
+			server = new UDPServer<DATAGRAM>(moduleNetwork.port);
 	}
 
 	protected virtual void Start()
@@ -69,16 +67,16 @@ public abstract class ReplayableUDPServer<DATAGRAM> : RobotModule, IReplayableUD
 		server.Start(ProcessPacket);
 	}
 
-	protected void StartReplay(int time_offset)
+	protected override void StartReplay(int time_offset)
 	{
 		if (!replay.ReplayInbound())
 			return;
 
-		IReplayableUDPServer[] servers=transform.parent.GetComponentsInChildren<IReplayableUDPServer>();
+		ReplayableServer[] servers=transform.parent.GetComponentsInChildren<ReplayableServer>();
 			
 		ulong min_timestamp_us = ulong.MaxValue;
 
-		foreach (IReplayableUDPServer rep in servers)
+		foreach (ReplayableServer rep in servers)
 		{
 			if (rep.GetFirstPacketTimestampUs() < min_timestamp_us)
 				min_timestamp_us = rep.GetFirstPacketTimestampUs();
@@ -94,7 +92,7 @@ public abstract class ReplayableUDPServer<DATAGRAM> : RobotModule, IReplayableUD
 		client.StartReplay(start_us); 
 	}
 
-	public ulong GetFirstPacketTimestampUs()
+	public override ulong GetFirstPacketTimestampUs()
 	{
 		if (client == null || !replay.ReplayInbound())
 			return ulong.MaxValue;

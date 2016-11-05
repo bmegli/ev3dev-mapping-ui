@@ -15,11 +15,9 @@ using UnityEngine;
 using System.Collections;
 using System.IO;
 
-public abstract class ReplayableTCPClient<MESSAGE> : RobotModule
+public abstract class ReplayableTCPClient<MESSAGE> : ReplayableClient
 	where MESSAGE : IMessage, new()
 {
-	public NetworkProperties tcp;
-
 	private TCPClient<MESSAGE> client;
 
 	protected TCPClientState TCPClientState
@@ -44,17 +42,32 @@ public abstract class ReplayableTCPClient<MESSAGE> : RobotModule
 	{
 		base.Awake ();
 
-		print(name + " - address " + network.robotIp  + " port: " + tcp.port);
+		print(name + " - address " + network.robotIp  + " port: " + moduleNetwork.port);
 
 		if (replay.RecordOutbound()) 
 		{
 			print(name + " - dumping packets to '" + Config.DumpPath(robot.sessionDirectory, name) + "'");
 			Directory.CreateDirectory(Config.DUMPS_DIRECTORY);
 			Directory.CreateDirectory(Config.DumpPath(robot.sessionDirectory));
-			client = new TCPClient<MESSAGE>(network.robotIp, tcp.port, Config.DumpPath(robot.sessionDirectory, name), true);
-		} 
+			client = new TCPClient<MESSAGE>(network.robotIp, moduleNetwork.port, Config.DumpPath(robot.sessionDirectory, name), true);
+		}
+		else if (replay.ReplayOutbound()) //the client reading from dump & sending
+		{
+			print(name + " - replay from '" + Config.DumpPath(robot.sessionDirectory, name) + "'");
+
+			try
+			{
+				client = new TCPClient<MESSAGE>(network.robotIp, moduleNetwork.port, Config.DumpPath(robot.sessionDirectory, name), false);
+			}
+			catch(System.Exception)
+			{
+				print(name + " - replay disabled (can't initialize from '" + Config.DumpPath(robot.sessionDirectory, name) + "' on port " + moduleNetwork.port + ")");
+				replay.mode = ReplayMode.None;
+				enabled = false;
+			}
+		}
 		else
-			client = new TCPClient<MESSAGE>(network.robotIp, tcp.port);
+			client = new TCPClient<MESSAGE>(network.robotIp, moduleNetwork.port);
 	}
 		
 	protected virtual void OnDestroy()
@@ -69,7 +82,7 @@ public abstract class ReplayableTCPClient<MESSAGE> : RobotModule
 
 	protected void StartConnecting()
 	{
-		print(name + " - connecting to " + network.robotIp  + " port: " + tcp.port);
+		print(name + " - connecting to " + network.robotIp  + " port: " + moduleNetwork.port);
 		client.StartConnecting ();
 	}
 		
@@ -80,7 +93,7 @@ public abstract class ReplayableTCPClient<MESSAGE> : RobotModule
 			print(name + " - can't disconnect (not connected)");
 			return;
 		}
-		print(name + " - disconnecting from " + network.robotIp  + " port: " + tcp.port);
+		print(name + " - disconnecting from " + network.robotIp  + " port: " + moduleNetwork.port);
 		client.Disconnect();
 	}
 
@@ -102,4 +115,31 @@ public abstract class ReplayableTCPClient<MESSAGE> : RobotModule
 		return false;
 	}
 
+	protected override void StartReplay(int time_offset)
+	{
+		if (!replay.ReplayOutbound())
+			return;
+
+		ReplayableClient[] clients=transform.parent.GetComponentsInChildren<ReplayableClient>();
+
+		ulong min_timestamp_us = ulong.MaxValue;
+		foreach (ReplayableClient rep in clients)
+			if (rep.GetFirstPacketTimestampUs() < min_timestamp_us)
+				min_timestamp_us = rep.GetFirstPacketTimestampUs();
+
+		ulong start_us = min_timestamp_us;
+		if (time_offset >= 0)
+			start_us += (ulong) time_offset;
+		else
+			start_us -= (ulong)(-time_offset);
+
+		client.StartReplay(start_us); 
+	}
+
+	public override ulong GetFirstPacketTimestampUs()
+	{
+		if (client == null || !replay.ReplayOutbound())
+			return ulong.MaxValue;
+		return client.GetFirstReplayTimestamp();
+	}
 }

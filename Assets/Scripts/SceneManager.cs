@@ -18,8 +18,8 @@ public class SceneManager : MonoBehaviour
 {
 	private Transform dynamicObjects;
 	private GameObject uiCanvas;
-	private GameObject robot;
-	private Control robotControl;
+//	private GameObject robot;
+//	private Control robotControl;
 	private GameObject robotsPanel;
 
 	public static SceneManager Instance { get; private set; }
@@ -54,8 +54,8 @@ public class SceneManager : MonoBehaviour
 		Instance = this;
 		dynamicObjects = new GameObject("DynamicObjects").transform;
 		uiCanvas = GameObject.Find("UICanvas");
-		robot = GameObject.FindGameObjectWithTag ("Player");
-		robotControl = robot.GetComponent<Control> ();
+//		robot = GameObject.FindGameObjectWithTag ("Player");
+//		robotControl = robot.GetComponent<Control> ();
 		robotsPanel = GameObject.Find("RobotsPanel");
 	}
 
@@ -66,8 +66,6 @@ public class SceneManager : MonoBehaviour
 			l.SaveMap();
 	}
 
-	//temporary, change to something abstract for replays!
-	//can be run only once or it will blow up!
 	private bool replayStarted=false;
 	public void StartReplay()
 	{
@@ -75,26 +73,15 @@ public class SceneManager : MonoBehaviour
 			return;
 		replayStarted = true;
 
-		Control[] controls = FindObjectsOfType<Control> ();
-		Odometry[] odometry = FindObjectsOfType<Odometry> ();
-		DeadReconning[] deadr = FindObjectsOfType<DeadReconning> ();
-		Laser[] lasers=FindObjectsOfType<Laser>();
-		Drive[] drives = FindObjectsOfType<Drive> ();
-		Wifi[] wifis = FindObjectsOfType<Wifi>();
+		ReplayableServer[] servers=FindObjectsOfType<ReplayableServer>();
+		ReplayableClient[] clients=FindObjectsOfType<ReplayableClient>();
+
+		foreach (ReplayableServer server in servers)
+			server.StartReplay();
+		foreach (ReplayableClient client in clients)
+			client.StartReplay();
 
 
-		foreach (Control c in controls)
-			c.StartReplay ();
-		foreach (Odometry o in odometry)
-			o.StartReplay ();
-		foreach (DeadReconning dr in deadr)
-			dr.StartReplay ();
-		foreach (Laser l in lasers)
-			l.StartReplay ();
-		foreach (Wifi w in wifis)
-			w.StartReplay ();		
-		foreach (Drive d in drives)
-			d.StartReplay ();
 	}
 	public void ToggleShowUI()
 	{

@@ -54,9 +54,9 @@ public class DeadReconning : ReplayableUDPServer<DeadReconningPacket>
 		base.Start();
 	}
 
-	public void StartReplay()
+	public override void StartReplay()
 	{
-		base.StartReplay(20000);
+		StartReplay(20000);
 	}
 
 	void Update ()
@@ -155,7 +155,7 @@ public class DeadReconning : ReplayableUDPServer<DeadReconningPacket>
 
 	public override string ModuleCall()
 	{
-		return "ev3dead-reconning " + network.hostIp + " " + udp.port + " " + module.pollMs;
+		return "ev3dead-reconning " + network.hostIp + " " + moduleNetwork.port + " " + module.pollMs;
 	}
 	public override int ModulePriority()
 	{

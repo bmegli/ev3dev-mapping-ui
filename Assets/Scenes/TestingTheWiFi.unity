@@ -182,7 +182,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 680e70490318a1241a2a64052386af7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tcp:
+  moduleNetwork:
     port: 8004
   module:
     timeoutMs: 1000
@@ -402,7 +402,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f08c69115b8acd940a519b32f96fe3c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  udp:
+  moduleNetwork:
     port: 8006
   module:
     autostart: 1
@@ -635,7 +635,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 2
-  direction: 0
+  direction: 1
 --- !u!114 &1952588918
 MonoBehaviour:
   m_ObjectHideFlags: 0

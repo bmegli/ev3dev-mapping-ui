@@ -59,9 +59,9 @@ public class Odometry : ReplayableUDPServer<OdometryPacket>
 		base.Start();
 	}
 
-	public void StartReplay()
+	public override void StartReplay()
 	{
-		base.StartReplay(20000);
+		StartReplay(20000);
 	}
 
 	void Update ()
@@ -162,7 +162,7 @@ public class Odometry : ReplayableUDPServer<OdometryPacket>
 
 	public override string ModuleCall()
 	{
-		return "ev3odometry " + network.hostIp + " " + udp.port + " " + module.pollMs;
+		return "ev3odometry " + network.hostIp + " " + moduleNetwork.port + " " + module.pollMs;
 	}
 	public override int ModulePriority()
 	{

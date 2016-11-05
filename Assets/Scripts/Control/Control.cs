@@ -16,7 +16,6 @@
 * 
 */
 
-
 using UnityEngine;
 using System;
 using System.Collections.Generic;
@@ -53,35 +52,32 @@ public class Control : ReplayableTCPClient<ControlMessage>
 		modules.Remove(this);
 		modules.Sort();
 	}
-		
-	public void StartReplay()
-	{
-		//base.StartReplay(0);
-	}
-		
+				
 	void Update ()
 	{
-		if (replay.mode == UDPReplayMode.Replay)
+		if (replay.ReplayInbound())
 			return; //do nothing, we replay previous communication
-
+		
 		switch (GetState ())
 		{
-		case ModuleState.Offline:
-			StartConnectingIfAutostartAndDisconnected ();
-			break;
-		case ModuleState.Initializing:
-			StartConnectingIfAutostartAndDisconnected();
-			if (TCPClientState == TCPClientState.Idle)
-			{
-				SetState(ModuleState.Failed);
-				OutputErrorMessage();
-			}
-			if (TCPClientState == TCPClientState.Connected)
-			{
-				SetState (ModuleState.Online);
-				EnableModules ();
-			}
-			break;
+			case ModuleState.Offline:
+				StartConnectingIfAutostartAndDisconnected ();
+				break;
+			case ModuleState.Initializing:
+				StartConnectingIfAutostartAndDisconnected();
+				if (TCPClientState == TCPClientState.Idle)
+				{
+					SetState(ModuleState.Failed);
+					OutputErrorMessage();
+				}
+				if (TCPClientState == TCPClientState.Connected)
+				{
+					SetState (ModuleState.Online);
+
+					if(!replay.ReplayOutbound())
+						EnableModules ();
+				}
+				break;
 			case ModuleState.Online:
 				if (TCPClientState == TCPClientState.Idle)
 				{
@@ -94,7 +90,7 @@ public class Control : ReplayableTCPClient<ControlMessage>
 			
 				if (LastSeen > module.timeoutMs)
 					Send(ControlMessage.KeepaliveMessage());
-			break;
+				break;
 			case ModuleState.Shutdown:
 				while (ReceiveOne(msg))
 					ProcessMessage(msg);
@@ -104,9 +100,9 @@ public class Control : ReplayableTCPClient<ControlMessage>
 					SetState(ModuleState.Offline);
 					print(name + " - disconnected");
 				}
-			break;
-		case ModuleState.Failed:
-			break;
+				break;
+			case ModuleState.Failed:
+				break;
 		}
 
 	}
@@ -153,7 +149,7 @@ public class Control : ReplayableTCPClient<ControlMessage>
 				module.SetState(ModuleStateFromControlCommand(cmd));
 				break;
 			default:
-				print(name + " - ignoring unknown command " + message.GetType());
+				print(name + " - ignoring unsupported command " + message.GetType());
 				break;
 		}
 	}
@@ -212,7 +208,7 @@ public class Control : ReplayableTCPClient<ControlMessage>
 
 	private void EnableModule(RobotModule m)
 	{
-		if (replay.mode == UDPReplayMode.Replay)
+		if (replay.mode == ReplayMode.Replay)
 			return; //we just replay
 		
 		m.SetState(ModuleState.Initializing);
@@ -226,7 +222,7 @@ public class Control : ReplayableTCPClient<ControlMessage>
 		
 	private void DisableModule(RobotModule m)
 	{
-		if (replay.mode == UDPReplayMode.Replay)
+		if (replay.mode == ReplayMode.Replay)
 			return; //we just replay
 		
 		m.SetState(ModuleState.Shutdown);

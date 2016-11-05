@@ -10,19 +10,9 @@
  * GNU General Public License for more details.
  */
 
-using System;
-using System.Net.Sockets;
+using UnityEngine;
+using System.Collections;
 
-public interface IMessage
+public abstract class ReplayableClient : RobotModule
 {
-	void FromBinary(System.IO.BinaryReader reader);
-	int ToBinary(System.IO.BinaryWriter writer);
-
-	int PayloadSize (System.IO.BinaryReader header);
-
-	int HeaderSize ();
-	ulong GetTimestampUs();
-
 }
-
-

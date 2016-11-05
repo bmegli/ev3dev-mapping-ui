@@ -93,11 +93,7 @@ public class Control : ReplayableTCPClient<ControlMessage>
 					ProcessMessage(msg);
 			
 				if (LastSeen > module.timeoutMs)
-				{
-					print(name + " -  sending keepalive"); 
 					Send(ControlMessage.KeepaliveMessage());
-				}
-
 			break;
 			case ModuleState.Shutdown:
 				while (ReceiveOne(msg))

@@ -90,6 +90,12 @@ NavMeshSettings:
     cellSize: 0.16666667
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &939865545 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11409934, guid: f1c965012d5aeb44b9488089e600e3ad,
+    type: 2}
+  m_PrefabInternal: {fileID: 1232975330}
+  m_Script: {fileID: 11500000, guid: 8b11418fc32400342804ea7206f56a96, type: 3}
 --- !u!1001 &1232975330
 Prefab:
   m_ObjectHideFlags: 0
@@ -486,6 +492,51 @@ Prefab:
       propertyPath: m_RootOrder
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 224000010157528014, guid: 7f06da13b2f46d746b6fc95626d32620,
+        type: 2}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224000010157528014, guid: 7f06da13b2f46d746b6fc95626d32620,
+        type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224000010157528014, guid: 7f06da13b2f46d746b6fc95626d32620,
+        type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 52
+      objectReference: {fileID: 0}
+    - target: {fileID: 224000010157528014, guid: 7f06da13b2f46d746b6fc95626d32620,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: -50
+      objectReference: {fileID: 0}
+    - target: {fileID: 224000010157528014, guid: 7f06da13b2f46d746b6fc95626d32620,
+        type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 104
+      objectReference: {fileID: 0}
+    - target: {fileID: 224000010157528014, guid: 7f06da13b2f46d746b6fc95626d32620,
+        type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 224000011414595766, guid: 7f06da13b2f46d746b6fc95626d32620,
+        type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 104
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000013039453404, guid: 7f06da13b2f46d746b6fc95626d32620,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 939865545}
+    - target: {fileID: 114000013039453404, guid: 7f06da13b2f46d746b6fc95626d32620,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: StartReplay
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7f06da13b2f46d746b6fc95626d32620, type: 2}
   m_IsPrefabParent: 0
@@ -583,7 +634,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ff0d11dd54c26442835bbf9be65c986, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mode: 0
+  mode: 2
   direction: 0
 --- !u!114 &1952588918
 MonoBehaviour:
@@ -611,7 +662,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b6f228208324a94c9fa6a198527051e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sessionDirectory: TestingTheWifi
+  sessionDirectory: TestingTCPControl
 --- !u!4 &1952588920
 Transform:
   m_ObjectHideFlags: 0

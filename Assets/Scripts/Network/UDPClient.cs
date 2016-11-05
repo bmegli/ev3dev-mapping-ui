@@ -24,7 +24,7 @@ public class UDPClient<DATAGRAM>
 
 	private UdpClient udpClient;
 
-	private Thread proecessingThread;
+	private Thread replayThread;
 
 	private byte[] packet_data;
 	private BinaryWriter writer;
@@ -119,16 +119,16 @@ public class UDPClient<DATAGRAM>
 		
 	public void StartReplay(ulong base_timestamp_us)
 	{
-		if (proecessingThread != null)
+		if (replayThread != null)
 			throw new InvalidOperationException("UDP Client Replay is already running");
 		if (dumpReader == null)
 			throw new InvalidOperationException("Replay was not properly initialized");
 
 		baseline_timestamp_us = base_timestamp_us;
 		stopwatch.Start();
-		proecessingThread = new Thread(new ThreadStart(ProcessingThreadMain));
+		replayThread = new Thread(new ThreadStart(ProcessingThreadMain));
 		Run = true;
-		proecessingThread.Start();
+		replayThread.Start();
 	}
 	public void Stop()
 	{		

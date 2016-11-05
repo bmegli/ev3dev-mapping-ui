@@ -14,6 +14,7 @@ using System.Collections;
 using System.Net;
 using System.Net.Sockets;
 using System.IO;
+using System.Threading;
 using System;
 
 using UnityEngine;
@@ -21,28 +22,13 @@ using UnityEngine;
 public enum TCPClientState {Disconnected, Connecting, Connected, Idle};
 
 public class TCPClient<MESSAGE> 
-	where MESSAGE : IMessage
-{
+	where MESSAGE : IMessage, new()
+{	
 	const int INITIAL_BUFFER_SIZE = 256;
 
-	public TCPClientState State
-	{
-		get;
-		private set;
-	}
-
-	public long LastSeen
-	{
-		get {return lastSeenStopwatch.ElapsedMilliseconds ; }
-	}
-
-	public SocketException LastError
-	{
-		get;
-		private set;
-	}
-
 	private TcpClient tcpClient;
+
+	private Thread replayThread;
 
 	private string remoteHost;
 	private int remotePort;
@@ -53,17 +39,25 @@ public class TCPClient<MESSAGE>
 	private BinaryWriter writer;
 	private BinaryReader reader;
 
-//	private BinaryReader dumpReader;
-//	private BinaryWriter dumpWriter;
+	private BinaryReader dumpReader;
+	private BinaryWriter dumpWriter;
 
 	private ulong firstTimestampUs; //this is our first timestamp
-	private ulong baseline_timestamp_us; //this is baseline timestamp among all replaying servers
+	private ulong baseline_timestamp_us; //this is baseline timestamp among all replaying clients
 
 	private System.Diagnostics.Stopwatch lastSeenStopwatch;
-	//private System.Diagnostics.Stopwatch stopwatch;
+	private System.Diagnostics.Stopwatch stopwatch;
+	private MESSAGE message = new MESSAGE();
 
 	private bool receivedHeader=false;
 	private int receivedPayloadSize = 0;
+
+	public long LastSeen { get {return lastSeenStopwatch.ElapsedMilliseconds ; } }
+	public bool Run { get; set; }
+
+	public TCPClientState State { get; private set; }
+
+	public SocketException LastError { get; private set; }
 
 	public TCPClient(string host, int port)
 	{
@@ -76,7 +70,22 @@ public class TCPClient<MESSAGE>
 		remotePort = port;
 		lastSeenStopwatch = new System.Diagnostics.Stopwatch();
 	}
-		
+
+	public TCPClient(string host, int port, string dumpfile, bool record)
+		: this(host, port)
+	{
+		stopwatch = new System.Diagnostics.Stopwatch();
+
+		if(record)
+			dumpWriter = new BinaryWriter(File.Open(dumpfile, FileMode.Create));
+		else //replay
+		{
+			dumpReader = new BinaryReader(File.Open(dumpfile, FileMode.Open));
+			message.FromBinary(dumpReader);
+			firstTimestampUs = message.GetTimestampUs ();
+		}
+	}
+
 	public void StartConnecting()
 	{
 		if (State == TCPClientState.Connected || State == TCPClientState.Connected)
@@ -125,6 +134,8 @@ public class TCPClient<MESSAGE>
 
 	public void Stop()
 	{
+		Run = false;
+
 		if (lastSeenStopwatch != null)
 			lastSeenStopwatch.Stop();
 
@@ -139,15 +150,13 @@ public class TCPClient<MESSAGE>
 		if (writer != null)
 			writer.Close();
 
-
-		/*
-		if (dumpReader != null)
-			dumpReader.Close ();
 		if (stopwatch != null)
 			stopwatch.Stop();
+	
+		if (dumpReader != null)
+			dumpReader.Close ();
 		if (dumpWriter != null)
 			dumpWriter.Close ();
-		*/
 	}
 
 	public bool ReceiveOne(MESSAGE msg)
@@ -203,16 +212,60 @@ public class TCPClient<MESSAGE>
 
 			lastSeenStopwatch.Reset();
 			lastSeenStopwatch.Start();
+
+			if (dumpWriter != null)
+				dumpWriter.Write (outMemoryStream.GetBuffer(), 0, packet_length);
+			
 		}
 		catch(SocketException exc)
 		{
 			State = TCPClientState.Idle;
 			LastError = exc;
-			// use exc information
 		}
-//		if (dumpWriter != null)
-//			dumpWriter.Write (messageMemoryStream.GetBuffer(), 0, packet_length);
 	}
-		
+
+	public ulong GetFirstReplayTimestamp()
+	{
+		return firstTimestampUs;
+	}
+
+	public void StartReplay(ulong base_timestamp_us)
+	{
+		if (replayThread != null)
+			throw new InvalidOperationException("UDP Client Replay is already running");
+		if (dumpReader == null)
+			throw new InvalidOperationException("Replay was not properly initialized");
+
+		baseline_timestamp_us = base_timestamp_us;
+		stopwatch.Start();
+		replayThread = new Thread(new ThreadStart(ProcessingThreadMain));
+		Run = true;
+		replayThread.Start();
+	}
+
+	private void ProcessingThreadMain()
+	{
+		ulong elapsed_ms;
+
+		try
+		{
+			while (Run && State == TCPClientState.Connected)
+			{
+				elapsed_ms = baseline_timestamp_us/1000 + (ulong)stopwatch.ElapsedMilliseconds;
+				if(elapsed_ms < message.GetTimestampUs()/1000)
+					Thread.Sleep( (int)(message.GetTimestampUs()/1000 - elapsed_ms) );
+
+				Send(message);
+
+				message.FromBinary(dumpReader);
+			}
+		}
+		catch(System.Exception) //whatever happens just finish, to do - finish more softly when file ends, no need for exception
+		{
+		}
+
+		Debug.Log("Replay - finished");
+		Stop();
+	}
 }
 

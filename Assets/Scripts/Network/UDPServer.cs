@@ -111,9 +111,8 @@ public class UDPServer<DATAGRAM>
 			datagram.FromBinary(new System.IO.BinaryReader(new System.IO.MemoryStream(data)));
 			onDatagram(datagram);
 	
-			if (dumpWriter!=null)
-				datagram.ToBinary(dumpWriter);
-
+			if (dumpWriter != null)
+				dumpWriter.Write(data);
 		}
 			
 		if(dumpWriter!=null)

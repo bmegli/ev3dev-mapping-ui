@@ -13,9 +13,10 @@
 
 using UnityEngine;
 using System.Collections;
+using System.IO;
 
 public abstract class ReplayableTCPClient<MESSAGE> : RobotModule
-	where MESSAGE : IMessage
+	where MESSAGE : IMessage, new()
 {
 	public NetworkProperties tcp;
 
@@ -44,7 +45,16 @@ public abstract class ReplayableTCPClient<MESSAGE> : RobotModule
 		base.Awake ();
 
 		print(name + " - address " + network.robotIp  + " port: " + tcp.port);
-		client = new TCPClient<MESSAGE>(network.robotIp, tcp.port);
+
+		if (replay.RecordOutbound()) 
+		{
+			print(name + " - dumping packets to '" + Config.DumpPath(robot.sessionDirectory, name) + "'");
+			Directory.CreateDirectory(Config.DUMPS_DIRECTORY);
+			Directory.CreateDirectory(Config.DumpPath(robot.sessionDirectory));
+			client = new TCPClient<MESSAGE>(network.robotIp, tcp.port, Config.DumpPath(robot.sessionDirectory, name), true);
+		} 
+		else
+			client = new TCPClient<MESSAGE>(network.robotIp, tcp.port);
 	}
 		
 	protected virtual void OnDestroy()

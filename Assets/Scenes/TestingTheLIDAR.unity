@@ -289,10 +289,13 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 794299335}
-  - 114: {fileID: 794299334}
   - 114: {fileID: 794299333}
   - 114: {fileID: 794299332}
   - 114: {fileID: 794299331}
+  - 114: {fileID: 794299338}
+  - 114: {fileID: 794299337}
+  - 114: {fileID: 794299336}
+  - 114: {fileID: 794299334}
   m_Layer: 0
   m_Name: Robot
   m_TagString: Player
@@ -345,8 +348,7 @@ MonoBehaviour:
 --- !u!114 &794299334
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114000013788507174, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
-    type: 2}
+  m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 794299330}
   m_Enabled: 1
@@ -371,6 +373,49 @@ Transform:
   - {fileID: 1810892782}
   m_Father: {fileID: 0}
   m_RootOrder: 5
+--- !u!114 &794299336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 794299330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c2a17d7eb04d9f4d82b30f91de7f093, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  horizontal: Horizontal
+  vertical: Vertical
+  acceleration: Acceleration
+--- !u!114 &794299337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 794299330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13c84b9fbf0a0d742917ed905350f627, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxLinearSpeedMmPerSec: 200
+  MaxAngularSpeedDegPerSec: 45
+--- !u!114 &794299338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 794299330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56009f903a9acf64e85dacbbe8996dcc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wheelDiameterMm: 43.2
+  wheelbaseMm: 250
+  encoderCountsPerRotation: 360
+  maxEncoderCountsPerSecond: 1000
+  reverseMotorPolarity: 0
 --- !u!1 &925884582
 GameObject:
   m_ObjectHideFlags: 0

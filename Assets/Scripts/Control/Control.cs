@@ -21,9 +21,18 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 
-//this class has temp implementation!
+[Serializable]
+public class ControlProperties
+{
+	public int timeoutMs=1000;
+	public bool autostart = true;
+}
+
+[RequireComponent (typeof (ControlUI))]
 public class Control : ReplayableTCPClient<ControlMessage>
 {
+	public ControlProperties module;
+
 	private List<RobotModule> modules=new List<RobotModule>();
 	private ControlMessage msg=new ControlMessage();
 
@@ -61,29 +70,44 @@ public class Control : ReplayableTCPClient<ControlMessage>
 			StartConnectingIfAutostartAndDisconnected ();
 			break;
 		case ModuleState.Initializing:
-			StartConnectingIfAutostartAndDisconnected ();
+			StartConnectingIfAutostartAndDisconnected();
 			if (TCPClientState == TCPClientState.Idle)
-				SetState (ModuleState.Failed);
+			{
+				SetState(ModuleState.Failed);
+				OutputErrorMessage();
+			}
 			if (TCPClientState == TCPClientState.Connected)
 			{
 				SetState (ModuleState.Online);
 				EnableModules ();
 			}
 			break;
-		case ModuleState.Online:
-			if (TCPClientState == TCPClientState.Idle)
-			{
-				SetState (ModuleState.Failed);
-				return;
-			}
-			while (ReceiveOne (msg))
-				ProcessMessage (msg);
-			//LastSeen + Keepalive
+			case ModuleState.Online:
+				if (TCPClientState == TCPClientState.Idle)
+				{
+					SetState(ModuleState.Failed);
+					OutputErrorMessage();
+					return;
+				}
+				while (ReceiveOne(msg))
+					ProcessMessage(msg);
+			
+				if (LastSeen > module.timeoutMs)
+				{
+					print(name + " -  sending keepalive"); 
+					Send(ControlMessage.KeepaliveMessage());
+				}
+
 			break;
-		case ModuleState.Shutdown:
-			while (ReceiveOne (msg))
-				ProcessMessage (msg);
-			//all all disabled go offline, disconnect
+			case ModuleState.Shutdown:
+				while (ReceiveOne(msg))
+					ProcessMessage(msg);
+				if (AreAllModulesOfflineOrFailed())
+				{ 
+					Disconnect();
+					SetState(ModuleState.Offline);
+					print(name + " - disconnected");
+				}
 			break;
 		case ModuleState.Failed:
 			break;
@@ -100,7 +124,11 @@ public class Control : ReplayableTCPClient<ControlMessage>
 		}
 	}
 
-
+	private void OutputErrorMessage()
+	{
+		print(name + " - connection failed (" + LastErrorMessage + ")");
+	}
+		
 	private ModuleState ModuleStateFromControlCommand(ControlCommands cmd)
 	{
 		if (cmd == ControlCommands.ENABLED)
@@ -112,7 +140,7 @@ public class Control : ReplayableTCPClient<ControlMessage>
 		throw new ArgumentException("Unable to convert command " + cmd.ToString() + " to ModuleState");	
 	}
 
-	void ProcessMessage(ControlMessage message)
+	private void ProcessMessage(ControlMessage message)
 	{
 		RobotModule module;
 		ControlCommands cmd = message.GetCommand();
@@ -133,7 +161,48 @@ public class Control : ReplayableTCPClient<ControlMessage>
 				break;
 		}
 	}
-		
+
+	private bool AreAllModulesOfflineOrFailed()
+	{
+		foreach (RobotModule module in modules)
+			if (!(module.GetState() == ModuleState.Offline || module.GetState() == ModuleState.Failed ) )
+				return false;
+		return true;
+	}
+
+	public void EnableDisableSelf(bool enable)
+	{
+		if (enable)
+			EnableSelf();
+		else
+			DisableSelf();
+	}
+
+	private void DisableSelf()
+	{
+		print(name + " - disable called from " + GetState().ToString());
+
+		if (GetState() != ModuleState.Online)
+			return;
+
+		SetState(ModuleState.Shutdown);	
+
+		foreach (RobotModule module in modules)
+			if(module.GetState() == ModuleState.Online || module.GetState() == ModuleState.Initializing)
+				DisableModule(module);	
+	}
+	private void EnableSelf()
+	{
+		print(name + " - enable called from " + GetState().ToString());
+
+		if (GetState() != ModuleState.Offline && GetState() != ModuleState.Failed)
+			return;
+
+		StartConnecting ();
+		SetState (ModuleState.Initializing);
+	}
+
+
 	public void EnableDisableModule(string unique_module_name, bool enable)
 	{
 		RobotModule mod = modules.Find(m => (m.name == unique_module_name));
@@ -143,10 +212,9 @@ public class Control : ReplayableTCPClient<ControlMessage>
 		else
 			DisableModule(mod);
 
-
 	}
 
-	public void EnableModule(RobotModule m)
+	private void EnableModule(RobotModule m)
 	{
 		if (replay.mode == UDPReplayMode.Replay)
 			return; //we just replay
@@ -159,7 +227,8 @@ public class Control : ReplayableTCPClient<ControlMessage>
 		Send (msg);
 
 	}
-	public void DisableModule(RobotModule m)
+		
+	private void DisableModule(RobotModule m)
 	{
 		if (replay.mode == UDPReplayMode.Replay)
 			return; //we just replay
@@ -173,7 +242,7 @@ public class Control : ReplayableTCPClient<ControlMessage>
 	}
 
 
-	public void EnableModules()
+	private void EnableModules()
 	{		
 		foreach (RobotModule module in modules)
 		{
@@ -186,7 +255,8 @@ public class Control : ReplayableTCPClient<ControlMessage>
 
 	private void DisableModules()
 	{ 
-		// maybe check some connected state etc
+		if (GetState() != ModuleState.Online)
+			return;
 
 		foreach (RobotModule module in modules)
 			if(module.GetState() == ModuleState.Initializing || module.GetState() == ModuleState.Online)

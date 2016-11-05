@@ -16,6 +16,8 @@ using System.Net.Sockets;
 using System.IO;
 using System;
 
+using UnityEngine;
+
 public enum TCPClientState {Disconnected, Connecting, Connected, Idle};
 
 public class TCPClient<MESSAGE> 
@@ -29,8 +31,18 @@ public class TCPClient<MESSAGE>
 		private set;
 	}
 
+	public long LastSeen
+	{
+		get {return lastSeenStopwatch.ElapsedMilliseconds ; }
+	}
+
+	public SocketException LastError
+	{
+		get;
+		private set;
+	}
+
 	private TcpClient tcpClient;
-	private NetworkStream stream;
 
 	private string remoteHost;
 	private int remotePort;
@@ -47,12 +59,11 @@ public class TCPClient<MESSAGE>
 	private ulong firstTimestampUs; //this is our first timestamp
 	private ulong baseline_timestamp_us; //this is baseline timestamp among all replaying servers
 
-//	private System.Diagnostics.Stopwatch stopwatch;
+	private System.Diagnostics.Stopwatch lastSeenStopwatch;
+	//private System.Diagnostics.Stopwatch stopwatch;
 
 	private bool receivedHeader=false;
 	private int receivedPayloadSize = 0;
-
-	private AsyncCallback onConnectCallback;
 
 	public TCPClient(string host, int port)
 	{
@@ -63,13 +74,34 @@ public class TCPClient<MESSAGE>
 		reader = new BinaryReader (inMemoryStream);
 		remoteHost = host;
 		remotePort = port;
+		lastSeenStopwatch = new System.Diagnostics.Stopwatch();
+	}
+		
+	public void StartConnecting()
+	{
+		if (State == TCPClientState.Connected || State == TCPClientState.Connected)
+			throw new InvalidOperationException ("Unable to start connecting, already connected or connecting");
+	
+		tcpClient.BeginConnect (remoteHost, remotePort, OnConnect, tcpClient);
+
+		State = TCPClientState.Connecting;
 	}
 
 	private void OnConnect(IAsyncResult result)
 	{
+		try
+		{
+			tcpClient.EndConnect(result);
+		}
+		catch(SocketException exc)
+		{
+			LastError = exc;
+		}
+			
 		if (tcpClient.Connected)
 		{
-			stream = tcpClient.GetStream ();
+			lastSeenStopwatch.Reset();
+			lastSeenStopwatch.Start();
 			State = TCPClientState.Connected;
 		}
 		else
@@ -77,34 +109,37 @@ public class TCPClient<MESSAGE>
 			State = TCPClientState.Idle;
 		}
 	}
-
-	public void StartConnecting()
+		
+	public void Disconnect()
 	{
-		if (State == TCPClientState.Connected || State == TCPClientState.Connected)
-			throw new InvalidOperationException ("Unable to start connecting, already connected or connecting");
-		onConnectCallback = new AsyncCallback (OnConnect);
-		tcpClient.BeginConnect (remoteHost, remotePort, onConnectCallback, tcpClient);
-
-		State = TCPClientState.Connecting;
+		if (State == TCPClientState.Disconnected || State == TCPClientState.Idle)
+			return;
+		if (tcpClient == null)
+			return;
+		if(tcpClient.Connected)
+			tcpClient.GetStream().Close();
+		tcpClient.Close();
+		tcpClient = new TcpClient();
+		State = TCPClientState.Idle;
 	}
-
-	public void Connect()
-	{		
-		tcpClient.Connect (remoteHost, remotePort);
-		stream = tcpClient.GetStream ();
-	}
-
 
 	public void Stop()
 	{
+		if (lastSeenStopwatch != null)
+			lastSeenStopwatch.Stop();
+
 		if (tcpClient != null)
-			tcpClient.Close ();
-		if (stream != null)
-			stream.Close ();
+		{
+			if(tcpClient.Connected)
+				tcpClient.GetStream().Close();
+			tcpClient.Close();
+		}
 		if (reader != null)
 			reader.Close();
 		if (writer != null)
 			writer.Close();
+
+
 		/*
 		if (dumpReader != null)
 			dumpReader.Close ();
@@ -125,7 +160,7 @@ public class TCPClient<MESSAGE>
 			if(inMemoryStream.Capacity < msg.HeaderSize())
 				inMemoryStream.Capacity = msg.HeaderSize();
 
-			stream.Read(inMemoryStream.GetBuffer(), 0, msg.HeaderSize());
+			tcpClient.GetStream().Read(inMemoryStream.GetBuffer(), 0, msg.HeaderSize());
 			reader.BaseStream.Position = 0;
 			reader.BaseStream.SetLength(msg.HeaderSize());
 		
@@ -141,7 +176,7 @@ public class TCPClient<MESSAGE>
 			return false;
 
 		if (receivedPayloadSize > 0)
-			stream.Read(inMemoryStream.GetBuffer(), msg.HeaderSize(), receivedPayloadSize);
+			tcpClient.GetStream().Read(inMemoryStream.GetBuffer(), msg.HeaderSize(), receivedPayloadSize);
 
 		reader.BaseStream.Position = 0;
 
@@ -149,6 +184,9 @@ public class TCPClient<MESSAGE>
 		receivedPayloadSize = 0;
 
 		msg.FromBinary (reader);
+
+		lastSeenStopwatch.Reset();
+		lastSeenStopwatch.Start();
 
 		return true;
 	}
@@ -158,11 +196,23 @@ public class TCPClient<MESSAGE>
 		writer.Seek(0, SeekOrigin.Begin);
 		int packet_length=message.ToBinary(writer);
 		writer.Flush();
-		stream.Write (outMemoryStream.GetBuffer(), 0, packet_length);
-	
+
+		try
+		{
+			tcpClient.GetStream().Write (outMemoryStream.GetBuffer(), 0, packet_length);
+
+			lastSeenStopwatch.Reset();
+			lastSeenStopwatch.Start();
+		}
+		catch(SocketException exc)
+		{
+			State = TCPClientState.Idle;
+			LastError = exc;
+			// use exc information
+		}
 //		if (dumpWriter != null)
 //			dumpWriter.Write (messageMemoryStream.GetBuffer(), 0, packet_length);
 	}
-
+		
 }
 

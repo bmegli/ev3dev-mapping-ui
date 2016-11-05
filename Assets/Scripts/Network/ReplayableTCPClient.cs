@@ -17,7 +17,7 @@ using System.Collections;
 public abstract class ReplayableTCPClient<MESSAGE> : RobotModule
 	where MESSAGE : IMessage
 {
-	public UDPProperties udp;
+	public NetworkProperties tcp;
 
 	private TCPClient<MESSAGE> client;
 
@@ -25,13 +25,26 @@ public abstract class ReplayableTCPClient<MESSAGE> : RobotModule
 	{
 		get {return client.State;}
 	}
-		
+
+	protected string LastErrorMessage
+	{
+		get{return client.LastError.Message; }
+	}
+	protected int LastErrorCode
+	{
+		get{return client.LastError.ErrorCode; }
+	}
+	protected long LastSeen
+	{
+		get{return client.LastSeen; }
+	}
+
 	protected override void Awake()
 	{
 		base.Awake ();
 
-		print(name + " - address " + network.robotIp  + " port: " + udp.port);
-		client = new TCPClient<MESSAGE>(network.robotIp, udp.port);
+		print(name + " - address " + network.robotIp  + " port: " + tcp.port);
+		client = new TCPClient<MESSAGE>(network.robotIp, tcp.port);
 	}
 		
 	protected virtual void OnDestroy()
@@ -46,10 +59,21 @@ public abstract class ReplayableTCPClient<MESSAGE> : RobotModule
 
 	protected void StartConnecting()
 	{
-		print(name + " - connecting to " + network.robotIp  + " port: " + udp.port);
+		print(name + " - connecting to " + network.robotIp  + " port: " + tcp.port);
 		client.StartConnecting ();
 	}
 		
+	protected void Disconnect()
+	{
+		if (client.State == TCPClientState.Disconnected || client.State == TCPClientState.Idle)
+		{
+			print(name + " - can't disconnect (not connected)");
+			return;
+		}
+		print(name + " - disconnecting from " + network.robotIp  + " port: " + tcp.port);
+		client.Disconnect();
+	}
+
 	protected void Send(MESSAGE message)
 	{
 		client.Send(message);

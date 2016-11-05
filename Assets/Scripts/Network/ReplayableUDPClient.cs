@@ -17,7 +17,7 @@ using System.IO;
 public abstract class ReplayableUDPClient<DATAGRAM> : RobotModule, IReplayableUDPClient
 	where DATAGRAM : IDatagram, new()
 {
-	public UDPProperties udp;
+	public NetworkProperties udp;
 
 	private UDPClient<DATAGRAM> client;
 			

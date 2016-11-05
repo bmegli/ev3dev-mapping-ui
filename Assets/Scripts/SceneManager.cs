@@ -20,7 +20,7 @@ public class SceneManager : MonoBehaviour
 	private GameObject uiCanvas;
 	private GameObject robot;
 	private Control robotControl;
-	private GameObject modulesPanel;
+	private GameObject robotsPanel;
 
 	public static SceneManager Instance { get; private set; }
 
@@ -29,9 +29,14 @@ public class SceneManager : MonoBehaviour
 		get {return Instance.dynamicObjects;}
 	}
 
-	public static GameObject ModulesPanel
+	public static GameObject RobotsPanel
 	{
-		get{return Instance.modulesPanel; }
+		get{return Instance.robotsPanel; }
+	}
+
+	public static Transform UICanvas
+	{
+		get{ return Instance.uiCanvas.transform; }
 	}
 
 	private void Destroy()
@@ -51,7 +56,7 @@ public class SceneManager : MonoBehaviour
 		uiCanvas = GameObject.Find("UICanvas");
 		robot = GameObject.FindGameObjectWithTag ("Player");
 		robotControl = robot.GetComponent<Control> ();
-		modulesPanel = GameObject.Find("ModulesPanel");
+		robotsPanel = GameObject.Find("RobotsPanel");
 	}
 
 	public void SaveMaps()

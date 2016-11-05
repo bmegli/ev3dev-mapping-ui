@@ -28,7 +28,7 @@ public interface IReplayableUDPClient
 }
 	
 [Serializable]
-public class UDPProperties
+public class NetworkProperties
 {
 	public int port=8000;
 	//public string dumpFilename="dump.bin";

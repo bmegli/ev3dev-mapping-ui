@@ -13,55 +13,55 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
-using System;
 
-public class ModuleUI : MonoBehaviour, IComparable<ModuleUI>
+public class ControlUI : MonoBehaviour
 {
 	public Transform UiTransform;
+	public Transform ModulesPanel;
 	public Text ModuleName;
 	public Text ModuleText;
 	public Toggle EnabledToggle;
 
 	protected Transform uiTransform;
+	private Transform modulesPanel;
+
 	private Text moduleName;
 	private Text moduleState;
 	private Toggle enabledToggle;
 	private Control control;
 
-	protected RobotModule module;
-
 	protected virtual void Awake()
 	{
+		modulesPanel = Instantiate<Transform>(ModulesPanel);
 		uiTransform = Instantiate<Transform>(UiTransform);
+
 		moduleName = SafeInstantiateText(ModuleName, uiTransform, "module");
 		moduleState = SafeInstantiateText(ModuleText, uiTransform, ModuleState.Offline.ToString().ToLower());
 		enabledToggle = SafeInstantiate<Toggle>(EnabledToggle, uiTransform);
 		enabledToggle.onValueChanged.AddListener(SetEnable);
-		control = transform.parent.GetComponentInChildren<Control> ();
-		module = GetComponent<RobotModule> ();
 	}
-
-	public void SetUIParent(Transform rectTranform)
-	{
-		uiTransform.SetParent(rectTranform, false);
-	}
-
+		
 	protected virtual void Start ()
 	{
-		if (module == null)
-		{
-			print("Module not set!");
-			enabled = false;
-			return;
-		}
-		moduleName.text = module.name;
+		control = GetComponent<Control>();
+		moduleName.text = transform.parent.name;
+
+		uiTransform.SetParent(modulesPanel, false);
+
+		ModuleUI[] modulesUIs = transform.parent.GetComponentsInChildren<ModuleUI>();
+		System.Array.Sort(modulesUIs);
+
+		foreach (ModuleUI module in modulesUIs)
+			module.SetUIParent(modulesPanel);
+		
+		modulesPanel.SetParent(SceneManager.RobotsPanel.transform, false);
 	}
 
 	protected virtual void Update ()
 	{
-		moduleState.text = module.GetState().ToString().ToLower();
+		moduleState.text = control.GetState().ToString().ToLower();
 
-		if (module.GetState() == ModuleState.Online)
+		if (control.GetState() == ModuleState.Online)
 			enabledToggle.Set(true, false);
 		else
 			enabledToggle.Set(false, false);
@@ -69,7 +69,7 @@ public class ModuleUI : MonoBehaviour, IComparable<ModuleUI>
 
 	public void SetEnable(bool enable)
 	{
-		control.EnableDisableModule(module.name, enable);
+		control.EnableDisableSelf(enable);
 	}
 
 	protected Text SafeInstantiateText(Text original, Transform parent, string initial_text) 
@@ -78,7 +78,7 @@ public class ModuleUI : MonoBehaviour, IComparable<ModuleUI>
 		instantiated.text=initial_text;
 		return instantiated;
 	}
-		
+
 	protected T SafeInstantiate<T>(T original, Transform parent) where T : MonoBehaviour
 	{
 		if (original == null)
@@ -103,10 +103,7 @@ public class ModuleUI : MonoBehaviour, IComparable<ModuleUI>
 		return instantiated;
 	}
 
-	public int CompareTo(ModuleUI other)
-	{
-		return module.CompareTo(other.module);
-	}
+
 
 
 }

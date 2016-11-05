@@ -103,7 +103,14 @@ public class ControlMessage : IMessage
 	{
 		PutAttribute (new ControlAttributeI32 (attribute, value));
 	}
-		
+
+	public static ControlMessage KeepaliveMessage()
+	{
+		ControlMessage msg = new ControlMessage();
+		msg.NewMessage(ControlCommands.KEEPALIVE);
+		return msg;
+	}
+
 	public static ControlMessage EnableMessage(string unique_name, string call, ushort creation_delay_ms)
 	{
 		ControlMessage msg = new ControlMessage ();
@@ -241,7 +248,6 @@ public abstract class ControlAttribute
 		ControlAttributes attribute = (ControlAttributes) reader.ReadByte ();
 		byte length = reader.ReadByte ();
 
-
 		switch (attribute)
 		{
 		case ControlAttributes.UNIQUE_NAME:
@@ -270,7 +276,7 @@ public class ControlAttributeString : ControlAttribute
 
 	private ControlAttributeString(ControlAttributes attr, byte len, BinaryReader reader) : base(attr, len)
 	{
-		byte[] ascii_data=reader.ReadBytes (len);
+		byte[] ascii_data=reader.ReadBytes(len);
 		data=System.Text.Encoding.ASCII.GetString(ascii_data, 0 , len-1);
 	}
 

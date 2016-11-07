@@ -15,6 +15,12 @@ using System;
 using System.Collections;
 
 [Serializable]
+public class ModuleNetwork
+{
+	public int port=8000;
+}
+	
+[Serializable]
 public class ModuleProperties
 {
 	public bool autostart=true;
@@ -26,10 +32,11 @@ public enum ModuleState {Offline=0, Initializing=1, Online=2, Shutdown=3, Failed
 
 // Note - this component depends on its parent in hierarchy!
 
-
 // Common functions for all components and common robot configuration from parent
 public abstract class RobotModule : MonoBehaviour, IComparable<RobotModule>
 {
+	public ModuleNetwork moduleNetwork;
+
 	protected RobotRequired robot;
 	protected Network network;
 	protected Replay replay;
@@ -58,7 +65,7 @@ public abstract class RobotModule : MonoBehaviour, IComparable<RobotModule>
 	{
 		return ModulePriority().CompareTo( other.ModulePriority() );
 	}
-
+		
 	protected virtual void Awake()
 	{
 		robot = SafeGetComponentInParent<RobotRequired> ().DeepCopy ();
@@ -68,6 +75,13 @@ public abstract class RobotModule : MonoBehaviour, IComparable<RobotModule>
 		physics = SafeGetComponentInParent<Physics>().DeepCopy();
 		limits = SafeGetComponentInParent<Limits>().DeepCopy();
 		input = SafeGetComponentInParent<UserInput>().DeepCopy();
+	}
+
+	public abstract ulong GetFirstPacketTimestampUs();
+	protected abstract void StartReplay(int time_offset_us);
+	public virtual void StartReplay()
+	{
+		StartReplay(0);
 	}
 
 	protected T SafeInstantiate<T>(T original) where T : MonoBehaviour

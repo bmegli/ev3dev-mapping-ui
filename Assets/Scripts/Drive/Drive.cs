@@ -21,7 +21,7 @@ public class DriveModuleProperties : ModuleProperties
 
 enum DriveMode {Manual, Auto};
 
-[RequireComponent (typeof (LaserUI))]
+[RequireComponent (typeof (DriveUI))]
 public class Drive : ReplayableUDPClient<DrivePacket>
 {
 	public int packetDelayMs=50;
@@ -46,15 +46,10 @@ public class Drive : ReplayableUDPClient<DrivePacket>
 	protected override void Start ()
 	{
 	}
-
-	public void StartReplay()
-	{
-		base.StartReplay(0);
-	}
-		
+				
 	void Update ()
 	{
-		if (replay.mode == UDPReplayMode.Replay)
+		if (replay.mode == ReplayMode.Replay)
 			return; //do nothing, we replay previous communication or replay inbound traffic
 
 		timeSinceLastPacketMs += Time.deltaTime*1000.0f;
@@ -91,7 +86,7 @@ public class Drive : ReplayableUDPClient<DrivePacket>
 
 	public void DriveAhead(float distance_cm, float speed_cm_per_sec)
 	{
-		if (replay.mode == UDPReplayMode.Replay) 
+		if (replay.mode == ReplayMode.Replay) 
 			return; //do nothing, we replay previous communication or inbound traffic
 		
 		mode = DriveMode.Auto;
@@ -166,7 +161,7 @@ public class Drive : ReplayableUDPClient<DrivePacket>
 
 	public override string ModuleCall()
 	{
-		return "ev3drive " + udp.port + " " + module.timeoutMs;
+		return "ev3drive " + moduleNetwork.port + " " + module.timeoutMs;
 	}
 	public override int ModulePriority()
 	{

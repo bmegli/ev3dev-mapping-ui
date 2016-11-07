@@ -10,49 +10,56 @@
  * GNU General Public License for more details.
  */
 
+
 using UnityEngine;
-using System.Collections.Generic;
+using System.Collections;
 using System.IO;
 
-public abstract class ReplayableUDPClient<DATAGRAM> : ReplayableClient
-	where DATAGRAM : IDatagram, new()
+public abstract class ReplayableTCPClient<MESSAGE> : ReplayableClient
+	where MESSAGE : IMessage, new()
 {
-	private UDPClient<DATAGRAM> client;
-			
-	protected void Send(DATAGRAM packet)
+	private TCPClient<MESSAGE> client;
+
+	protected TCPClientState TCPClientState
 	{
-		client.Send (packet);
+		get {return client.State;}
 	}
 
-	protected virtual void OnDestroy()
+	protected string LastErrorMessage
 	{
-		print(name + " - stop client");
-		if(client != null)
-			client.Stop();
+		get{return client.LastError.Message; }
+	}
+	protected int LastErrorCode
+	{
+		get{return client.LastError.ErrorCode; }
+	}
+	protected long LastSeen
+	{
+		get{return client.LastSeen; }
 	}
 
 	protected override void Awake()
 	{
 		base.Awake ();
 
-		print(name + " - port: " + moduleNetwork.port);
+		print(name + " - address " + network.robotIp  + " port: " + moduleNetwork.port);
 
 		if (replay.RecordOutbound()) 
 		{
 			print(name + " - dumping packets to '" + Config.DumpPath(robot.sessionDirectory, name) + "'");
 			Directory.CreateDirectory(Config.DUMPS_DIRECTORY);
 			Directory.CreateDirectory(Config.DumpPath(robot.sessionDirectory));
-			client = new UDPClient<DATAGRAM>(network.robotIp, moduleNetwork.port, Config.DumpPath(robot.sessionDirectory, name), true);
-		} 
+			client = new TCPClient<MESSAGE>(network.robotIp, moduleNetwork.port, Config.DumpPath(robot.sessionDirectory, name), true);
+		}
 		else if (replay.ReplayOutbound()) //the client reading from dump & sending
 		{
 			print(name + " - replay from '" + Config.DumpPath(robot.sessionDirectory, name) + "'");
 
 			try
 			{
-				client = new UDPClient<DATAGRAM>(network.robotIp, moduleNetwork.port, Config.DumpPath(robot.sessionDirectory, name), false);
+				client = new TCPClient<MESSAGE>(network.robotIp, moduleNetwork.port, Config.DumpPath(robot.sessionDirectory, name), false);
 			}
-			catch
+			catch(System.Exception)
 			{
 				print(name + " - replay disabled (can't initialize from '" + Config.DumpPath(robot.sessionDirectory, name) + "' on port " + moduleNetwork.port + ")");
 				replay.mode = ReplayMode.None;
@@ -60,10 +67,53 @@ public abstract class ReplayableUDPClient<DATAGRAM> : ReplayableClient
 			}
 		}
 		else
-			client = new UDPClient<DATAGRAM>(network.robotIp, moduleNetwork.port);
+			client = new TCPClient<MESSAGE>(network.robotIp, moduleNetwork.port);
+	}
+		
+	protected virtual void OnDestroy()
+	{
+		print(name + " - stop client");
+		if(client != null)
+			client.Stop();
+
+	}
+				
+	protected abstract void Start();
+
+	protected void StartConnecting()
+	{
+		print(name + " - connecting to " + network.robotIp  + " port: " + moduleNetwork.port);
+		client.StartConnecting ();
+	}
+		
+	protected void Disconnect()
+	{
+		if (client.State == TCPClientState.Disconnected || client.State == TCPClientState.Idle)
+		{
+			print(name + " - can't disconnect (not connected)");
+			return;
+		}
+		print(name + " - disconnecting from " + network.robotIp  + " port: " + moduleNetwork.port);
+		client.Disconnect();
 	}
 
-	protected abstract void Start();
+	protected void Send(MESSAGE message)
+	{
+		client.Send(message);
+	}
+		
+	protected bool ReceiveOne(MESSAGE msg)
+	{
+		try
+		{
+			return client.ReceiveOne(msg);
+		}
+		catch(System.ArgumentException exc)
+		{
+			print (name + " - ignoring malformed message " + exc.ToString());
+		}
+		return false;
+	}
 
 	protected override void StartReplay(int time_offset)
 	{
@@ -91,14 +141,5 @@ public abstract class ReplayableUDPClient<DATAGRAM> : ReplayableClient
 		if (client == null || !replay.ReplayOutbound())
 			return ulong.MaxValue;
 		return client.GetFirstReplayTimestamp();
-	}
-
-	public bool IsPacketWaiting()
-	{
-		return client.IsPacketWaiting();
-	}
-	public bool ReceiveOne(DATAGRAM datagram)
-	{
-		return client.ReceiveOne(datagram);
 	}
 }

@@ -1,26 +1,29 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public enum ReplayMode {None, Record, Replay};
+public enum ReplayDirection {Inbound, Outbound};
+
 public class Replay : MonoBehaviour
 {
-	public UDPReplayMode mode = UDPReplayMode.None;
-	public UDPReplayDirection direction = UDPReplayDirection.Inbound;
+	public ReplayMode mode = ReplayMode.None;
+	public ReplayDirection direction = ReplayDirection.Inbound;
 
 	public bool RecordInbound()
 	{
-		return mode == UDPReplayMode.Record && direction == UDPReplayDirection.Inbound;
+		return mode == ReplayMode.Record && direction == ReplayDirection.Inbound;
 	}
 	public bool RecordOutbound()
 	{
-		return mode == UDPReplayMode.Record && direction == UDPReplayDirection.Outbound;
+		return mode == ReplayMode.Record && direction == ReplayDirection.Outbound;
 	}
 	public bool ReplayInbound()
 	{
-		return mode == UDPReplayMode.Replay && direction == UDPReplayDirection.Inbound;
+		return mode == ReplayMode.Replay && direction == ReplayDirection.Inbound;
 	}
 	public bool ReplayOutbound()
 	{
-		return mode == UDPReplayMode.Replay && direction == UDPReplayDirection.Outbound;
+		return mode == ReplayMode.Replay && direction == ReplayDirection.Outbound;
 	}
 		
 	public Replay DeepCopy()

@@ -106,12 +106,7 @@ public class Wifi : ReplayableUDPServer<WifiPacket>
 		map3D = GetComponent<Map3D>();
 		base.Start();
 	}
-
-	public void StartReplay()
-	{
-		base.StartReplay(0);
-	}
-
+		
 	void Update()
 	{
 		lock (wifiLock)
@@ -217,7 +212,7 @@ public class Wifi : ReplayableUDPServer<WifiPacket>
 
 	public override string ModuleCall()
 	{
-		return "ev3wifi " + network.hostIp + " " + udp.port + " " + module.wirelessDevice + " " + module.pollMs;
+		return "ev3wifi " + network.hostIp + " " + moduleNetwork.port + " " + module.wirelessDevice + " " + module.pollMs;
 	}
 	public override int ModulePriority()
 	{

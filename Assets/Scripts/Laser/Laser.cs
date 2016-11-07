@@ -122,10 +122,6 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 		map3D = GetComponent<Map3D> ();
 		base.Start();
 	}
-	public void StartReplay()
-	{
-		base.StartReplay(0);
-	}
 
 	void Update ()
 	{
@@ -302,7 +298,7 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 
 	public override string ModuleCall()
 	{
-		return "ev3laser " + module.laserDevice + " " + module.motorPort + " " + network.hostIp + " " + udp.port + " " + module.laserDutyCycle;
+		return "ev3laser " + module.laserDevice + " " + module.motorPort + " " + network.hostIp + " " + moduleNetwork.port + " " + module.laserDutyCycle;
 	}
 	public override int ModulePriority()
 	{

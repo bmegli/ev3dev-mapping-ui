@@ -90,6 +90,12 @@ NavMeshSettings:
     cellSize: 0.16666667
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &436102201 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11409934, guid: f1c965012d5aeb44b9488089e600e3ad,
+    type: 2}
+  m_PrefabInternal: {fileID: 2065968506}
+  m_Script: {fileID: 11500000, guid: 8b11418fc32400342804ea7206f56a96, type: 3}
 --- !u!1001 &515788133
 Prefab:
   m_ObjectHideFlags: 0
@@ -158,6 +164,11 @@ Prefab:
         type: 2}
       propertyPath: moduleNetwork.port
       value: 8006
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000010431501252, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
+        type: 2}
+      propertyPath: mode
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
@@ -243,41 +254,16 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 224000010157528014, guid: 7f06da13b2f46d746b6fc95626d32620,
+    - target: {fileID: 114000013039453404, guid: 7f06da13b2f46d746b6fc95626d32620,
         type: 2}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 224000010157528014, guid: 7f06da13b2f46d746b6fc95626d32620,
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 436102201}
+    - target: {fileID: 114000014206592630, guid: 7f06da13b2f46d746b6fc95626d32620,
         type: 2}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 224000010157528014, guid: 7f06da13b2f46d746b6fc95626d32620,
-        type: 2}
-      propertyPath: m_AnchoredPosition.x
-      value: 52
-      objectReference: {fileID: 0}
-    - target: {fileID: 224000010157528014, guid: 7f06da13b2f46d746b6fc95626d32620,
-        type: 2}
-      propertyPath: m_AnchoredPosition.y
-      value: -50
-      objectReference: {fileID: 0}
-    - target: {fileID: 224000010157528014, guid: 7f06da13b2f46d746b6fc95626d32620,
-        type: 2}
-      propertyPath: m_SizeDelta.x
-      value: 104
-      objectReference: {fileID: 0}
-    - target: {fileID: 224000010157528014, guid: 7f06da13b2f46d746b6fc95626d32620,
-        type: 2}
-      propertyPath: m_SizeDelta.y
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 224000011414595766, guid: 7f06da13b2f46d746b6fc95626d32620,
-        type: 2}
-      propertyPath: m_SizeDelta.x
-      value: 104
-      objectReference: {fileID: 0}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 436102201}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7f06da13b2f46d746b6fc95626d32620, type: 2}
   m_IsPrefabParent: 0

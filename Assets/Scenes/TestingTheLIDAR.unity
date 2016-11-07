@@ -494,6 +494,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1552632758}
   - 114: {fileID: 1552632759}
+  - 114: {fileID: 1552632760}
   m_Layer: 0
   m_Name: Control
   m_TagString: Untagged
@@ -532,6 +533,24 @@ MonoBehaviour:
   module:
     timeoutMs: 1000
     autostart: 1
+--- !u!114 &1552632760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1552632757}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8df3b6d5a01c1144496c9e77ae872a11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UiTransform: {fileID: 224000014143048226, guid: 65f13ffe83a96c346a20799a371253c3,
+    type: 2}
+  ModulesPanel: {fileID: 224000014273432050, guid: a739c3d2ecb42584ab50aa32a25083e0,
+    type: 2}
+  ModuleName: {fileID: 11445212, guid: f4343af0dd1752d4dbeedd72c0ab47cd, type: 2}
+  ModuleText: {fileID: 11476718, guid: b3cd24b3fd3c11f468cca498f15db4ce, type: 2}
+  EnabledToggle: {fileID: 11469012, guid: 24eba0bcd1d1ad543b88447b9a715f6d, type: 2}
 --- !u!1 &1810892781
 GameObject:
   m_ObjectHideFlags: 0

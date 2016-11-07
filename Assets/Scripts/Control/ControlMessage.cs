@@ -201,34 +201,34 @@ public class ControlMessage : IMessage
 			written += a.ToBinary (writer);
 		return written;
 	}
-		
-	public class ControlHeader
-	{
-		public const int CONTROL_HEADER_BYTES = 12;
-
-		public ulong timestamp_us;
-		public byte protocol_version;
-		public ControlCommands command;
-		public ushort payload_length;
-
-		public void FromBinary(BinaryReader reader)
-		{
-			timestamp_us = (ulong)IPAddress.NetworkToHostOrder(reader.ReadInt64());
-			protocol_version = reader.ReadByte ();
-			command = (ControlCommands) reader.ReadSByte ();
-			payload_length = (ushort)IPAddress.NetworkToHostOrder(reader.ReadInt16());
-		}
-		public int ToBinary(BinaryWriter writer)
-		{
-			writer.Write(IPAddress.HostToNetworkOrder((long)timestamp_us));
-			writer.Write(protocol_version);
-			writer.Write((sbyte)command);
-			writer.Write (IPAddress.HostToNetworkOrder ((short)payload_length));
-			return CONTROL_HEADER_BYTES;
-		}
-	}
 }
 
+public class ControlHeader
+{
+	public const int CONTROL_HEADER_BYTES = 12;
+
+	public ulong timestamp_us;
+	public byte protocol_version;
+	public ControlCommands command;
+	public ushort payload_length;
+
+	public void FromBinary(BinaryReader reader)
+	{
+		timestamp_us = (ulong)IPAddress.NetworkToHostOrder(reader.ReadInt64());
+		protocol_version = reader.ReadByte ();
+		command = (ControlCommands) reader.ReadSByte ();
+		payload_length = (ushort)IPAddress.NetworkToHostOrder(reader.ReadInt16());
+	}
+	public int ToBinary(BinaryWriter writer)
+	{
+		writer.Write(IPAddress.HostToNetworkOrder((long)timestamp_us));
+		writer.Write(protocol_version);
+		writer.Write((sbyte)command);
+		writer.Write (IPAddress.HostToNetworkOrder ((short)payload_length));
+		return CONTROL_HEADER_BYTES;
+	}
+}
+	
 public abstract class ControlAttribute
 {
 	public const int CONTROL_ATTRIBUTE_HEADER_BYTES = 2;

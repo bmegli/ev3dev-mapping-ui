@@ -11,7 +11,9 @@
  */
 
 using UnityEngine;
+using System.IO;
 using System;
+
 
 [Serializable]
 public class DriveModuleProperties : ModuleProperties
@@ -19,7 +21,7 @@ public class DriveModuleProperties : ModuleProperties
 	public int timeoutMs=500;
 }
 
-enum DriveMode {Manual, Auto};
+enum DriveMode {Manual, Auto, Backtrack};
 
 [RequireComponent (typeof (DriveUI))]
 public class Drive : ReplayableUDPClient<DrivePacket>
@@ -57,21 +59,22 @@ public class Drive : ReplayableUDPClient<DrivePacket>
 		if (timeSinceLastPacketMs < packetDelayMs)
 			return;
 
-		packet.timestamp_us = Timestamp.TimestampUs();
-
-		if (mode == DriveMode.Auto)
+		if ( (mode == DriveMode.Auto || mode == DriveMode.Backtrack)  && IsManualInput() )
 		{
-			if (IsManualInput ())
-			{
-				mode = DriveMode.Manual;
-				return;
-			}
-			packet.command = (short)DrivePacket.Commands.KEEPALIVE;
+			mode = DriveMode.Manual;
+			return;
 		}
 
-		if (mode == DriveMode.Manual)
+		if (mode == DriveMode.Backtrack)
+			return;
+
+		packet.timestamp_us = Timestamp.TimestampUs();
+
+		if(mode == DriveMode.Auto)
+			packet.command = DrivePacket.Commands.KEEPALIVE;
+		else if (mode == DriveMode.Manual)
 		{
-			packet.command = (short)DrivePacket.Commands.SET_SPEED;
+			packet.command = DrivePacket.Commands.SET_SPEED;
 			InputToEngineSpeeds (Input.GetAxis(input.horizontal), Input.GetAxis(input.vertical), 0.2f + 0.8f*Input.GetAxis(input.acceleration), out packet.param1,out packet.param2);
 		}
 
@@ -91,12 +94,23 @@ public class Drive : ReplayableUDPClient<DrivePacket>
 		
 		mode = DriveMode.Auto;
 		packet.timestamp_us = Timestamp.TimestampUs();
-		packet.command = (short)DrivePacket.Commands.TO_POSITION_WITH_SPEED;
+		packet.command = DrivePacket.Commands.TO_POSITION_WITH_SPEED;
 		DistanceAndSpeedToEngineCountsAndSpeed (distance_cm, speed_cm_per_sec, out packet.param1, out packet.param2, out packet.param3, out packet.param4);
 		Send(packet);	
 		timeSinceLastPacketMs = 0.0f;
 	}
+
+	public void Backtrack()
+	{
+		if (replay.ReplayAny())
+			return; 
 		
+		PrepareBacktrackDump();
+		InitReplayFrom (GetAuxiliaryFilename());
+		mode = DriveMode.Backtrack;
+		StartReplay ();
+	}
+				
 	#region Logic
 
 	//move this to design time later
@@ -153,7 +167,57 @@ public class Drive : ReplayableUDPClient<DrivePacket>
 		l_counts_s = r_counts_s =(short)(counts_per_s * scale);
 		//TO DO - check limits!
 	}
+		
+	#endregion
 
+	#region Backtracking
+
+	private void PrepareBacktrackDump()
+	{		
+		FlushDump ();
+
+		FileStream filestream=File.Open(GetReplayFilename(), FileMode.Open, FileAccess.Read);
+		long packets = filestream.Length / packet.BinarySize ();
+
+		BinaryReader reader = new BinaryReader (filestream);
+		DrivePacket[] datagrams=new DrivePacket[packets];
+
+		for (int i = datagrams.Length - 1; i >= 0; ++i)
+		{
+			datagrams [i] = new DrivePacket ();
+			datagrams [i].FromBinary (reader);
+		}
+
+		reader.Close ();
+		filestream.Close ();
+
+		BinaryWriter rewriter=new BinaryWriter(File.Open (GetAuxiliaryFilename(), FileMode.Create, FileAccess.Write));
+
+		ulong now = Timestamp.TimestampUs ();
+		ulong base_timestamp = datagrams[0].timestamp_us;
+
+		foreach (DrivePacket dp in datagrams)
+		{
+			dp.timestamp_us = now + (base_timestamp - dp.timestamp_us);
+			switch (dp.command)
+			{
+			case DrivePacket.Commands.SET_SPEED:
+				dp.param1 = (short) -dp.param1;
+				dp.param2 = (short) -dp.param2;
+				break;
+			case DrivePacket.Commands.TO_POSITION_WITH_SPEED:
+				dp.param3 = (short) -dp.param3;
+				dp.param4 = (short) -dp.param4;
+				break;
+			default:
+				break;
+			}
+
+			dp.ToBinary (rewriter);
+		}
+
+		rewriter.Close ();
+	}
 
 	#endregion
 

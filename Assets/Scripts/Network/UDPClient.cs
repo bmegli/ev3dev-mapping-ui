@@ -47,23 +47,22 @@ public class UDPClient<DATAGRAM>
 		writer = new BinaryWriter(new MemoryStream(packet_data)); 
 	}
 
-	public UDPClient(string hostname, int udp_port, string dumpFile, bool record)
+	public UDPClient(string hostname, int udp_port, string dumpFile, bool record) : this(hostname, udp_port)
 	{
-		udpClient = new UdpClient(hostname, udp_port);	
-		packet_data = new byte[new DATAGRAM().BinarySize()];
-		writer = new BinaryWriter(new MemoryStream(packet_data)); 
-		stopwatch = new System.Diagnostics.Stopwatch();
-
-		if(record)
-			dumpWriter = new BinaryWriter(File.Open(dumpFile, FileMode.Create));
+		if (record) 
+			dumpWriter = new BinaryWriter (File.Open (dumpFile, FileMode.Create, FileAccess.Write));
 		else //replay
-		{
-			dumpReader = new BinaryReader(File.Open(dumpFile, FileMode.Open));
-			packet.FromBinary(dumpReader);
-			firstTimestampUs = packet.GetTimestampUs ();
-		}
+			InitReplayFrom(dumpFile);		
 	}
-				
+			
+	public void InitReplayFrom(string dumpFile)
+	{
+		stopwatch = new System.Diagnostics.Stopwatch();
+		dumpReader = new BinaryReader(File.Open(dumpFile, FileMode.Open, FileAccess.Read));
+		packet.FromBinary(dumpReader);
+		firstTimestampUs = packet.GetTimestampUs ();
+	}
+
 	public void Send(DATAGRAM datagram)
 	{
 		writer.Seek(0, SeekOrigin.Begin);
@@ -107,9 +106,6 @@ public class UDPClient<DATAGRAM>
 		datagram.FromBinary(new System.IO.BinaryReader(new System.IO.MemoryStream(data)));
 
 		return true;
-	//	if (dumpWriter!=null)
-	//		datagram.ToBinary(dumpWriter);
-		
 	}
 
 	public ulong GetFirstReplayTimestamp()
@@ -168,6 +164,18 @@ public class UDPClient<DATAGRAM>
 		}
 			
 		Debug.Log("Replay - finished");
-		Stop();
+
+		Run = false;
+		stopwatch.Stop ();
+		stopwatch = null;
+		dumpReader.Close ();
+		dumpReader = null;
+	}
+
+	public void FlushDump()
+	{
+		if (dumpWriter == null)
+			return;
+		dumpWriter.Flush ();
 	}
 }

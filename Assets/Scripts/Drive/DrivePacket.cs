@@ -14,10 +14,10 @@ using System.Net;
 
 public class DrivePacket : IDatagram
 {
-	public enum Commands {KEEPALIVE=0, SET_SPEED=1, TO_POSITION_WITH_SPEED};
+	public enum Commands : short {KEEPALIVE=0, SET_SPEED=1, TO_POSITION_WITH_SPEED};
 
 	public ulong timestamp_us;
-	public short command;
+	public Commands command;
 	public short param1;
 	public short param2;
 	public short param3;
@@ -31,7 +31,7 @@ public class DrivePacket : IDatagram
 	public void FromBinary(System.IO.BinaryReader reader)
 	{
 		timestamp_us = (ulong)IPAddress.NetworkToHostOrder(reader.ReadInt64());
-		command = IPAddress.NetworkToHostOrder(reader.ReadInt16());
+		command = (Commands)IPAddress.NetworkToHostOrder(reader.ReadInt16());
 		param1 = IPAddress.NetworkToHostOrder(reader.ReadInt16());
 		param2 = IPAddress.NetworkToHostOrder(reader.ReadInt16());
 		param3 = IPAddress.NetworkToHostOrder(reader.ReadInt16());
@@ -40,7 +40,7 @@ public class DrivePacket : IDatagram
 	public void ToBinary(System.IO.BinaryWriter writer)
 	{
 		writer.Write(IPAddress.HostToNetworkOrder((long)timestamp_us));
-		writer.Write(IPAddress.HostToNetworkOrder(command));
+		writer.Write(IPAddress.HostToNetworkOrder((short)command));
 		writer.Write(IPAddress.HostToNetworkOrder(param1));
 		writer.Write(IPAddress.HostToNetworkOrder(param2));
 		writer.Write(IPAddress.HostToNetworkOrder(param3));

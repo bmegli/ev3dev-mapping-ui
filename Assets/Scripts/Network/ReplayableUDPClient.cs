@@ -85,7 +85,26 @@ public abstract class ReplayableUDPClient<DATAGRAM> : ReplayableClient
 
 		client.StartReplay(start_us); 
 	}
+		
+	protected void InitReplayFrom(string filename)
+	{
+		client.InitReplayFrom(filename);
+	}
 
+	protected string GetReplayFilename()
+	{
+		return Config.DumpPath (robot.sessionDirectory, name);
+	}
+	protected string GetAuxiliaryFilename()
+	{
+		return Config.DumpPath (robot.sessionDirectory, name + "Auxiliary");
+	}
+	protected void FlushDump()
+	{
+		client.FlushDump ();
+	}
+
+		
 	public override ulong GetFirstPacketTimestampUs()
 	{
 		if (client == null || !replay.ReplayOutbound())
@@ -101,4 +120,7 @@ public abstract class ReplayableUDPClient<DATAGRAM> : ReplayableClient
 	{
 		return client.ReceiveOne(datagram);
 	}
+
+
+
 }

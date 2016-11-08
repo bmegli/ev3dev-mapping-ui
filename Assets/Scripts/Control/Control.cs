@@ -13,6 +13,7 @@
 /*
 *  For functional requirements see:
 *  https://github.com/bmegli/ev3dev-mapping-ui/issues/26
+*  https://github.com/bmegli/ev3dev-mapping/issues/18
 * 
 */
 
@@ -56,7 +57,7 @@ public class Control : ReplayableTCPClient<ControlMessage>
 	void Update ()
 	{
 		if (replay.ReplayInbound())
-			return; //do nothing, we replay previous communication
+			return; 
 		
 		switch (GetState ())
 		{
@@ -75,7 +76,7 @@ public class Control : ReplayableTCPClient<ControlMessage>
 					SetState (ModuleState.Online);
 
 					if(!replay.ReplayOutbound())
-						EnableModules ();
+						EnableModules();
 				}
 				break;
 			case ModuleState.Online:
@@ -164,6 +165,13 @@ public class Control : ReplayableTCPClient<ControlMessage>
 
 	public void EnableDisableSelf(bool enable)
 	{
+		if(replay.ReplayInbound())
+		{
+			print(name + " - ignoring request to enable/disable " + name + " (replay)");
+			return;
+		}
+
+
 		if (enable)
 			EnableSelf();
 		else
@@ -172,8 +180,6 @@ public class Control : ReplayableTCPClient<ControlMessage>
 
 	private void DisableSelf()
 	{
-		print(name + " - disable called from " + GetState().ToString());
-
 		if (GetState() != ModuleState.Online)
 			return;
 
@@ -185,8 +191,6 @@ public class Control : ReplayableTCPClient<ControlMessage>
 	}
 	private void EnableSelf()
 	{
-		print(name + " - enable called from " + GetState().ToString());
-
 		if (GetState() != ModuleState.Offline && GetState() != ModuleState.Failed)
 			return;
 
@@ -197,6 +201,12 @@ public class Control : ReplayableTCPClient<ControlMessage>
 
 	public void EnableDisableModule(string unique_module_name, bool enable)
 	{
+		if (replay.ReplayAny())
+		{
+			print(name + " - ignoring request to enable/disable " + unique_module_name + " (replay)");
+			return;
+		}
+
 		RobotModule mod = modules.Find(m => (m.name == unique_module_name));
 
 		if(enable)
@@ -207,10 +217,7 @@ public class Control : ReplayableTCPClient<ControlMessage>
 	}
 
 	private void EnableModule(RobotModule m)
-	{
-		if (replay.mode == ReplayMode.Replay)
-			return; //we just replay
-		
+	{		
 		m.SetState(ModuleState.Initializing);
 
 		ControlMessage msg = ControlMessage.EnableMessage (m.name, m.ModuleCall (), (ushort)m.CreationDelayMs ());
@@ -221,10 +228,7 @@ public class Control : ReplayableTCPClient<ControlMessage>
 	}
 		
 	private void DisableModule(RobotModule m)
-	{
-		if (replay.mode == ReplayMode.Replay)
-			return; //we just replay
-		
+	{		
 		m.SetState(ModuleState.Shutdown);
 
 		ControlMessage msg = ControlMessage.DisableMessage(m.name);

@@ -349,8 +349,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9cb4566455ea2442bd5c6428e227c4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  udp:
-    port: 8005
+  moduleNetwork:
+    port: 8000
   module:
     autostart: 1
     priority: 0
@@ -368,7 +368,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  direction: 0
 --- !u!114 &114000010445054316
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -380,7 +379,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f08c69115b8acd940a519b32f96fe3c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  udp:
+  moduleNetwork:
     port: 8006
   module:
     autostart: 1
@@ -426,7 +425,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16fafc25713fd58429f10b2ece1da39a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  udp:
+  moduleNetwork:
     port: 8003
   packetDelayMs: 50
   module:
@@ -564,7 +563,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 680e70490318a1241a2a64052386af7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tcp:
+  moduleNetwork:
     port: 8004
   module:
     timeoutMs: 1000
@@ -596,7 +595,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91596b955124c8e48bd73bdc50fec278, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  udp:
+  moduleNetwork:
     port: 8001
   module:
     autostart: 1
@@ -620,7 +619,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91596b955124c8e48bd73bdc50fec278, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  udp:
+  moduleNetwork:
     port: 8002
   module:
     autostart: 1

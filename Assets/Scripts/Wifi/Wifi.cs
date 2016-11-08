@@ -220,7 +220,7 @@ public class Wifi : ReplayableUDPServer<WifiPacket>
 	}
 	public override bool ModuleAutostart()
 	{
-		return module.autostart && !replay.ReplayInbound();
+		return module.autostart;
 	}
 	public override int CreationDelayMs()
 	{

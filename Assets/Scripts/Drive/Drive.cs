@@ -49,8 +49,8 @@ public class Drive : ReplayableUDPClient<DrivePacket>
 				
 	void Update ()
 	{
-		if (replay.mode == ReplayMode.Replay)
-			return; //do nothing, we replay previous communication or replay inbound traffic
+		if (replay.ReplayAny())
+			return; 
 
 		timeSinceLastPacketMs += Time.deltaTime*1000.0f;
 
@@ -86,8 +86,8 @@ public class Drive : ReplayableUDPClient<DrivePacket>
 
 	public void DriveAhead(float distance_cm, float speed_cm_per_sec)
 	{
-		if (replay.mode == ReplayMode.Replay) 
-			return; //do nothing, we replay previous communication or inbound traffic
+		if (replay.ReplayAny())
+			return; 
 		
 		mode = DriveMode.Auto;
 		packet.timestamp_us = Timestamp.TimestampUs();

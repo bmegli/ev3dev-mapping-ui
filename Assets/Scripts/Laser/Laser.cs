@@ -306,7 +306,7 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 	}
 	public override bool ModuleAutostart()
 	{
-		return module.autostart && !replay.ReplayInbound();
+		return module.autostart;
 	}
 	public override int CreationDelayMs()
 	{

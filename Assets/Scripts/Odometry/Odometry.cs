@@ -170,7 +170,7 @@ public class Odometry : ReplayableUDPServer<OdometryPacket>
 	}
 	public override bool ModuleAutostart()
 	{
-		return module.autostart && !replay.ReplayInbound();
+		return module.autostart;
 	}
 	public override int CreationDelayMs()
 	{

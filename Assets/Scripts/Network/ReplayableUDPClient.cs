@@ -65,6 +65,11 @@ public abstract class ReplayableUDPClient<DATAGRAM> : ReplayableClient
 
 	protected abstract void Start();
 
+	protected bool ReplayRunning
+	{
+		get {return client.ReplayRunning; }
+	}
+
 	protected override void StartReplay(int time_offset)
 	{
 		if (!replay.ReplayOutbound())
@@ -85,12 +90,26 @@ public abstract class ReplayableUDPClient<DATAGRAM> : ReplayableClient
 
 		client.StartReplay(start_us); 
 	}
-		
+	protected void StopReplay()
+	{
+		print(name + " - stopping replay");
+		client.StopReplay ();
+	}
+
+
 	protected void InitReplayFrom(string filename)
 	{
 		print(name + " - replay from '" + filename + "'");
 		client.InitReplayFrom(filename);
 	}
+	protected void InitRecordTo(string filename)
+	{
+		print(name + " - dumping packets to '" + Config.DumpPath(robot.sessionDirectory, name) + "'");
+		Directory.CreateDirectory(Config.DUMPS_DIRECTORY);
+		Directory.CreateDirectory(Config.DumpPath(robot.sessionDirectory));
+		client.InitRecordTo(filename);
+	}
+
 		
 	protected void StartExclusiveReplay()
 	{
@@ -101,9 +120,9 @@ public abstract class ReplayableUDPClient<DATAGRAM> : ReplayableClient
 	{
 		return Config.DumpPath (robot.sessionDirectory, name);
 	}
-	protected string GetAuxiliaryFilename()
+	protected string GetReplayFilename(string postfix)
 	{
-		return Config.DumpPath (robot.sessionDirectory, name + "Auxiliary");
+		return Config.DumpPath (robot.sessionDirectory, name + postfix);
 	}
 		
 	protected void FlushDump()

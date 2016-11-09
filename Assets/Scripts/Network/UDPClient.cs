@@ -20,7 +20,8 @@ using UnityEngine;
 public class UDPClient<DATAGRAM> 
 	where DATAGRAM : IDatagram, new()
 {
-	public bool Run { get; set; }
+	public bool Run { get;private set; }
+	public bool ReplayRunning {get; private set;}
 
 	private UdpClient udpClient;
 
@@ -49,20 +50,12 @@ public class UDPClient<DATAGRAM>
 
 	public UDPClient(string hostname, int udp_port, string dumpFile, bool record) : this(hostname, udp_port)
 	{
-		if (record) 
-			dumpWriter = new BinaryWriter (File.Open (dumpFile, FileMode.Create, FileAccess.Write, FileShare.Read));
+		if (record)
+			InitRecordTo (dumpFile);
 		else //replay
 			InitReplayFrom(dumpFile);		
 	}
 			
-	public void InitReplayFrom(string dumpFile)
-	{
-		stopwatch = new System.Diagnostics.Stopwatch();
-		dumpReader = new BinaryReader(File.Open(dumpFile, FileMode.Open, FileAccess.Read));
-		packet.FromBinary(dumpReader);
-		firstTimestampUs = packet.GetTimestampUs ();
-	}
-
 	public void Send(DATAGRAM datagram)
 	{
 		writer.Seek(0, SeekOrigin.Begin);
@@ -113,6 +106,19 @@ public class UDPClient<DATAGRAM>
 		return firstTimestampUs;
 	}
 		
+	public void InitRecordTo(string dumpFile)
+	{
+		dumpWriter = new BinaryWriter (File.Open (dumpFile, FileMode.Create, FileAccess.Write, FileShare.Read));
+	}
+		
+	public void InitReplayFrom(string dumpFile)
+	{
+		stopwatch = new System.Diagnostics.Stopwatch();
+		dumpReader = new BinaryReader(File.Open(dumpFile, FileMode.Open, FileAccess.Read));
+		packet.FromBinary(dumpReader);
+		firstTimestampUs = packet.GetTimestampUs ();
+	}
+
 	public void StartReplay(ulong base_timestamp_us)
 	{
 		if (replayThread != null)
@@ -124,24 +130,40 @@ public class UDPClient<DATAGRAM>
 		stopwatch.Start();
 		replayThread = new Thread(new ThreadStart(ProcessingThreadMain));
 		Run = true;
+		ReplayRunning = true;
 		replayThread.Start();
 	}
-	public void Stop()
+		
+	public void StopReplay()
 	{		
 		Run = false;
+		if (stopwatch != null)
+		{
+			stopwatch.Stop ();		
+			stopwatch = null;
+		}
+		if (dumpReader != null)
+		{
+			dumpReader.Close ();
+			dumpReader = null;
+		}
+
+	
+		replayThread = null;
+	}
+
+	public void Stop()
+	{		
+		StopReplay ();
 		//this will make udpClient.Send to throw an exception and return from the blocking call
 		if(udpClient!=null)
 			udpClient.Close();
 		if(writer!=null)
 			writer.Close();
-		if(dumpReader!=null)
-			dumpReader.Close();
-		if (stopwatch != null)
-			stopwatch.Stop();
 		if (dumpWriter != null)
 			dumpWriter.Close ();
 	}
-
+		
 	public void ProcessingThreadMain()
 	{
 		ulong elapsed_ms;
@@ -165,12 +187,8 @@ public class UDPClient<DATAGRAM>
 			
 		Debug.Log("Replay - finished");
 
-		Run = false;
-		stopwatch.Stop ();
-		stopwatch = null;
-		dumpReader.Close ();
-		dumpReader = null;
-		replayThread = null;
+		StopReplay();
+		ReplayRunning = false;
 	}
 
 	public void FlushDump()

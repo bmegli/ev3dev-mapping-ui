@@ -42,6 +42,10 @@ public class Drive : ReplayableUDPClient<DrivePacket>
 	protected override void Awake()
 	{		
 		base.Awake ();
+
+		if (!replay.ReplayAny () && !replay.RecordOutbound ())
+			InitRecordTo (GetRecordFilename());
+		
 		CheckLimits();
 	}
 
@@ -59,15 +63,21 @@ public class Drive : ReplayableUDPClient<DrivePacket>
 		if (timeSinceLastPacketMs < packetDelayMs)
 			return;
 
-		if ( (mode == DriveMode.Auto || mode == DriveMode.Backtrack)  && IsManualInput() )
+		if (IsManualInput ())
 		{
-			mode = DriveMode.Manual;
-			return;
+			if (mode == DriveMode.Auto)
+			{
+				mode = DriveMode.Manual;
+				return;
+			}
+			if (mode == DriveMode.Backtrack)
+				StopReplay ();			
 		}
+	
 
-		if (mode == DriveMode.Backtrack)
-			return;
-
+		if ( mode == DriveMode.Backtrack && !ReplayRunning)
+			mode = DriveMode.Manual;
+						
 		packet.timestamp_us = Timestamp.TimestampUs();
 
 		if(mode == DriveMode.Auto)
@@ -105,8 +115,8 @@ public class Drive : ReplayableUDPClient<DrivePacket>
 		if (replay.ReplayAny())
 			return; 
 		
-		PrepareBacktrackDump();
-		InitReplayFrom (GetAuxiliaryFilename());
+		PrepareBacktrackDump(GetBacktrackFilename());
+		InitReplayFrom (GetBacktrackFilename());
 		mode = DriveMode.Backtrack;
 		StartExclusiveReplay();
 	}
@@ -172,11 +182,11 @@ public class Drive : ReplayableUDPClient<DrivePacket>
 
 	#region Backtracking
 
-	private void PrepareBacktrackDump()
+	private void PrepareBacktrackDump(string backtrackFilename)
 	{		
 		FlushDump ();
 
-		FileStream filestream=File.Open(GetReplayFilename(), FileMode.Open, FileAccess.Read, FileShare.Write);
+		FileStream filestream=File.Open(GetRecordFilename(), FileMode.Open, FileAccess.Read, FileShare.Write);
 		long packets = filestream.Length / packet.BinarySize ();
 
 		BinaryReader reader = new BinaryReader (filestream);
@@ -191,7 +201,7 @@ public class Drive : ReplayableUDPClient<DrivePacket>
 		reader.Close ();
 		filestream.Close ();
 
-		BinaryWriter rewriter=new BinaryWriter(File.Open (GetAuxiliaryFilename(), FileMode.Create, FileAccess.Write));
+		BinaryWriter rewriter=new BinaryWriter(File.Open (backtrackFilename, FileMode.Create, FileAccess.Write));
 
 		ulong now = Timestamp.TimestampUs ();
 		ulong base_timestamp = datagrams[0].timestamp_us;
@@ -219,6 +229,20 @@ public class Drive : ReplayableUDPClient<DrivePacket>
 		rewriter.Close ();
 	}
 
+	private string GetRecordFilename()
+	{
+		if (replay.RecordOutbound ())
+			return base.GetReplayFilename ();
+		if (!replay.ReplayAny ())
+			return base.GetReplayFilename ("Track");
+
+		throw new InvalidOperationException ("There should be no drive record file in replay mode");
+	}
+	private string GetBacktrackFilename()
+	{
+		return GetReplayFilename("BackTrack");
+	}
+		
 	#endregion
 
 	#region RobotModule 

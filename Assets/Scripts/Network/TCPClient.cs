@@ -77,10 +77,10 @@ public class TCPClient<MESSAGE>
 		stopwatch = new System.Diagnostics.Stopwatch();
 
 		if(record)
-			dumpWriter = new BinaryWriter(File.Open(dumpfile, FileMode.Create));
+			dumpWriter = new BinaryWriter(File.Open(dumpfile, FileMode.Create, FileAccess.Write));
 		else //replay
 		{
-			dumpReader = new BinaryReader(File.Open(dumpfile, FileMode.Open));
+			dumpReader = new BinaryReader(File.Open(dumpfile, FileMode.Open, FileAccess.Read));
 			message.FromBinary(dumpReader);
 			firstTimestampUs = message.GetTimestampUs ();
 		}

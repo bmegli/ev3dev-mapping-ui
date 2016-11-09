@@ -50,7 +50,7 @@ public class UDPServer<DATAGRAM>
 		port = udp_port;
 		udpClient = new UdpClient(port);
 
-		dumpWriter = new BinaryWriter(File.Open(dumpFile, FileMode.Create));
+		dumpWriter = new BinaryWriter(File.Open(dumpFile, FileMode.Create, FileAccess.Write));
 	}
 		
 	public void Start(DatagramHandler<DATAGRAM> datagramFunction)

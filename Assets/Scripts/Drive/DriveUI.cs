@@ -28,6 +28,7 @@ public class DriveUI : ModuleUI
 	private InputField distanceInputField;
 	private InputField speedInputField;
 	private Button goButton;
+	private Button backtrackButton;
 
 	protected override void Awake()
 	{
@@ -40,6 +41,11 @@ public class DriveUI : ModuleUI
 		SafeInstantiateText (SpeedUnitText, speedDistanceLayout.transform, "cm/s");
 		goButton = SafeInstantiate<Button> (GoButton, uiTransform);
 		goButton.onClick.AddListener (OnGoButtonClicked);
+		backtrackButton = SafeInstantiate<Button> (GoButton, uiTransform);
+		backtrackButton.GetComponentInChildren<Text> ().text = "backtrack";
+		backtrackButton.onClick.AddListener (OnBacktrackButtonClicked);
+
+
 	}
 
 	public void OnGoButtonClicked()
@@ -47,6 +53,10 @@ public class DriveUI : ModuleUI
 		float distance_cm=float.Parse (distanceInputField.text);
 		float speed_cm_per_s=float.Parse (speedInputField.text);
 		drive.DriveAhead (distance_cm, speed_cm_per_s);
+	}
+	public void OnBacktrackButtonClicked()
+	{
+		drive.Backtrack ();
 	}
 
 	protected override void Start ()

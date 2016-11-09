@@ -132,16 +132,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8bbfa862b3f5f34e9b418fe5562e75f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LevelArea: 100
+  LevelArea: 10
   ScrollArea: 0
   ScrollSpeed: 3
   DragSpeed: 20
   ZoomSpeed: 10
   ZoomMin: 0.5
-  ZoomMax: 20
+  ZoomMax: 10
   PanSpeed: 20
   PanAngleMin: 25
-  PanAngleMax: 80
+  PanAngleMax: 60
   RotationSpeed: 100
 --- !u!124 &124000013236124230
 Behaviour:

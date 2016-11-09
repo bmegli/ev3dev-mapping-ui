@@ -33,14 +33,14 @@ public class MouseRts : MonoBehaviour
 	{
 		// Init camera translation for this frame.
 		var translation = Vector3.zero;
+		Camera camera = GetComponent<Camera>();
 	
 		// Zoom in or out
 		var zoomDelta = Input.GetAxis("Mouse ScrollWheel")*ZoomSpeed*Time.deltaTime;
 		if (zoomDelta!=0)
-
 			translation -= Vector3.up * ZoomSpeed * zoomDelta;
 		
-		var pan = GetComponent<Camera>().transform.eulerAngles.x - zoomDelta * PanSpeed;
+		var pan = camera.transform.eulerAngles.x - zoomDelta * PanSpeed;
 		pan = Mathf.Clamp(pan, PanAngleMin, PanAngleMax);
 
 		//Rotate around Y axis
@@ -51,8 +51,7 @@ public class MouseRts : MonoBehaviour
 //		Vector3 forward = GetComponent<Camera>().transform.forward;
 //		Vector3 right = GetComponent<Camera> ().transform.right;
 			
-		GetComponent<Camera>().transform.eulerAngles = new Vector3(0, yrotation, 0);
-
+		camera.transform.eulerAngles = new Vector3(0, yrotation, 0);
 		// Move camera with arrow keys
 	//	translation += new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")) * Time.deltaTime * ScrollSpeed;
 
@@ -90,26 +89,16 @@ public class MouseRts : MonoBehaviour
 		}
 
 		// Keep camera within level and zoom area
-		var desiredPosition = GetComponent<Camera>().transform.position + translation;
-		if (desiredPosition.x < -LevelArea || LevelArea < desiredPosition.x)
-		{
-			translation.x = 0;
-		}
-		if (desiredPosition.y < ZoomMin || ZoomMax < desiredPosition.y)
-		{
-			translation.y = 0;
-		}
-		if (desiredPosition.z < -LevelArea || LevelArea < desiredPosition.z)
-		{
-			translation.z = 0;
-		}
+		var desiredPosition = camera.transform.position + camera.transform.TransformDirection(translation);
+
+		desiredPosition.x = Mathf.Clamp(desiredPosition.x, -LevelArea, LevelArea);
+		desiredPosition.y = Mathf.Clamp(desiredPosition.y, ZoomMin, ZoomMax);
+		desiredPosition.z = Mathf.Clamp(desiredPosition.z, -LevelArea, LevelArea);
 
 		// Finally move camera parallel to world axis
-		GetComponent<Camera>().transform.Translate(translation);
-
-		if (zoomDelta < 0 || GetComponent<Camera>().transform.position.y < (ZoomMax / 2))
-		{
-			GetComponent<Camera>().transform.eulerAngles = new Vector3(pan, yrotation, 0);
-		}
+		camera.transform.position = desiredPosition;
+			
+		camera.transform.eulerAngles = new Vector3(pan, yrotation, 0);
+		
 	}
 }

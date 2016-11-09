@@ -32,7 +32,7 @@ public class UDPClient<DATAGRAM>
 	private BinaryReader dumpReader;
 	private BinaryWriter dumpWriter;
 
-	private ulong firstTimestampUs; //this is our first timestamp
+	private ulong firstTimestampUs = ulong.MaxValue; //this is our first timestamp
 	private ulong baseline_timestamp_us; //this is baseline timestamp among all replaying servers
 
 	private System.Diagnostics.Stopwatch stopwatch;
@@ -50,7 +50,7 @@ public class UDPClient<DATAGRAM>
 	public UDPClient(string hostname, int udp_port, string dumpFile, bool record) : this(hostname, udp_port)
 	{
 		if (record) 
-			dumpWriter = new BinaryWriter (File.Open (dumpFile, FileMode.Create, FileAccess.Write));
+			dumpWriter = new BinaryWriter (File.Open (dumpFile, FileMode.Create, FileAccess.Write, FileShare.Read));
 		else //replay
 			InitReplayFrom(dumpFile);		
 	}
@@ -170,6 +170,7 @@ public class UDPClient<DATAGRAM>
 		stopwatch = null;
 		dumpReader.Close ();
 		dumpReader = null;
+		replayThread = null;
 	}
 
 	public void FlushDump()

@@ -68,7 +68,7 @@ public abstract class ReplayableUDPClient<DATAGRAM> : ReplayableClient
 	protected override void StartReplay(int time_offset)
 	{
 		if (!replay.ReplayOutbound())
-			return;
+			return;		
 
 		ReplayableClient[] clients=transform.parent.GetComponentsInChildren<ReplayableClient>();
 
@@ -88,7 +88,13 @@ public abstract class ReplayableUDPClient<DATAGRAM> : ReplayableClient
 		
 	protected void InitReplayFrom(string filename)
 	{
+		print(name + " - replay from '" + filename + "'");
 		client.InitReplayFrom(filename);
+	}
+		
+	protected void StartExclusiveReplay()
+	{
+		client.StartReplay(client.GetFirstReplayTimestamp());
 	}
 
 	protected string GetReplayFilename()
@@ -99,6 +105,7 @@ public abstract class ReplayableUDPClient<DATAGRAM> : ReplayableClient
 	{
 		return Config.DumpPath (robot.sessionDirectory, name + "Auxiliary");
 	}
+		
 	protected void FlushDump()
 	{
 		client.FlushDump ();

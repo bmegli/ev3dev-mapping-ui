@@ -108,7 +108,7 @@ public class Drive : ReplayableUDPClient<DrivePacket>
 		PrepareBacktrackDump();
 		InitReplayFrom (GetAuxiliaryFilename());
 		mode = DriveMode.Backtrack;
-		StartReplay ();
+		StartExclusiveReplay();
 	}
 				
 	#region Logic
@@ -176,13 +176,13 @@ public class Drive : ReplayableUDPClient<DrivePacket>
 	{		
 		FlushDump ();
 
-		FileStream filestream=File.Open(GetReplayFilename(), FileMode.Open, FileAccess.Read);
+		FileStream filestream=File.Open(GetReplayFilename(), FileMode.Open, FileAccess.Read, FileShare.Write);
 		long packets = filestream.Length / packet.BinarySize ();
 
 		BinaryReader reader = new BinaryReader (filestream);
 		DrivePacket[] datagrams=new DrivePacket[packets];
 
-		for (int i = datagrams.Length - 1; i >= 0; ++i)
+		for (int i = datagrams.Length - 1; i >= 0; --i)
 		{
 			datagrams [i] = new DrivePacket ();
 			datagrams [i].FromBinary (reader);
@@ -215,7 +215,7 @@ public class Drive : ReplayableUDPClient<DrivePacket>
 
 			dp.ToBinary (rewriter);
 		}
-
+			
 		rewriter.Close ();
 	}
 

@@ -127,10 +127,10 @@ public class UDPClient<DATAGRAM>
 			throw new InvalidOperationException("Replay was not properly initialized");
 
 		baseline_timestamp_us = base_timestamp_us;
-		stopwatch.Start();
 		replayThread = new Thread(new ThreadStart(ProcessingThreadMain));
 		Run = true;
 		ReplayRunning = true;
+		stopwatch.Start();
 		replayThread.Start();
 	}
 		

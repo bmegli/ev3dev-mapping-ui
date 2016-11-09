@@ -104,7 +104,7 @@ public abstract class ReplayableUDPClient<DATAGRAM> : ReplayableClient
 	}
 	protected void InitRecordTo(string filename)
 	{
-		print(name + " - dumping packets to '" + Config.DumpPath(robot.sessionDirectory, name) + "'");
+		print(name + " - dumping packets to '" + filename + "'");
 		Directory.CreateDirectory(Config.DUMPS_DIRECTORY);
 		Directory.CreateDirectory(Config.DumpPath(robot.sessionDirectory));
 		client.InitRecordTo(filename);
@@ -129,7 +129,6 @@ public abstract class ReplayableUDPClient<DATAGRAM> : ReplayableClient
 	{
 		client.FlushDump ();
 	}
-
 		
 	public override ulong GetFirstPacketTimestampUs()
 	{
@@ -146,7 +145,4 @@ public abstract class ReplayableUDPClient<DATAGRAM> : ReplayableClient
 	{
 		return client.ReceiveOne(datagram);
 	}
-
-
-
 }

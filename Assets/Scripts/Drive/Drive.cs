@@ -36,7 +36,11 @@ public class Drive : ReplayableUDPClient<DrivePacket>
 
 	protected override void OnDestroy()
 	{
+		StopBacktrack();
 		base.OnDestroy ();
+		File.Delete(GetBacktrackFilename());
+		if (!replay.ReplayAny() && !replay.RecordOutbound())
+			File.Delete(GetRecordFilename());
 	}
 
 	protected override void Awake()
@@ -74,9 +78,13 @@ public class Drive : ReplayableUDPClient<DrivePacket>
 				StopReplay ();			
 		}
 	
-
-		if ( mode == DriveMode.Backtrack && !ReplayRunning)
-			mode = DriveMode.Manual;
+		if (mode == DriveMode.Backtrack)
+		{
+			if (!ReplayRunning)
+				mode = DriveMode.Manual;
+			else
+				return;
+		}
 						
 		packet.timestamp_us = Timestamp.TimestampUs();
 
@@ -85,7 +93,7 @@ public class Drive : ReplayableUDPClient<DrivePacket>
 		else if (mode == DriveMode.Manual)
 		{
 			packet.command = DrivePacket.Commands.SET_SPEED;
-			InputToEngineSpeeds (Input.GetAxis(input.horizontal), Input.GetAxis(input.vertical), 0.2f + 0.8f*Input.GetAxis(input.acceleration), out packet.param1,out packet.param2);
+			InputToEngineSpeeds (Input.GetAxis(input.horizontal), Input.GetAxis(input.vertical), (1.0f-input.accelerationPower) + input.accelerationPower *Input.GetAxis(input.acceleration), out packet.param1,out packet.param2);
 		}
 
 		Send(packet);	
@@ -101,7 +109,9 @@ public class Drive : ReplayableUDPClient<DrivePacket>
 	{
 		if (replay.ReplayAny())
 			return; 
-		
+
+		StopBacktrack();
+					
 		mode = DriveMode.Auto;
 		packet.timestamp_us = Timestamp.TimestampUs();
 		packet.command = DrivePacket.Commands.TO_POSITION_WITH_SPEED;
@@ -114,13 +124,16 @@ public class Drive : ReplayableUDPClient<DrivePacket>
 	{
 		if (replay.ReplayAny())
 			return; 
-		
+
+		StopBacktrack();
+
 		PrepareBacktrackDump(GetBacktrackFilename());
 		InitReplayFrom (GetBacktrackFilename());
 		mode = DriveMode.Backtrack;
 		StartExclusiveReplay();
 	}
-				
+
+		
 	#region Logic
 
 	//move this to design time later
@@ -182,6 +195,16 @@ public class Drive : ReplayableUDPClient<DrivePacket>
 
 	#region Backtracking
 
+	private void StopBacktrack()
+	{
+		if (mode == DriveMode.Backtrack)
+		{
+			StopReplay();
+			print(name + " - stopping backtracking");
+			return;
+		}
+	}
+		
 	private void PrepareBacktrackDump(string backtrackFilename)
 	{		
 		FlushDump ();
@@ -228,11 +251,11 @@ public class Drive : ReplayableUDPClient<DrivePacket>
 			
 		rewriter.Close ();
 	}
-
+		
 	private string GetRecordFilename()
 	{
 		if (replay.RecordOutbound ())
-			return base.GetReplayFilename ();
+			return base.GetReplayFilename();
 		if (!replay.ReplayAny ())
 			return base.GetReplayFilename ("Track");
 

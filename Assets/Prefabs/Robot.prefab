@@ -316,6 +316,7 @@ MonoBehaviour:
   horizontal: Horizontal
   vertical: Vertical
   acceleration: Acceleration
+  accelerationPower: 0.45
 --- !u!114 &114000010387767330
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -422,7 +423,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fab4e6923a60ed49a0a454749c06e88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapPointCloud: {fileID: 0}
+  mapPointCloud: {fileID: 114000012045895920, guid: 79567bf5404538846a09dbc1401e4391,
+    type: 2}
 --- !u!114 &114000010904566416
 MonoBehaviour:
   m_ObjectHideFlags: 1

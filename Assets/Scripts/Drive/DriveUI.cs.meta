@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 35116b162bbe69348ad4d55f907b7d29
-timeCreated: 1475054965
+timeCreated: 1478813792
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
@@ -9,7 +9,8 @@ MonoImporter:
       type: 2}
   - ModuleName: {fileID: 11445212, guid: f4343af0dd1752d4dbeedd72c0ab47cd, type: 2}
   - ModuleText: {fileID: 11476718, guid: b3cd24b3fd3c11f468cca498f15db4ce, type: 2}
-  - EnabledToggle: {fileID: 11469012, guid: 24eba0bcd1d1ad543b88447b9a715f6d, type: 2}
+  - ModuleStateToggle: {fileID: 114000010470860990, guid: 09fc7c3ce85e48c40bc3e005ce9ea05d,
+      type: 2}
   - SpeedDistanceLayout: {fileID: 197220, guid: fea1a1c19ef3c064aa3ad7c2b2cfc597,
       type: 2}
   - DistanceInputField: {fileID: 11465008, guid: 6df19128db4bca344ac37eb947d30160,

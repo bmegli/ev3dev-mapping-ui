@@ -204,7 +204,8 @@ MonoBehaviour:
     type: 2}
   ModuleName: {fileID: 11445212, guid: f4343af0dd1752d4dbeedd72c0ab47cd, type: 2}
   ModuleText: {fileID: 11476718, guid: b3cd24b3fd3c11f468cca498f15db4ce, type: 2}
-  EnabledToggle: {fileID: 11469012, guid: 24eba0bcd1d1ad543b88447b9a715f6d, type: 2}
+  ModuleStateToggle: {fileID: 114000010470860990, guid: 09fc7c3ce85e48c40bc3e005ce9ea05d,
+    type: 2}
 --- !u!1001 &1683428571
 Prefab:
   m_ObjectHideFlags: 0
@@ -437,7 +438,8 @@ MonoBehaviour:
     type: 2}
   ModuleName: {fileID: 11445212, guid: f4343af0dd1752d4dbeedd72c0ab47cd, type: 2}
   ModuleText: {fileID: 11476718, guid: b3cd24b3fd3c11f468cca498f15db4ce, type: 2}
-  EnabledToggle: {fileID: 11469012, guid: 24eba0bcd1d1ad543b88447b9a715f6d, type: 2}
+  ModuleStateToggle: {fileID: 114000010470860990, guid: 09fc7c3ce85e48c40bc3e005ce9ea05d,
+    type: 2}
   SignalSlider: {fileID: 114000013491019610, guid: 8fb691da3ec61fd4bb4873e5976e537e,
     type: 2}
 --- !u!114 &1904955191
@@ -577,6 +579,7 @@ MonoBehaviour:
   horizontal: Horizontal
   vertical: Vertical
   acceleration: Acceleration
+  accelerationPower: 0.5
 --- !u!114 &1952588914
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -635,7 +638,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  direction: 0
 --- !u!114 &1952588918
 MonoBehaviour:
   m_ObjectHideFlags: 0

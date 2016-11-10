@@ -20,12 +20,12 @@ public class ModuleUI : MonoBehaviour, IComparable<ModuleUI>
 	public Transform UiTransform;
 	public Text ModuleName;
 	public Text ModuleText;
-	public Toggle EnabledToggle;
+	public Toggle ModuleStateToggle;
 
 	protected Transform uiTransform;
 	private Text moduleName;
 	private Text moduleState;
-	private Toggle enabledToggle;
+	private Toggle moduleStateToggle;
 	private Control control;
 
 	protected RobotModule module;
@@ -34,9 +34,10 @@ public class ModuleUI : MonoBehaviour, IComparable<ModuleUI>
 	{
 		uiTransform = Instantiate<Transform>(UiTransform);
 		moduleName = SafeInstantiateText(ModuleName, uiTransform, "module");
-		moduleState = SafeInstantiateText(ModuleText, uiTransform, ModuleState.Offline.ToString().ToLower());
-		enabledToggle = SafeInstantiate<Toggle>(EnabledToggle, uiTransform);
-		enabledToggle.onValueChanged.AddListener(SetEnable);
+		moduleStateToggle = SafeInstantiate<Toggle>(ModuleStateToggle, uiTransform);
+		moduleStateToggle.onValueChanged.AddListener(SetEnable);
+		moduleState = moduleStateToggle.GetComponentInChildren<Text>();
+		moduleState.text = ModuleState.Offline.ToString().ToLower();
 		control = transform.parent.GetComponentInChildren<Control> ();
 		module = GetComponent<RobotModule> ();
 	}
@@ -62,9 +63,9 @@ public class ModuleUI : MonoBehaviour, IComparable<ModuleUI>
 		moduleState.text = module.GetState().ToString().ToLower();
 
 		if (module.GetState() == ModuleState.Online)
-			enabledToggle.Set(true, false);
+			moduleStateToggle.Set(true, false);
 		else
-			enabledToggle.Set(false, false);
+			moduleStateToggle.Set(false, false);
 	}
 
 	public void SetEnable(bool enable)

@@ -24,7 +24,7 @@ public class WifiPacket : IDatagram
 	public uint rx_packets;
 	public uint tx_packets;
 
-	public string bssid_string;
+	public string bssid_string="00:00:00:00:00:00";
 
 	public void FromBinary(System.IO.BinaryReader reader)
 	{

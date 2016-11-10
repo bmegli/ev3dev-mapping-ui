@@ -119,7 +119,7 @@ public class Control : ReplayableTCPClient<ControlMessage>
 
 	private void OutputErrorMessage()
 	{
-		print(name + " - connection failed (" + LastErrorMessage + ")");
+		print(name + " - connection lost (" + LastErrorMessage + ")");
 	}
 		
 	private ModuleState ModuleStateFromControlCommand(ControlCommands cmd)

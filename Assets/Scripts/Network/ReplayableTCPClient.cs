@@ -29,10 +29,6 @@ public abstract class ReplayableTCPClient<MESSAGE> : ReplayableClient
 	{
 		get{return client.LastError.Message; }
 	}
-	protected int LastErrorCode
-	{
-		get{return client.LastError.ErrorCode; }
-	}
 	protected long LastSeen
 	{
 		get{return client.LastSeen; }

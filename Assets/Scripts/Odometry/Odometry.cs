@@ -52,6 +52,8 @@ public class Odometry : ReplayableUDPServer<OdometryPacket>
 	protected override void Awake()
 	{
 		base.Awake();
+		lastPosition = new PositionData{position=transform.parent.position, heading=transform.parent.eulerAngles.y};
+		thread_shared_position = lastPosition;
 	}
 
 	protected override void Start ()

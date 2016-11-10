@@ -31,6 +31,7 @@ public class DeadReconning : ReplayableUDPServer<DeadReconningPacket>
 	#region UDP Thread Only Data
 	private DeadReconningPacket lastPacket=new DeadReconningPacket();
 	private PositionData lastPosition=new PositionData();
+	private float initialHeading;
 	#endregion
 
 	#region Thread Shared Data
@@ -47,6 +48,9 @@ public class DeadReconning : ReplayableUDPServer<DeadReconningPacket>
 	protected override void Awake()
 	{
 		base.Awake();
+		lastPosition = new PositionData{position=transform.parent.position, heading=transform.parent.eulerAngles.y};
+		initialHeading = lastPosition.heading;
+		thread_shared_position = lastPosition;
 	}
 
 	protected override void Start ()
@@ -124,12 +128,12 @@ public class DeadReconning : ReplayableUDPServer<DeadReconningPacket>
 		if (Mathf.Abs(angle_difference_deg) > 180.0f)
 			angle_difference_deg = angle_difference_deg -  Mathf.Sign(angle_difference_deg) * 360.0f;
 
-		float average_heading_rad = (angle_start_deg + angle_difference_deg / 2.0f) * Constants.DEG2RAD;
+		float average_heading_rad = (angle_start_deg + initialHeading + angle_difference_deg / 2.0f) * Constants.DEG2RAD;
 
 		// Finally update the position and heading
 		lastPosition.timestamp = packet.timestamp_us;
 		lastPosition.position = new Vector3(lastPosition.position.x + displacement_m * Mathf.Sin(average_heading_rad), lastPosition.position.y, lastPosition.position.z + displacement_m * Mathf.Cos(average_heading_rad));
-		lastPosition.heading = angle_end_deg;
+		lastPosition.heading = angle_end_deg + initialHeading;
 
 		return lastPosition;
 	}

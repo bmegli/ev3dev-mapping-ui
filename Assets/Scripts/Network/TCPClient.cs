@@ -57,7 +57,7 @@ public class TCPClient<MESSAGE>
 
 	public TCPClientState State { get; private set; }
 
-	public SocketException LastError { get; private set; }
+	public Exception LastError { get; private set; }
 
 	public TCPClient(string host, int port)
 	{
@@ -217,10 +217,13 @@ public class TCPClient<MESSAGE>
 				dumpWriter.Write (outMemoryStream.GetBuffer(), 0, packet_length);
 			
 		}
-		catch(SocketException exc)
+		catch(Exception exc)
 		{
 			State = TCPClientState.Idle;
-			LastError = exc;
+			if (exc.InnerException != null)
+				LastError = exc.InnerException;
+			else
+				LastError = exc;
 		}
 	}
 

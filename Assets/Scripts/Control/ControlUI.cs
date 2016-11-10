@@ -20,14 +20,14 @@ public class ControlUI : MonoBehaviour
 	public Transform ModulesPanel;
 	public Text ModuleName;
 	public Text ModuleText;
-	public Toggle EnabledToggle;
+	public Toggle ModuleStateToggle;
 
 	protected Transform uiTransform;
 	private Transform modulesPanel;
 
 	private Text moduleName;
 	private Text moduleState;
-	private Toggle enabledToggle;
+	private Toggle moduleStateToggle;
 	private Control control;
 
 	protected virtual void Awake()
@@ -36,9 +36,11 @@ public class ControlUI : MonoBehaviour
 		uiTransform = Instantiate<Transform>(UiTransform);
 
 		moduleName = SafeInstantiateText(ModuleName, uiTransform, "module");
-		moduleState = SafeInstantiateText(ModuleText, uiTransform, ModuleState.Offline.ToString().ToLower());
-		enabledToggle = SafeInstantiate<Toggle>(EnabledToggle, uiTransform);
-		enabledToggle.onValueChanged.AddListener(SetEnable);
+		moduleStateToggle = SafeInstantiate<Toggle>(ModuleStateToggle, uiTransform);
+		moduleStateToggle.onValueChanged.AddListener(SetEnable);
+		moduleState = moduleStateToggle.GetComponentInChildren<Text>();
+		moduleState.text = ModuleState.Offline.ToString().ToLower();
+
 	}
 		
 	protected virtual void Start ()
@@ -62,9 +64,9 @@ public class ControlUI : MonoBehaviour
 		moduleState.text = control.GetState().ToString().ToLower();
 
 		if (control.GetState() == ModuleState.Online)
-			enabledToggle.Set(true, false);
+			moduleStateToggle.Set(true, false);
 		else
-			enabledToggle.Set(false, false);
+			moduleStateToggle.Set(false, false);
 	}
 
 	public void SetEnable(bool enable)

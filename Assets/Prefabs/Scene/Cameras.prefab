@@ -132,7 +132,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8bbfa862b3f5f34e9b418fe5562e75f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LevelArea: 10
+  LevelArea: 15
   ScrollArea: 0
   ScrollSpeed: 3
   DragSpeed: 20

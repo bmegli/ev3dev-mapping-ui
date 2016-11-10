@@ -75,9 +75,7 @@ public class WifiUI : ModuleUI
 
 		ssidText.text = string.Format("{0} {1:+00;-00} dBm",wifi.GetSSID(), wifi.GetSignalDbm()); 
 		bssidText.text = wifi.GetBSSID();
-		//rxTxText.text=string.Format("rx {0:00000} tx {1:00000}", wifi.GetRxPackets(), wifi.GetTxPackets());
 		rxTxText.text=string.Format("rx {0,5} tx {1,5}", wifi.GetRxPackets(), wifi.GetTxPackets());
-
 
 		int signalDbm = wifi.GetSignalDbm();
 		signalSlider.value = signalDbm;

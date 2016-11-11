@@ -22,7 +22,8 @@ public class LaserModuleProperties : ModuleProperties
 {
 	public string laserDevice = "/dev/tty_in1";
 	public string motorPort = "outC";
-	public int laserDutyCycle = -44;
+	public int laserDutyCycle = 44;
+	public int crcTolerancePct = 10;
 }
 	
 [Serializable]
@@ -42,6 +43,8 @@ class LaserThreadSharedData
 	public bool consumed = true;
 	public float averagedPacketTimeMs;
 	public float laserRPM;
+	public int crcFailurePercentage=0;
+	public int invalidPercentage=0;
 
 	public void CopyNewDataFrom(LaserThreadSharedData other)
 	{
@@ -50,6 +53,8 @@ class LaserThreadSharedData
 		length = other.length;
 		averagedPacketTimeMs = other.averagedPacketTimeMs;
 		laserRPM = other.laserRPM;
+		crcFailurePercentage = other.crcFailurePercentage;
+		invalidPercentage = other.invalidPercentage;
 
 		for (int i = from; i < from + length; ++i)
 		{
@@ -72,6 +77,10 @@ class LaserThreadInternalData
 	public ulong t_from=0;
 	public ulong t_to=0;
 	public float laserRPM;
+	public int invalidCount=0;
+	public int invalidPercentage = 0;
+	public int crcFailures=0;
+	public int crcFailurePercentage=0;
 
 	public void SetPending(int from, int length, ulong time_from, ulong time_to)
 	{
@@ -87,6 +96,8 @@ class LaserThreadInternalData
 [RequireComponent (typeof (Map3D))]
 public class Laser : ReplayableUDPServer<LaserPacket>
 {
+	public const ushort LIDAR_CRC_FAILURE_ERROR_CODE = 666;
+
 	public LaserModuleProperties module;
 	public LaserPlotProperties plot;
 
@@ -184,15 +195,30 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 			angle_index = packet.laser_angle + i;
 			angle = angle_index;
 
+			if (angle_index == 0)
+			{
+				threadInternal.crcFailurePercentage = threadInternal.crcFailures * 100 / 360;
+				threadInternal.invalidPercentage = threadInternal.invalidCount * 100 / 360;
+				threadInternal.crcFailures = threadInternal.invalidCount = 0;
+			}
+
 			readings [angle_index] = Vector3.zero;
 			timestamps[angle_index] = packet.GetTimestampUs(i);
 			invalid_data[angle_index] = packet.laser_readings[i].invalid_data == 1;
+
+			if (invalid_data[angle_index])
+			{
+				++threadInternal.invalidCount;
+				if (packet.laser_readings[i].distance == LIDAR_CRC_FAILURE_ERROR_CODE)
+					++threadInternal.crcFailures;
+			}
+				
 			//if distance is greater than maximum we allow, mark reading as inalid
 			invalid_data[angle_index] |= packet.laser_readings[i].distance > plot.distanceLimit * 1000;
 
 			if (invalid_data[angle_index])
 				continue;
-
+	
 			// calculate reading in laser plane
 			distance_mm = packet.laser_readings[i].distance;
 			alpha = angle - Constants.BETA;
@@ -258,8 +284,9 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 			threadShared.consumed = false;
 			threadShared.averagedPacketTimeMs = AveragedPacketTimeMs();
 			threadShared.laserRPM = threadInternal.laserRPM;
+			threadShared.invalidPercentage = threadInternal.invalidPercentage;
+			threadShared.crcFailurePercentage = threadInternal.crcFailurePercentage;
 		}
-
 	}
 
 
@@ -293,12 +320,21 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 	{
 		return data.laserRPM;
 	}
+	public float GetInvalidPercentage()
+	{
+		return data.invalidPercentage;
+	}
+
+	public float GetCRCFailurePercentage()
+	{
+		return data.crcFailurePercentage;
+	}
 
 	#region RobotModule
 
 	public override string ModuleCall()
 	{
-		return "ev3laser " + module.laserDevice + " " + module.motorPort + " " + network.hostIp + " " + moduleNetwork.port + " " + module.laserDutyCycle;
+		return "ev3laser " + module.laserDevice + " " + module.motorPort + " " + network.hostIp + " " + moduleNetwork.port + " " + module.laserDutyCycle + " " + module.crcTolerancePct;
 	}
 	public override int ModulePriority()
 	{

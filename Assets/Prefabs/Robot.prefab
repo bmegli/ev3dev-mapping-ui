@@ -636,6 +636,8 @@ MonoBehaviour:
   ModuleText: {fileID: 11476718, guid: b3cd24b3fd3c11f468cca498f15db4ce, type: 2}
   ModuleStateToggle: {fileID: 114000010470860990, guid: 09fc7c3ce85e48c40bc3e005ce9ea05d,
     type: 2}
+  ModuleButton: {fileID: 114000012705873148, guid: 438157a33dc5438428eb9f35afb47638,
+    type: 2}
 --- !u!114 &114000014268623658
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -658,7 +660,8 @@ MonoBehaviour:
   DistanceUnitText: {fileID: 11460400, guid: dbc6ff2687c82ae4abab447794025254, type: 2}
   SpeedInputField: {fileID: 11492832, guid: eb6397386ccea74449f248523cdb552b, type: 2}
   SpeedUnitText: {fileID: 11444408, guid: 3baaab142a995ce479a36c89cbee1e27, type: 2}
-  GoButton: {fileID: 11447058, guid: 6822615a4e0993a4fad061940a39a276, type: 2}
+  ModuleButton: {fileID: 114000012705873148, guid: 438157a33dc5438428eb9f35afb47638,
+    type: 2}
 --- !u!114 &114000014268933972
 MonoBehaviour:
   m_ObjectHideFlags: 1

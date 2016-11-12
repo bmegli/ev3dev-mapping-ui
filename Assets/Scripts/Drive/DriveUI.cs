@@ -23,7 +23,7 @@ public class DriveUI : ModuleUI
 	public Text DistanceUnitText;
 	public InputField SpeedInputField;
 	public Text SpeedUnitText;
-	public Button GoButton;
+	public Button ModuleButton;
 
 	private InputField distanceInputField;
 	private InputField speedInputField;
@@ -39,9 +39,12 @@ public class DriveUI : ModuleUI
 		SafeInstantiateText (DistanceUnitText, speedDistanceLayout.transform, "cm");
 		speedInputField = SafeInstantiate<InputField> (SpeedInputField, speedDistanceLayout.transform);
 		SafeInstantiateText (SpeedUnitText, speedDistanceLayout.transform, "cm/s");
-		goButton = SafeInstantiate<Button> (GoButton, uiTransform);
+
+		goButton = SafeInstantiate<Button> (ModuleButton, uiTransform);
+		goButton.GetComponentInChildren<Text> ().text = "go";
 		goButton.onClick.AddListener (OnGoButtonClicked);
-		backtrackButton = SafeInstantiate<Button> (GoButton, uiTransform);
+	
+		backtrackButton = SafeInstantiate<Button> (ModuleButton, uiTransform);
 		backtrackButton.GetComponentInChildren<Text> ().text = "backtrack";
 		backtrackButton.onClick.AddListener (OnBacktrackButtonClicked);
 

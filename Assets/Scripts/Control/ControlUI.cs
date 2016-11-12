@@ -21,6 +21,7 @@ public class ControlUI : MonoBehaviour
 	public Text ModuleName;
 	public Text ModuleText;
 	public Toggle ModuleStateToggle;
+	public Button ModuleButton;
 
 	protected Transform uiTransform;
 	private Transform modulesPanel;
@@ -28,7 +29,12 @@ public class ControlUI : MonoBehaviour
 	private Text moduleName;
 	private Text moduleState;
 	private Toggle moduleStateToggle;
+	private Button replayButton;
+	private Button saveMapsButton;
+
 	private Control control;
+
+	private bool replayStarted = false;
 
 	protected virtual void Awake()
 	{
@@ -41,6 +47,20 @@ public class ControlUI : MonoBehaviour
 		moduleState = moduleStateToggle.GetComponentInChildren<Text>();
 		moduleState.text = ModuleState.Offline.ToString().ToLower();
 
+		//to be generalized later
+		if (transform.parent.GetComponentsInChildren<Laser>().Length != 0)
+		{
+			saveMapsButton = SafeInstantiate<Button>(ModuleButton, uiTransform);
+			saveMapsButton.onClick.AddListener(OnSaveMapsButtonClicked);
+			saveMapsButton.GetComponentInChildren<Text>().text = "save maps";
+		}
+
+		if (GetComponentInParent<Replay>().ReplayAny())
+		{
+			replayButton = SafeInstantiate<Button>(ModuleButton, uiTransform);
+			replayButton.onClick.AddListener(OnReplayButtonClicked);
+			replayButton.GetComponentInChildren<Text>().text = "replay";
+		}
 	}
 		
 	protected virtual void Start ()
@@ -68,6 +88,33 @@ public class ControlUI : MonoBehaviour
 		else
 			moduleStateToggle.Set(false, false);
 	}
+
+	public void OnReplayButtonClicked()
+	{
+		if (replayStarted)
+		{
+			print(name + " - unable to start replay (already started)");
+			return;
+		}
+		replayStarted = true;
+
+		ReplayableServer[] servers=transform.parent.GetComponentsInChildren<ReplayableServer>();
+		ReplayableClient[] clients=transform.parent.GetComponentsInChildren<ReplayableClient>();
+
+		foreach (ReplayableServer server in servers)
+			server.StartReplay();
+		foreach (ReplayableClient client in clients)
+			client.StartReplay();
+		
+	}
+
+	public void OnSaveMapsButtonClicked()
+	{
+		Laser[] lasers=transform.parent.GetComponentsInChildren<Laser>();
+		foreach (Laser l in lasers)
+			l.SaveMap();
+	}
+
 
 	public void SetEnable(bool enable)
 	{

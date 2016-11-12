@@ -18,8 +18,6 @@ public class SceneManager : MonoBehaviour
 {
 	private Transform dynamicObjects;
 	private GameObject uiCanvas;
-//	private GameObject robot;
-//	private Control robotControl;
 	private GameObject robotsPanel;
 
 	public static SceneManager Instance { get; private set; }
@@ -54,51 +52,12 @@ public class SceneManager : MonoBehaviour
 		Instance = this;
 		dynamicObjects = new GameObject("DynamicObjects").transform;
 		uiCanvas = GameObject.Find("UICanvas");
-//		robot = GameObject.FindGameObjectWithTag ("Player");
-//		robotControl = robot.GetComponent<Control> ();
 		robotsPanel = GameObject.Find("RobotsPanel");
 	}
 
-	public void SaveMaps()
-	{
-		Laser[] lasers=FindObjectsOfType<Laser>();
-		foreach (Laser l in lasers)
-			l.SaveMap();
-	}
-
-	private bool replayStarted=false;
-	public void StartReplay()
-	{
-		if (replayStarted)
-			return;
-		replayStarted = true;
-
-		ReplayableServer[] servers=FindObjectsOfType<ReplayableServer>();
-		ReplayableClient[] clients=FindObjectsOfType<ReplayableClient>();
-
-		foreach (ReplayableServer server in servers)
-			server.StartReplay();
-		foreach (ReplayableClient client in clients)
-			client.StartReplay();
-
-
-	}
 	public void ToggleShowUI()
 	{
 		uiCanvas.SetActive(!uiCanvas.activeSelf);
 	}
-		
-	/*
-	public void EnableModules()
-	{
-		robotControl.EnableModules();
-	}
-	*/
-	/*
-	public void DisableModules()
-	{		
-		robotControl.DisableModules();
-	}
-	*/
 }
 	

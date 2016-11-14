@@ -108,8 +108,10 @@ public class Drive : ReplayableUDPClient<DrivePacket>
 	public void DriveAhead(float distance_cm, float speed_cm_per_sec)
 	{
 		if (replay.ReplayAny())
+		{
+			print(name + " - ignoring drive command (replay)");
 			return; 
-
+		}
 		StopBacktrack();
 					
 		mode = DriveMode.Auto;
@@ -123,7 +125,10 @@ public class Drive : ReplayableUDPClient<DrivePacket>
 	public void Backtrack()
 	{
 		if (replay.ReplayAny())
+		{
+			print(name + " - ignoring backtrack command (replay)");
 			return; 
+		}
 
 		StopBacktrack();
 

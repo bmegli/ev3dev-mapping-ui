@@ -1,4 +1,4 @@
-﻿/*
+﻿ /*
  * Copyright (C) 2016 Bartosz Meglicki <meglickib@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -29,27 +29,21 @@ public class UDPServer<DATAGRAM>
 	private DatagramHandler<DATAGRAM> onDatagram;
 	private BinaryWriter dumpWriter;
 
-	private int port; //to delete later
-
-	//just not to create it each time
+		//just not to create it each time
 	private IPEndPoint remote = new IPEndPoint(IPAddress.Any, 0);
 
 	//packets per second statistics
 	private ulong lastPacketTimeUs=0; 
 	private float avgPacketTimeMs=0.0f;
 
-	public UDPServer(int udp_port)
+	public UDPServer(string host, int udp_port)
 	{
-		port = udp_port;
-		udpClient = new UdpClient(port);
+		udpClient = new UdpClient(new IPEndPoint(IPAddress.Parse(host), udp_port));
 	}
 
 	//can throw exception if unable to create file
-	public UDPServer(int udp_port, string dumpFile)
+	public UDPServer(string host, int udp_port, string dumpFile) : this(host, udp_port)
 	{
-		port = udp_port;
-		udpClient = new UdpClient(port);
-
 		dumpWriter = new BinaryWriter(File.Open(dumpFile, FileMode.Create, FileAccess.Write));
 	}
 		

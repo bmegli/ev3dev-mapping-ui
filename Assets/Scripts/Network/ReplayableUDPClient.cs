@@ -35,17 +35,17 @@ public abstract class ReplayableUDPClient<DATAGRAM> : ReplayableClient
 	{
 		base.Awake ();
 
-		print(name + " - port: " + moduleNetwork.port);
-
-		if (replay.RecordOutbound()) 
+		if (replay.RecordOutbound())
 		{
+			print(name + " - preparing for host: " + network.robotIp + " on port: " + moduleNetwork.port);
 			print(name + " - dumping packets to '" + Config.DumpPath(robot.sessionDirectory, name) + "'");
 			Directory.CreateDirectory(Config.DUMPS_DIRECTORY);
 			Directory.CreateDirectory(Config.DumpPath(robot.sessionDirectory));
 			client = new UDPClient<DATAGRAM>(network.robotIp, moduleNetwork.port, Config.DumpPath(robot.sessionDirectory, name), true);
-		} 
+		}
 		else if (replay.ReplayOutbound()) //the client reading from dump & sending
 		{
+			print(name + " - preparing for host: " + network.robotIp + " port: " + moduleNetwork.port);
 			print(name + " - replay from '" + Config.DumpPath(robot.sessionDirectory, name) + "'");
 
 			try
@@ -59,8 +59,13 @@ public abstract class ReplayableUDPClient<DATAGRAM> : ReplayableClient
 				enabled = false;
 			}
 		}
+		else if(replay.ReplayInbound())
+			print(name + " - client not started (inbound replay)");
 		else
+		{
+			print(name + " - preparing for host: " + network.robotIp + " port: " + moduleNetwork.port);
 			client = new UDPClient<DATAGRAM>(network.robotIp, moduleNetwork.port);
+		}
 	}
 
 	protected abstract void Start();

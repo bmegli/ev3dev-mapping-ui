@@ -20,6 +20,7 @@ public class Map3D : MonoBehaviour
 	public PointCloud mapPointCloud;
 
 	private List<PointCloud> mapPointClouds=new List<PointCloud>();
+	private Transform pointCloudContainer;
 
 	public int AssignVertices(Vector3[] data, int i_from, int len, bool[] is_invalid)
 	{
@@ -27,7 +28,7 @@ public class Map3D : MonoBehaviour
 		if (mapPointClouds.Count == 0 || mapPointClouds[mapPointClouds.Count - 1].UnassignedCount() < len)
 		{			
 			pc = Instantiate<PointCloud>(mapPointCloud);
-			pc.transform.parent = SceneManager.DynamicObjects;
+			pc.transform.SetParent(pointCloudContainer, false);
 			mapPointClouds.Add(pc);
 		}
 		else
@@ -72,15 +73,11 @@ public class Map3D : MonoBehaviour
 
 		bw.Close();
 	}
-	/*
-	// Use this for initialization
+		
 	void Start ()
 	{		
+		pointCloudContainer = new GameObject(transform.parent.name + name).transform;
+		pointCloudContainer.parent = SceneManager.DynamicObjects;
 	}
-	
-	// Update is called once per frame
-	void Update ()
-	{
-	}
-	*/
+
 }

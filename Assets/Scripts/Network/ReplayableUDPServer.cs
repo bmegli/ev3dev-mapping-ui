@@ -36,11 +36,11 @@ public abstract class ReplayableUDPServer<DATAGRAM> : ReplayableServer
 
 		if (replay.RecordInbound())
 		{
-			print(name + " - awaiting client: " + network.robotIp + " on port: " + moduleNetwork.port);
+			print(name + " - awaiting client on: " + network.hostIp + " on port: " + moduleNetwork.port);
 			print(name + " - dumping packets to '" + Config.DumpPath(robot.sessionDirectory, name) + "'");
 			Directory.CreateDirectory(Config.DUMPS_DIRECTORY);
 			Directory.CreateDirectory(Config.DumpPath(robot.sessionDirectory));
-			server = new UDPServer<DATAGRAM>(network.robotIp, moduleNetwork.port, Config.DumpPath(robot.sessionDirectory, name));
+			server = new UDPServer<DATAGRAM>(network.hostIp, moduleNetwork.port, Config.DumpPath(robot.sessionDirectory, name));
 		}
 		else if (replay.ReplayInbound()) //the server and client reading from dump & sending
 		{
@@ -60,8 +60,8 @@ public abstract class ReplayableUDPServer<DATAGRAM> : ReplayableServer
 		}
 		else
 		{
-			print(name + " - awaiting client: " + network.robotIp + " on port: " + moduleNetwork.port);
-			server = new UDPServer<DATAGRAM>(network.robotIp, moduleNetwork.port);
+			print(name + " - awaiting client on: " + network.hostIp + " on port: " + moduleNetwork.port);
+			server = new UDPServer<DATAGRAM>(network.hostIp, moduleNetwork.port);
 		}
 	}
 

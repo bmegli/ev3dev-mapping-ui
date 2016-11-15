@@ -29,7 +29,7 @@ public class UDPServer<DATAGRAM>
 	private DatagramHandler<DATAGRAM> onDatagram;
 	private BinaryWriter dumpWriter;
 
-		//just not to create it each time
+	//just not to create it each time
 	private IPEndPoint remote = new IPEndPoint(IPAddress.Any, 0);
 
 	//packets per second statistics

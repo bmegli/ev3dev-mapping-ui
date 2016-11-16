@@ -29,20 +29,21 @@ public class UDPServer<DATAGRAM>
 	private DatagramHandler<DATAGRAM> onDatagram;
 	private BinaryWriter dumpWriter;
 
-	//just not to create it each time
 	private IPEndPoint remote = new IPEndPoint(IPAddress.Any, 0);
+	private IPEndPoint expectedRemote;
 
 	//packets per second statistics
 	private ulong lastPacketTimeUs=0; 
 	private float avgPacketTimeMs=0.0f;
 
-	public UDPServer(string host, int udp_port)
+	public UDPServer(string host, string remote, int udp_port)
 	{
+		expectedRemote = new IPEndPoint(IPAddress.Parse(remote), udp_port);
 		udpClient = new UdpClient(new IPEndPoint(IPAddress.Parse(host), udp_port));
 	}
 
 	//can throw exception if unable to create file
-	public UDPServer(string host, int udp_port, string dumpFile) : this(host, udp_port)
+	public UDPServer(string host, string remote, int udp_port, string dumpFile) : this(host, remote, udp_port)
 	{
 		dumpWriter = new BinaryWriter(File.Open(dumpFile, FileMode.Create, FileAccess.Write));
 	}
@@ -78,7 +79,12 @@ public class UDPServer<DATAGRAM>
 		{
 			try
 			{
-				data=udpClient.Receive(ref remote);					
+				data=udpClient.Receive(ref remote);			
+				if(!remote.Address.Equals(expectedRemote.Address))
+				{
+					Debug.Log("Ignoring packet from " + remote);
+					continue;
+				}
 			}
 			catch(SocketException)
 			{   

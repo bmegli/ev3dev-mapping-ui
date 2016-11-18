@@ -96,7 +96,7 @@ class LaserThreadInternalData
 [RequireComponent (typeof (Map3D))]
 public class Laser : ReplayableUDPServer<LaserPacket>
 {
-	public const ushort LIDAR_CRC_FAILURE_ERROR_CODE = 66;
+	public const ushort LIDAR_CRC_FAILURE_ERROR_CODE = 0x66;
 
 	public LaserModuleProperties module;
 	public LaserPlotProperties plot;

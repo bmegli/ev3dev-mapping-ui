@@ -18,22 +18,25 @@ public class Config
 	public const string MAPS_DIRECTORY="PLY";
 	public const string DUMPS_DIRECTORY="UDP";
 
-	public static string DumpPath(string dump_dir)
+
+	public static string DumpPath(string dump_dir, string dump_subdir)
 	{
-		return DUMPS_DIRECTORY + "/" + dump_dir;
-	}
-	public static string DumpPath(string dump_dir, string dump_file)
-	{
-		return DUMPS_DIRECTORY + "/" + dump_dir + "/" + dump_file + ".bin";
+		return DUMPS_DIRECTORY + "/" + dump_dir + "/" + dump_subdir;
 	}
 		
-	public static string MapPath(string map_dir)
+	public static string DumpPath(string dump_dir, string dump_subdir, string dump_file)
 	{
-		return MAPS_DIRECTORY + "/" + map_dir;
+		return DUMPS_DIRECTORY + "/" + dump_dir + "/" + dump_subdir + "/" + dump_file + ".bin";
 	}
-	public static string MapPath(string map_dir, string map_file)
+
+
+	public static string MapPath(string map_dir, string map_subdir)
 	{
-		return MAPS_DIRECTORY + "/" + map_dir + "/" + map_file + ".ply";
+		return MAPS_DIRECTORY + "/" + map_dir + "/" + map_subdir;
+	}
+	public static string MapPath(string map_dir, string map_subdir, string map_file)
+	{
+		return MAPS_DIRECTORY + "/" + map_dir + "/" + map_subdir + "/" + map_file + ".ply";
 	}
 
 

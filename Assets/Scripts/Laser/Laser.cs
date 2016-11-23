@@ -302,12 +302,13 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 			return;
 		}
 
-		Directory.CreateDirectory(Config.MAPS_DIRECTORY);
-		Directory.CreateDirectory(Config.MapPath(robot.sessionDirectory));
+		string robotName = transform.parent.name;
 
-		print("saving map to file \"" + Config.MapPath(robot.sessionDirectory, name) + "\"");
+		Directory.CreateDirectory(Config.MapPath(robot.sessionDirectory, robotName));
 
-		map3D.SaveToPlyPolygonFileFormat(Config.MapPath(robot.sessionDirectory, name), "created with ev3dev-mapping");
+		print("saving map to file \"" + Config.MapPath(robot.sessionDirectory, robotName, name) + "\"");
+
+		map3D.SaveToPlyPolygonFileFormat(Config.MapPath(robot.sessionDirectory, robotName, name), "created with ev3dev-mapping");
 	}
 
 	#endregion

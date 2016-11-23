@@ -35,26 +35,28 @@ public abstract class ReplayableUDPClient<DATAGRAM> : ReplayableClient
 	{
 		base.Awake ();
 
+		string robotName = transform.parent.name;
+
 		if (replay.RecordOutbound())
 		{
 			print(name + " - preparing for host: " + network.robotIp + " on port: " + moduleNetwork.port);
-			print(name + " - dumping packets to '" + Config.DumpPath(robot.sessionDirectory, name) + "'");
+			print(name + " - dumping packets to '" + Config.DumpPath(robot.sessionDirectory, robotName, name) + "'");
 			Directory.CreateDirectory(Config.DUMPS_DIRECTORY);
-			Directory.CreateDirectory(Config.DumpPath(robot.sessionDirectory));
-			client = new UDPClient<DATAGRAM>(network.robotIp, moduleNetwork.port, Config.DumpPath(robot.sessionDirectory, name), true);
+			Directory.CreateDirectory(Config.DumpPath(robot.sessionDirectory, robotName));
+			client = new UDPClient<DATAGRAM>(network.robotIp, moduleNetwork.port, Config.DumpPath(robot.sessionDirectory, robotName, name), true);
 		}
 		else if (replay.ReplayOutbound()) //the client reading from dump & sending
 		{
 			print(name + " - preparing for host: " + network.robotIp + " port: " + moduleNetwork.port);
-			print(name + " - replay from '" + Config.DumpPath(robot.sessionDirectory, name) + "'");
+			print(name + " - replay from '" + Config.DumpPath(robot.sessionDirectory, robotName, name) + "'");
 
 			try
 			{
-				client = new UDPClient<DATAGRAM>(network.robotIp, moduleNetwork.port, Config.DumpPath(robot.sessionDirectory, name), false);
+				client = new UDPClient<DATAGRAM>(network.robotIp, moduleNetwork.port, Config.DumpPath(robot.sessionDirectory, robotName, name), false);
 			}
 			catch
 			{
-				print(name + " - replay disabled (can't initialize from '" + Config.DumpPath(robot.sessionDirectory, name) + "' on port " + moduleNetwork.port + ")");
+				print(name + " - replay disabled (can't initialize from '" + Config.DumpPath(robot.sessionDirectory, robotName, name) + "' on port " + moduleNetwork.port + ")");
 				replay.mode = ReplayMode.None;
 				enabled = false;
 			}
@@ -111,7 +113,7 @@ public abstract class ReplayableUDPClient<DATAGRAM> : ReplayableClient
 	{
 		print(name + " - dumping packets to '" + filename + "'");
 		Directory.CreateDirectory(Config.DUMPS_DIRECTORY);
-		Directory.CreateDirectory(Config.DumpPath(robot.sessionDirectory));
+		Directory.CreateDirectory(Config.DumpPath(robot.sessionDirectory, transform.parent.name));
 		client.InitRecordTo(filename);
 	}
 
@@ -123,11 +125,11 @@ public abstract class ReplayableUDPClient<DATAGRAM> : ReplayableClient
 
 	protected string GetReplayFilename()
 	{
-		return Config.DumpPath (robot.sessionDirectory, name);
+		return Config.DumpPath (robot.sessionDirectory, transform.parent.name, name);
 	}
 	protected string GetReplayFilename(string postfix)
 	{
-		return Config.DumpPath (robot.sessionDirectory, name + postfix);
+		return Config.DumpPath (robot.sessionDirectory, transform.parent.name ,name + postfix);
 	}
 		
 	protected void FlushDump()

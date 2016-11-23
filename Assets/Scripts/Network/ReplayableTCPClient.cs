@@ -38,26 +38,28 @@ public abstract class ReplayableTCPClient<MESSAGE> : ReplayableClient
 	{
 		base.Awake ();
 
-		print(name + " - address " + network.robotIp  + " port: " + moduleNetwork.port);
+		string robotName = transform.parent.name;
 
+		print(name + " - address " + network.robotIp  + " port: " + moduleNetwork.port);
+	
 		if (replay.RecordOutbound()) 
 		{
-			print(name + " - dumping packets to '" + Config.DumpPath(robot.sessionDirectory, name) + "'");
-			Directory.CreateDirectory(Config.DUMPS_DIRECTORY);
-			Directory.CreateDirectory(Config.DumpPath(robot.sessionDirectory));
-			client = new TCPClient<MESSAGE>(network.robotIp, moduleNetwork.port, Config.DumpPath(robot.sessionDirectory, name), true);
+			print(name + " - dumping packets to '" + Config.DumpPath(robot.sessionDirectory, robotName, name) + "'");
+
+			Directory.CreateDirectory(Config.DumpPath(robot.sessionDirectory, robotName));
+			client = new TCPClient<MESSAGE>(network.robotIp, moduleNetwork.port, Config.DumpPath(robot.sessionDirectory, robotName, name), true);
 		}
 		else if (replay.ReplayOutbound()) //the client reading from dump & sending
 		{
-			print(name + " - replay from '" + Config.DumpPath(robot.sessionDirectory, name) + "'");
+			print(name + " - replay from '" + Config.DumpPath(robot.sessionDirectory, robotName, name) + "'");
 
 			try
 			{
-				client = new TCPClient<MESSAGE>(network.robotIp, moduleNetwork.port, Config.DumpPath(robot.sessionDirectory, name), false);
+				client = new TCPClient<MESSAGE>(network.robotIp, moduleNetwork.port, Config.DumpPath(robot.sessionDirectory, robotName, name), false);
 			}
 			catch(System.Exception)
 			{
-				print(name + " - replay disabled (can't initialize from '" + Config.DumpPath(robot.sessionDirectory, name) + "' on port " + moduleNetwork.port + ")");
+				print(name + " - replay disabled (can't initialize from '" + Config.DumpPath(robot.sessionDirectory, robotName, name) + "' on port " + moduleNetwork.port + ")");
 				replay.mode = ReplayMode.None;
 				enabled = false;
 			}

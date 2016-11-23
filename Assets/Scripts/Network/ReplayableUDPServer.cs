@@ -34,27 +34,28 @@ public abstract class ReplayableUDPServer<DATAGRAM> : ReplayableServer
 	{
 		base.Awake ();
 
+		string robotName = transform.parent.name;
+
 		if (replay.RecordInbound())
 		{
 			print(name + " - awaiting client " + network.robotIp + " on " + network.hostIp + ":" + moduleNetwork.port);
-			print(name + " - dumping packets to '" + Config.DumpPath(robot.sessionDirectory, name) + "'");
-			Directory.CreateDirectory(Config.DUMPS_DIRECTORY);
-			Directory.CreateDirectory(Config.DumpPath(robot.sessionDirectory));
-			server = new UDPServer<DATAGRAM>(network.hostIp, network.robotIp, moduleNetwork.port, Config.DumpPath(robot.sessionDirectory, name));
+			print(name + " - dumping packets to '" + Config.DumpPath(robot.sessionDirectory, robotName, name) + "'");
+			Directory.CreateDirectory(Config.DumpPath(robot.sessionDirectory, robotName));
+			server = new UDPServer<DATAGRAM>(network.hostIp, network.robotIp, moduleNetwork.port, Config.DumpPath(robot.sessionDirectory, robotName, name));
 		}
 		else if (replay.ReplayInbound()) //the server and client reading from dump & sending
 		{
 			print(name + " - awaiting client 127.0.0.1 on 127.0.0.1:" + moduleNetwork.port);
-			print(name + " - replay from '" + Config.DumpPath(robot.sessionDirectory, name) + "'");
+			print(name + " - replay from '" + Config.DumpPath(robot.sessionDirectory, robotName, name) + "'");
 			server = new UDPServer<DATAGRAM>("127.0.0.1","127.0.0.1", moduleNetwork.port);
 
 			try
 			{
-				client = new UDPClient<DATAGRAM>("127.0.0.1", moduleNetwork.port, Config.DumpPath(robot.sessionDirectory, name), false);
+				client = new UDPClient<DATAGRAM>("127.0.0.1", moduleNetwork.port, Config.DumpPath(robot.sessionDirectory, robotName, name), false);
 			}
 			catch
 			{
-				print(name + " - replay disabled (can't initialize from '" + Config.DumpPath(robot.sessionDirectory, name) + "' on port " + moduleNetwork.port + ")");
+				print(name + " - replay disabled (can't initialize from '" + Config.DumpPath(robot.sessionDirectory, robotName, name) + "' on port " + moduleNetwork.port + ")");
 				replay.mode = ReplayMode.None;
 			}
 		}

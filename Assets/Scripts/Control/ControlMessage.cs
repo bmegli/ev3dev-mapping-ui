@@ -112,6 +112,13 @@ public class ControlMessage : IMessage
 		PutAttribute (new ControlAttributeI32 (attribute, value));
 	}
 
+	public ControlMessage FillWithKeepaliveMessage()
+	{
+		attributes.Clear ();
+		NewMessage(ControlCommands.KEEPALIVE);
+		return this;
+	}
+
 	public static ControlMessage KeepaliveMessage()
 	{
 		ControlMessage msg = new ControlMessage();

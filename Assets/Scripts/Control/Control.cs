@@ -90,7 +90,7 @@ public class Control : ReplayableTCPClient<ControlMessage>
 					ProcessMessage(msg);
 			
 				if (LastSeen > module.timeoutMs)
-					Send(ControlMessage.KeepaliveMessage());
+					Send(msg.FillWithKeepaliveMessage());
 				break;
 			case ModuleState.Shutdown:
 				while (ReceiveOne(msg))
@@ -135,7 +135,6 @@ public class Control : ReplayableTCPClient<ControlMessage>
 
 	private void ProcessMessage(ControlMessage message)
 	{
-		RobotModule module;
 		ControlCommands cmd = message.GetCommand();
 
 		switch (cmd)
@@ -145,7 +144,7 @@ public class Control : ReplayableTCPClient<ControlMessage>
 			case ControlCommands.ENABLED:				
 			case ControlCommands.DISABLED:
 			case ControlCommands.FAILED: //failed has additional information on error code
-				module = modules.Find(m => (m.name == message.Attribute<string>(0)));
+				RobotModule module = modules.Find(m => (m.name == message.Attribute<string>(0)));
 				print(name + " - " + module.name + " state changed to " + cmd.ToString());
 				module.SetState(ModuleStateFromControlCommand(cmd));
 				break;
@@ -170,7 +169,6 @@ public class Control : ReplayableTCPClient<ControlMessage>
 			print(name + " - ignoring request to enable/disable " + name + " (replay)");
 			return;
 		}
-
 
 		if (enable)
 			EnableSelf();
@@ -278,7 +276,7 @@ public class Control : ReplayableTCPClient<ControlMessage>
 	}
 	public override bool ModuleAutostart()
 	{
-		return true;
+		return module.autostart;
 	}
 	public override int CreationDelayMs()
 	{

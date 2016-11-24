@@ -28,6 +28,7 @@ public class PointCloud : MonoBehaviour
 	public const int MAX_VERTICES = 65534;
 
 	private Mesh mesh;
+	private Vector3[] mesh_vertices;
 
 	private int assignedPoints; 
 
@@ -48,7 +49,7 @@ public class PointCloud : MonoBehaviour
 
 		assignedPoints = 0;
 
-		Vector3[] mesh_vertices = new Vector3[numberOfPoints];
+		mesh_vertices = new Vector3[numberOfPoints];
 		Color[] mesh_colors = new Color[numberOfPoints];
 		int[] mesh_indices = new int[numberOfPoints];
 
@@ -82,7 +83,8 @@ public class PointCloud : MonoBehaviour
 
 	public int AssignVertices(Vector3[] data, int len)
 	{
-		Vector3[] vertices = mesh.vertices;
+		Vector3[] vertices = mesh_vertices;
+		Bounds bounds = mesh.bounds;
 		int assigned = 0;
 		int unassigned = UnassignedCount();
 
@@ -90,13 +92,14 @@ public class PointCloud : MonoBehaviour
 		for (int i = 0; i < len && assigned < unassigned; ++i)
 		{
 			vertices[assignedPoints + assigned] = data[i];
+			bounds.Encapsulate(data[i]);
 			++assigned;
 		}
 
 		mesh.vertices = vertices;
 
 		//if this happens to be time consuming we can keep the bounds and update if they change while adding
-		mesh.RecalculateBounds(); 
+		mesh.bounds = bounds;
 		assignedPoints += assigned;
 
 		return assigned;
@@ -105,7 +108,8 @@ public class PointCloud : MonoBehaviour
 
 	public int AssignVertices(Vector3[] data, int i_from, int len, bool[] is_invalid)
 	{
-		Vector3[] vertices = mesh.vertices;
+		Vector3[] vertices = mesh_vertices;
+		Bounds bounds = mesh.bounds;
 		int assigned = 0;
 		int unassigned = UnassignedCount();
 
@@ -115,19 +119,20 @@ public class PointCloud : MonoBehaviour
 			if (is_invalid[ind])
 				continue;
 			vertices[assignedPoints + assigned] = data[ind];
+			bounds.Encapsulate(data[ind]);
 			++assigned;
 		}
 
 		mesh.vertices = vertices;
 
 		//if this happens to be time consuming we can keep the bounds and update if they change while adding
-		mesh.RecalculateBounds(); 
+		mesh.bounds = bounds;
 		assignedPoints += assigned;
 
 		return assigned;
 	}
 	public void SaveToPlyPolygonFileFormat(BinaryWriter bw)
 	{
-		PLYPolygonFileFormat.EmitVertices(bw, mesh.vertices, AssignedCount());
+		PLYPolygonFileFormat.EmitVertices(bw, mesh_vertices, AssignedCount());
 	}
 }

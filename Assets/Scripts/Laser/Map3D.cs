@@ -36,6 +36,7 @@ public class Map3D : MonoBehaviour
 
 		return pc.AssignVertices(data, i_from, len, is_invalid);
 	}
+
 	public int AssignVertices(Vector3[] data, int len)
 	{
 		PointCloud pc;

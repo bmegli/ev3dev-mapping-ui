@@ -29,7 +29,6 @@ public class UDPServer<DATAGRAM>
 	private DatagramHandler<DATAGRAM> onDatagram;
 	private BinaryWriter dumpWriter;
 
-	private IPEndPoint remote = new IPEndPoint(IPAddress.Any, 0);
 	private IPEndPoint expectedRemote;
 
 	//packets per second statistics
@@ -69,18 +68,21 @@ public class UDPServer<DATAGRAM>
 	}
 					
 	public void ReceiverThreadMain()
-	{
-		byte[] data = null;
+	{		
 		DATAGRAM datagram=new DATAGRAM();
-
 		int datagram_size = datagram.BinarySize();
+		EndPoint remote = new IPEndPoint(IPAddress.Any, 0);
+		byte[] data = new byte[datagram_size];
+		BinaryReader reader = new BinaryReader(new MemoryStream(data));
 
 		while (Run)
 		{
 			try
-			{
-				data=udpClient.Receive(ref remote);			
-				if(!remote.Address.Equals(expectedRemote.Address))
+			{				
+				udpClient.Client.ReceiveFrom(data, ref remote);
+				reader.BaseStream.Position=0;
+
+				if(!(remote as IPEndPoint).Address.Equals(expectedRemote.Address))
 				{
 					Debug.Log("Ignoring packet from " + remote);
 					continue;
@@ -98,9 +100,6 @@ public class UDPServer<DATAGRAM>
 				break;
 			}
 	
-			if (data.Length != datagram_size)
-				throw new InvalidOperationException("Received datagram of incorrect size, different remote?");
-
 			//gather server stats
 			if(lastPacketTimeUs==0) //first packet case
 				lastPacketTimeUs=Timestamp.TimestampUs();
@@ -108,13 +107,14 @@ public class UDPServer<DATAGRAM>
 				UpdatePacketFrequencyStatistics();
 
 			//process datagram
-			datagram.FromBinary(new System.IO.BinaryReader(new System.IO.MemoryStream(data)));
+			datagram.FromBinary(reader);
 			onDatagram(datagram);
 	
 			if (dumpWriter != null)
 				dumpWriter.Write(data);
 		}
-			
+
+		reader.Close();
 		if(dumpWriter!=null)
 			dumpWriter.Close();
 		onDatagram = null;

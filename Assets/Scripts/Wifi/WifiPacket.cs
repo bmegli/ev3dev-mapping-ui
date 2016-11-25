@@ -18,8 +18,8 @@ public class WifiPacket : IDatagram
 	public const int SSID_LENGTH_WITH0_MAX=33;
 
 	public ulong timestamp_us;
-	public byte[] bssid;
-	public string ssid;
+	public byte[] bssid=new byte[BSSID_LENGTH];
+	public string ssid="";
 	public sbyte signal_dbm;
 	public uint rx_packets;
 	public uint tx_packets;
@@ -86,14 +86,19 @@ public class WifiPacket : IDatagram
 		return System.Text.Encoding.ASCII.GetString(ascii, 0, index_of_zero);
 	}
 
-	public WifiPacket DeepCopy()
+	public void CloneFrom(WifiPacket p)
 	{
-		WifiPacket other = (WifiPacket) this.MemberwiseClone();
-		other.bssid_string = string.Copy(bssid_string);
-		other.ssid = string.Copy(ssid);
-		other.bssid = new byte[BSSID_LENGTH];
-		bssid.CopyTo(other.bssid, 0);
-		return other;
-	}
+		timestamp_us = p.timestamp_us;
 
+		// we acctually want those to be reference copies
+		// they are filled with new refs in FrmoBinary anyway
+		bssid = p.bssid;
+		ssid = p.ssid;
+		bssid_string = p.bssid_string;
+
+		signal_dbm = p.signal_dbm;
+		rx_packets = p.rx_packets;
+		tx_packets = p.tx_packets;
+
+	}
 }

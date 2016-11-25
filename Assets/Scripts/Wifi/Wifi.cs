@@ -133,7 +133,7 @@ public class Wifi : ReplayableUDPServer<WifiPacket>
 			print(name + " ignoring out of time packet (previous, now):" + Environment.NewLine + lastPacket.ToString() + Environment.NewLine + packet.ToString());
 			return;
 		}			
-		lastPacket = packet.DeepCopy();
+		lastPacket.CloneFrom(packet);
 
 		if (plot.plotType == WifiPlotType.Map)
 			ProcessReadings (packet);

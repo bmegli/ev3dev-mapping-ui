@@ -25,7 +25,8 @@ public abstract class ReplayableUDPServer<DATAGRAM> : ReplayableServer
 	protected virtual void OnDestroy()
 	{
 		print(name + " - stop server");
-		server.Stop();
+		if(server!=null)
+			server.Stop();
 		if (client!=null)
 			client.Stop();
 	}
@@ -41,7 +42,15 @@ public abstract class ReplayableUDPServer<DATAGRAM> : ReplayableServer
 			print(name + " - awaiting client " + network.robotIp + " on " + network.hostIp + ":" + moduleNetwork.port);
 			print(name + " - dumping packets to '" + Config.DumpPath(robot.sessionDirectory, robotName, name) + "'");
 			Directory.CreateDirectory(Config.DumpPath(robot.sessionDirectory, robotName));
-			server = new UDPServer<DATAGRAM>(network.hostIp, network.robotIp, moduleNetwork.port, Config.DumpPath(robot.sessionDirectory, robotName, name));
+			try
+			{
+				server = new UDPServer<DATAGRAM>(network.hostIp, network.robotIp, moduleNetwork.port, Config.DumpPath(robot.sessionDirectory, robotName, name));
+			}
+			catch(System.Exception e)
+			{
+				Debug.LogError(name + " - unable to initialize on " + network.hostIp + ":" + moduleNetwork.port + " - " + e.Message);
+				enabled = false;
+			}
 		}
 		else if (replay.ReplayInbound()) //the server and client reading from dump & sending
 		{
@@ -62,7 +71,15 @@ public abstract class ReplayableUDPServer<DATAGRAM> : ReplayableServer
 		else
 		{
 			print(name + " - awaiting client " + network.robotIp + " on " +  network.hostIp + ":" + moduleNetwork.port);
-			server = new UDPServer<DATAGRAM>(network.hostIp, network.robotIp, moduleNetwork.port);
+			try
+			{
+				server = new UDPServer<DATAGRAM>(network.hostIp, network.robotIp, moduleNetwork.port);
+			}
+			catch(System.Exception e)
+			{
+				Debug.LogError(name + " - unable to initialize on " + network.hostIp + ":" + moduleNetwork.port + " - " + e.Message);
+				enabled = false;
+			}
 		}
 	}
 

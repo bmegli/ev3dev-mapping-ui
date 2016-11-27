@@ -43,7 +43,15 @@ public abstract class ReplayableUDPClient<DATAGRAM> : ReplayableClient
 			print(name + " - dumping packets to '" + Config.DumpPath(robot.sessionDirectory, robotName, name) + "'");
 			Directory.CreateDirectory(Config.DUMPS_DIRECTORY);
 			Directory.CreateDirectory(Config.DumpPath(robot.sessionDirectory, robotName));
-			client = new UDPClient<DATAGRAM>(network.robotIp, moduleNetwork.port, Config.DumpPath(robot.sessionDirectory, robotName, name), true);
+			try
+			{
+				client = new UDPClient<DATAGRAM>(network.robotIp, moduleNetwork.port, Config.DumpPath(robot.sessionDirectory, robotName, name), true);
+			}
+			catch(System.Exception e)
+			{
+				Debug.LogError(name + " - unable to initialize for " + network.hostIp + ":" + moduleNetwork.port + " - " + e.Message);
+				enabled = false;
+			}
 		}
 		else if (replay.ReplayOutbound()) //the client reading from dump & sending
 		{
@@ -66,7 +74,16 @@ public abstract class ReplayableUDPClient<DATAGRAM> : ReplayableClient
 		else
 		{
 			print(name + " - preparing for host: " + network.robotIp + " port: " + moduleNetwork.port);
-			client = new UDPClient<DATAGRAM>(network.robotIp, moduleNetwork.port);
+			try
+			{
+				client = new UDPClient<DATAGRAM>(network.robotIp, moduleNetwork.port);
+			}
+			catch(System.Exception e)
+			{
+				Debug.LogError(name + " - unable to initialize for " + network.hostIp + ":" + moduleNetwork.port + " - " + e.Message);
+				enabled = false;
+			}
+
 		}
 	}
 

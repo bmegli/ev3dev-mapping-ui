@@ -17,7 +17,7 @@ public class Config
 {
 	public const string MAPS_DIRECTORY="PLY";
 	public const string DUMPS_DIRECTORY="UDP";
-
+	public const string SNAPSHOTS_DIRECTORY="SNAPSHOT";
 
 	public static string DumpPath(string dump_dir, string dump_subdir)
 	{
@@ -28,8 +28,7 @@ public class Config
 	{
 		return DUMPS_DIRECTORY + "/" + dump_dir + "/" + dump_subdir + "/" + dump_file + ".bin";
 	}
-
-
+		
 	public static string MapPath(string map_dir, string map_subdir)
 	{
 		return MAPS_DIRECTORY + "/" + map_dir + "/" + map_subdir;
@@ -37,6 +36,16 @@ public class Config
 	public static string MapPath(string map_dir, string map_subdir, string map_file)
 	{
 		return MAPS_DIRECTORY + "/" + map_dir + "/" + map_subdir + "/" + map_file + ".ply";
+	}
+
+	public static string SnapshotPath(string snap_dir, string snap_subdir)
+	{
+		return SNAPSHOTS_DIRECTORY + "/" + snap_dir + "/" + snap_subdir;
+	}
+
+	public static string SnapshotPath(string snap_dir, string snap_subdir, string snap_file)
+	{
+		return SNAPSHOTS_DIRECTORY + "/" + snap_dir + "/" + snap_subdir + "/" + snap_file + ".csv";
 	}
 
 

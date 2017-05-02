@@ -33,7 +33,14 @@ public class LaserPlotProperties
 	public float distanceLimit=10.0f;
 	public PointCloud laserPointCloud;
 }
-	
+
+[Serializable]
+public class LaserSnapshotProperties
+{
+	public int snapshotNumber=10;
+}
+
+
 class LaserThreadSharedData
 {
 	public Vector3[] readings=new Vector3[360];
@@ -91,15 +98,17 @@ class LaserThreadInternalData
 		t_to = time_to;
 	}
 }
-
+	
 [RequireComponent (typeof (LaserUI))]
 [RequireComponent (typeof (Map3D))]
 public class Laser : ReplayableUDPServer<LaserPacket>
 {
 	public const ushort LIDAR_CRC_FAILURE_ERROR_CODE = 0x66;
+	public const int INVALID_DATA_SNAPSHOT_REPLACEMENT_VALUE = 0;
 
 	public LaserModuleProperties module;
 	public LaserPlotProperties plot;
+	public LaserSnapshotProperties snapshot;
 
 	private PointCloud laserPointCloud;
 	private Map3D map3D;
@@ -107,6 +116,10 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 	private LaserThreadSharedData data=new LaserThreadSharedData();
 
 	private Matrix4x4 laserTRS;
+
+	private int snapshotsToTake=0;
+	private bool collecting=false;
+	private StreamWriter snapshotWriter;
 
 	#region UDP Thread Only Data
 	private LaserThreadInternalData threadInternal = new LaserThreadInternalData ();
@@ -119,6 +132,8 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 	protected override void OnDestroy()
 	{
 		base.OnDestroy ();
+		if(snapshotWriter != null)
+			snapshotWriter.Close();		
 	}
 
 	protected override void Awake()
@@ -126,7 +141,14 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 		base.Awake();
 		laserPointCloud = SafeInstantiate<PointCloud> (plot.laserPointCloud);
 		laserTRS =  Matrix4x4.TRS (transform.localPosition, transform.localRotation, Vector3.one);
+
+		string robotName = transform.parent.name;
+
+		print(name + " - dumping snapshots to '" + Config.SnapshotPath(robot.sessionDirectory, robotName, name) + "'");
+		Directory.CreateDirectory(Config.SnapshotPath(robot.sessionDirectory, robotName));
+		snapshotWriter = new StreamWriter(Config.SnapshotPath(robot.sessionDirectory, robotName, name));
 	}
+
 
 	protected override void Start ()
 	{
@@ -182,7 +204,7 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 
 	private void CalculateReadingsInLocalReferenceFrame(LaserPacket packet)
 	{
-		int angle_index;
+		int angle_index, distance;
 		float alpha, distance_mm, angle;
 		Vector3 pos;
 
@@ -200,11 +222,31 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 				threadInternal.crcFailurePercentage = threadInternal.crcFailures * 100 / 360;
 				threadInternal.invalidPercentage = threadInternal.invalidCount * 100 / 360;
 				threadInternal.crcFailures = threadInternal.invalidCount = 0;
+
+				if (snapshotsToTake > 0 && !collecting)
+					collecting = true;
 			}
+
 
 			readings [angle_index] = Vector3.zero;
 			timestamps[angle_index] = packet.GetTimestampUs(i);
 			invalid_data[angle_index] = packet.laser_readings[i].invalid_data == 1;
+
+			if (collecting)
+			{								
+				distance = invalid_data[angle_index] ? INVALID_DATA_SNAPSHOT_REPLACEMENT_VALUE : (int)packet.laser_readings[i].distance;					
+				snapshotWriter.Write(distance);
+				if (angle_index < 359)
+					snapshotWriter.Write(";");
+				else
+				{
+					snapshotWriter.WriteLine();
+					--snapshotsToTake;
+					if (snapshotsToTake == 0)
+						collecting = false;
+				}
+			}
+
 
 			if (invalid_data[angle_index])
 			{
@@ -309,6 +351,16 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 		print("saving map to file \"" + Config.MapPath(robot.sessionDirectory, robotName, name) + "\"");
 
 		map3D.SaveToPlyPolygonFileFormat(Config.MapPath(robot.sessionDirectory, robotName, name), "created with ev3dev-mapping");
+	}
+
+	public void TakeSnapshot()
+	{
+		if (snapshotsToTake != 0 || collecting)
+		{
+			print("laser - ignoring snapshot request (in progress)");
+			return;
+		}
+		snapshotsToTake = snapshot.snapshotNumber;
 	}
 
 	#endregion

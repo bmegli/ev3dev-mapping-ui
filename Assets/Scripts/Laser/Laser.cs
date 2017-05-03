@@ -37,7 +37,7 @@ public class LaserPlotProperties
 [Serializable]
 public class LaserSnapshotProperties
 {
-	public int snapshotNumber=10;
+	public int snapshotNumber=20;
 }
 
 
@@ -155,7 +155,7 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 		map3D = GetComponent<Map3D> ();
 		base.Start();
 	}
-
+		
 	void Update ()
 	{
 		lock (threadShared)

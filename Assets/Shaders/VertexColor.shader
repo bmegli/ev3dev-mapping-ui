@@ -1,4 +1,6 @@
-﻿// Code source:
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+// Code source:
 // http://www.kamend.com/2014/05/rendering-a-point-cloud-inside-unity/
 
 Shader "Custom/VertexColor" {
@@ -23,7 +25,7 @@ Shader "Custom/VertexColor" {
         VertexOutput vert(VertexInput v) {
          
             VertexOutput o;
-            o.pos = mul(UNITY_MATRIX_MVP, v.v);
+            o.pos = UnityObjectToClipPos(v.v);
             o.col = v.color;
              
             return o;

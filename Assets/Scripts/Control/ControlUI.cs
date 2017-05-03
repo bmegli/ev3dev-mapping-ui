@@ -55,9 +55,9 @@ public class ControlUI : MonoBehaviour
 			saveMapsButton = SafeInstantiate<Button>(ModuleButton, uiTransform);
 			saveMapsButton.onClick.AddListener(OnSaveMapsButtonClicked);
 			saveMapsButton.GetComponentInChildren<Text>().text = "save maps";
-			saveMapsButton = SafeInstantiate<Button>(ModuleButton, uiTransform);
-			saveMapsButton.onClick.AddListener(OnSnapshotButtonClicked);
-			saveMapsButton.GetComponentInChildren<Text>().text = "snapshot";		
+			takeSnapshotButton = SafeInstantiate<Button>(ModuleButton, uiTransform);
+			takeSnapshotButton.onClick.AddListener(OnSnapshotButtonClicked);
+			takeSnapshotButton.GetComponentInChildren<Text>().text = "snapshot";		
 		}
 
 		if (GetComponentInParent<Replay>().ReplayAny())

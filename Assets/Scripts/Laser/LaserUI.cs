@@ -44,7 +44,14 @@ public class LaserUI : ModuleUI
 		if (avgPacketMs != 0)
 			ppsText.text = string.Format("pps {0:00} ms {1:00}", 1000.0f / avgPacketMs, avgPacketMs);
 
-		laserSpeedText.text = string.Format("rpm {0:000}", laser.GetAveragedLaserRPM());
+		int snapshotsLeft = laser.GetSnapshotsLeft();
+		string laserSpeedAndSnapshots;
+		if(snapshotsLeft == 0)
+			laserSpeedAndSnapshots = string.Format("rpm {0:000}", laser.GetAveragedLaserRPM());
+		else
+			laserSpeedAndSnapshots = string.Format("rpm {0:000} snp {1:00}", laser.GetAveragedLaserRPM(), laser.GetSnapshotsLeft());
+				
+		laserSpeedText.text = laserSpeedAndSnapshots;
 		laserInvalidCRCText.text = string.Format("inv {0:00} crc {1:00}",laser.GetInvalidPercentage() ,laser.GetCRCFailurePercentage());
 	}
 }

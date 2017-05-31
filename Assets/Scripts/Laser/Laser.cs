@@ -52,24 +52,38 @@ class LaserThreadSharedData
 	public float laserRPM;
 	public int crcFailurePercentage=0;
 	public int invalidPercentage=0;
+	public bool snapshot_request=false;
+	public int snapshots_left=0;
 
-	public void CopyNewDataFrom(LaserThreadSharedData other)
+	public void CopyNewDataFrom(LaserThreadSharedData thr_data)
 	{
 		// Copy only the data that changed since last call
-		from = other.from;
-		length = other.length;
-		averagedPacketTimeMs = other.averagedPacketTimeMs;
-		laserRPM = other.laserRPM;
-		crcFailurePercentage = other.crcFailurePercentage;
-		invalidPercentage = other.invalidPercentage;
+		from = thr_data.from;
+		length = thr_data.length;
+		averagedPacketTimeMs = thr_data.averagedPacketTimeMs;
+		laserRPM = thr_data.laserRPM;
+		crcFailurePercentage = thr_data.crcFailurePercentage;
+		invalidPercentage = thr_data.invalidPercentage;
 
 		for (int i = from; i < from + length; ++i)
 		{
 			int ind = i % readings.Length;
-			readings[ind] = other.readings[ind];
-			invalid_data[ind] = other.invalid_data[ind];
+			readings[ind] = thr_data.readings[ind];
+			invalid_data[ind] = thr_data.invalid_data[ind];
 		}
 	}
+	public void HandleSnapshotRequest(LaserThreadSharedData unity_data)
+	{
+		if (snapshots_left == 0 && unity_data.snapshot_request)
+		{
+			snapshots_left = unity_data.snapshots_left; 
+			snapshot_request = true;
+			unity_data.snapshot_request=false;
+		}
+
+		unity_data.snapshots_left = snapshots_left;		
+	}
+
 }
 
 class LaserThreadInternalData
@@ -88,6 +102,7 @@ class LaserThreadInternalData
 	public int invalidPercentage = 0;
 	public int crcFailures=0;
 	public int crcFailurePercentage=0;
+	public int snapshots_left=0;
 
 	public void SetPending(int from, int length, ulong time_from, ulong time_to)
 	{
@@ -117,8 +132,6 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 
 	private Matrix4x4 laserTRS;
 
-	private int snapshotsToTake=0;
-	private bool collecting=false;
 	private StreamWriter snapshotWriter;
 
 	#region UDP Thread Only Data
@@ -160,6 +173,7 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 	{
 		lock (threadShared)
 		{
+			threadShared.HandleSnapshotRequest(data);
 			if (threadShared.consumed)
 				return; //no new data, nothing to do
 			data.CopyNewDataFrom(threadShared);
@@ -167,7 +181,7 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 		}
 			
 		if (data.length > 360)
-			print ("Huh, does this ever happen? If so we can optimize");
+			print(name + " - huh, does this ever happen? If so we can optimize");
 
 		if(plot.plotType!=PlotType.Map)
 			laserPointCloud.SetVertices(data.readings);
@@ -204,7 +218,7 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 
 	private void CalculateReadingsInLocalReferenceFrame(LaserPacket packet)
 	{
-		int angle_index, distance;
+		int angle_index;
 		float alpha, distance_mm, angle;
 		Vector3 pos;
 
@@ -222,31 +236,11 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 				threadInternal.crcFailurePercentage = threadInternal.crcFailures * 100 / 360;
 				threadInternal.invalidPercentage = threadInternal.invalidCount * 100 / 360;
 				threadInternal.crcFailures = threadInternal.invalidCount = 0;
-
-				if (snapshotsToTake > 0 && !collecting)
-					collecting = true;
 			}
-
-
+				
 			readings [angle_index] = Vector3.zero;
 			timestamps[angle_index] = packet.GetTimestampUs(i);
 			invalid_data[angle_index] = packet.laser_readings[i].invalid_data == 1;
-
-			if (collecting)
-			{								
-				distance = invalid_data[angle_index] ? INVALID_DATA_SNAPSHOT_REPLACEMENT_VALUE : (int)packet.laser_readings[i].distance;					
-				snapshotWriter.Write(distance);
-				if (angle_index < 359)
-					snapshotWriter.Write(";");
-				else
-				{
-					snapshotWriter.WriteLine();
-					--snapshotsToTake;
-					if (snapshotsToTake == 0)
-						collecting = false;
-				}
-			}
-
 
 			if (invalid_data[angle_index])
 			{
@@ -282,7 +276,7 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 
 		if (not_in_history)
 		{
-			print("laser - ignoring packet (position data not in history) with timestamp " + t_from);
+			print(name + " - ignoring packet (position data not in history) with timestamp " + t_from);
 			return false;
 		}
 		if (not_yet)
@@ -328,9 +322,46 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 			threadShared.laserRPM = threadInternal.laserRPM;
 			threadShared.invalidPercentage = threadInternal.invalidPercentage;
 			threadShared.crcFailurePercentage = threadInternal.crcFailurePercentage;
+
+			if (threadShared.snapshot_request)
+			{
+				threadShared.snapshot_request = false;
+				threadInternal.snapshots_left = threadShared.snapshots_left;
+			}
+			threadShared.snapshots_left = threadInternal.snapshots_left;
 		}
+
+		if (threadInternal.snapshots_left == 0 || from + length != 360)
+			return;
+	
+		//just finished revolution, dump to file
+
+		--threadInternal.snapshots_left;
+	
+		DumpSnapshot();
 	}
 
+	void DumpSnapshot()
+	{
+		Vector3[] readings = threadInternal.readings;
+		bool[] invalid = threadInternal.invalid_data;
+
+		for (int i = 0; i < 360; ++i)
+		{						
+			for (int j = 0; j < 3; ++j)
+			{
+				int coordinate = (int)(readings[i][j] * 1000);
+				if (invalid[i])
+					coordinate = INVALID_DATA_SNAPSHOT_REPLACEMENT_VALUE;
+				snapshotWriter.Write(coordinate);
+			
+				if(!(i==359 && j==2))
+					snapshotWriter.Write(";");
+			}
+		}
+
+		snapshotWriter.WriteLine();
+	}
 
 	#endregion
 
@@ -355,12 +386,21 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 
 	public void TakeSnapshot()
 	{
-		if (snapshotsToTake != 0 || collecting)
+		if (data.snapshots_left > 0 || data.snapshot_request)
 		{
-			print("laser - ignoring snapshot request (in progress)");
+			print(name + " - ignoring snapshot request (in progress)");
 			return;
 		}
-		snapshotsToTake = snapshot.snapshotNumber;
+
+		data.snapshot_request = true;
+		data.snapshots_left = snapshot.snapshotNumber;
+
+//		if (snapshotsToTake != 0 || collecting)
+//		{
+//			print("laser - ignoring snapshot request (in progress)");
+//			return;
+//		}
+//		snapshotsToTake = snapshot.snapshotNumber;
 	}
 
 	#endregion
@@ -381,6 +421,11 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 	public float GetCRCFailurePercentage()
 	{
 		return data.crcFailurePercentage;
+	}
+
+	public int GetSnapshotsLeft()
+	{
+		return data.snapshots_left;
 	}
 
 	#region RobotModule

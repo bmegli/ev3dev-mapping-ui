@@ -31,6 +31,8 @@ public class ControlUI : MonoBehaviour
 	private Toggle moduleStateToggle;
 	private Button replayButton;
 	private Button saveMapsButton;
+	private Button takeSnapshotButton;
+
 
 	private Control control;
 
@@ -53,6 +55,9 @@ public class ControlUI : MonoBehaviour
 			saveMapsButton = SafeInstantiate<Button>(ModuleButton, uiTransform);
 			saveMapsButton.onClick.AddListener(OnSaveMapsButtonClicked);
 			saveMapsButton.GetComponentInChildren<Text>().text = "save maps";
+			takeSnapshotButton = SafeInstantiate<Button>(ModuleButton, uiTransform);
+			takeSnapshotButton.onClick.AddListener(OnSnapshotButtonClicked);
+			takeSnapshotButton.GetComponentInChildren<Text>().text = "snapshot";		
 		}
 
 		if (GetComponentInParent<Replay>().ReplayAny())
@@ -114,6 +119,13 @@ public class ControlUI : MonoBehaviour
 		foreach (Laser l in lasers)
 			l.SaveMap();
 	}
+	public void OnSnapshotButtonClicked()
+	{
+		Laser[] lasers=transform.parent.GetComponentsInChildren<Laser>();
+		foreach (Laser l in lasers)
+			l.TakeSnapshot();
+	}
+
 
 
 	public void SetEnable(bool enable)

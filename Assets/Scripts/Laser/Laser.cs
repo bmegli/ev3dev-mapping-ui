@@ -33,7 +33,14 @@ public class LaserPlotProperties
 	public float distanceLimit=10.0f;
 	public PointCloud laserPointCloud;
 }
-	
+
+[Serializable]
+public class LaserSnapshotProperties
+{
+	public int snapshotNumber=20;
+}
+
+
 class LaserThreadSharedData
 {
 	public Vector3[] readings=new Vector3[360];
@@ -45,24 +52,38 @@ class LaserThreadSharedData
 	public float laserRPM;
 	public int crcFailurePercentage=0;
 	public int invalidPercentage=0;
+	public bool snapshot_request=false;
+	public int snapshots_left=0;
 
-	public void CopyNewDataFrom(LaserThreadSharedData other)
+	public void CopyNewDataFrom(LaserThreadSharedData thr_data)
 	{
 		// Copy only the data that changed since last call
-		from = other.from;
-		length = other.length;
-		averagedPacketTimeMs = other.averagedPacketTimeMs;
-		laserRPM = other.laserRPM;
-		crcFailurePercentage = other.crcFailurePercentage;
-		invalidPercentage = other.invalidPercentage;
+		from = thr_data.from;
+		length = thr_data.length;
+		averagedPacketTimeMs = thr_data.averagedPacketTimeMs;
+		laserRPM = thr_data.laserRPM;
+		crcFailurePercentage = thr_data.crcFailurePercentage;
+		invalidPercentage = thr_data.invalidPercentage;
 
 		for (int i = from; i < from + length; ++i)
 		{
 			int ind = i % readings.Length;
-			readings[ind] = other.readings[ind];
-			invalid_data[ind] = other.invalid_data[ind];
+			readings[ind] = thr_data.readings[ind];
+			invalid_data[ind] = thr_data.invalid_data[ind];
 		}
 	}
+	public void HandleSnapshotRequest(LaserThreadSharedData unity_data)
+	{
+		if (snapshots_left == 0 && unity_data.snapshot_request)
+		{
+			snapshots_left = unity_data.snapshots_left; 
+			snapshot_request = true;
+			unity_data.snapshot_request=false;
+		}
+
+		unity_data.snapshots_left = snapshots_left;		
+	}
+
 }
 
 class LaserThreadInternalData
@@ -81,6 +102,7 @@ class LaserThreadInternalData
 	public int invalidPercentage = 0;
 	public int crcFailures=0;
 	public int crcFailurePercentage=0;
+	public int snapshots_left=0;
 
 	public void SetPending(int from, int length, ulong time_from, ulong time_to)
 	{
@@ -91,15 +113,17 @@ class LaserThreadInternalData
 		t_to = time_to;
 	}
 }
-
+	
 [RequireComponent (typeof (LaserUI))]
 [RequireComponent (typeof (Map3D))]
 public class Laser : ReplayableUDPServer<LaserPacket>
 {
 	public const ushort LIDAR_CRC_FAILURE_ERROR_CODE = 0x66;
+	public const int INVALID_DATA_SNAPSHOT_REPLACEMENT_VALUE = 0;
 
 	public LaserModuleProperties module;
 	public LaserPlotProperties plot;
+	public LaserSnapshotProperties snapshot;
 
 	private PointCloud laserPointCloud;
 	private Map3D map3D;
@@ -107,6 +131,8 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 	private LaserThreadSharedData data=new LaserThreadSharedData();
 
 	private Matrix4x4 laserTRS;
+
+	private StreamWriter snapshotWriter;
 
 	#region UDP Thread Only Data
 	private LaserThreadInternalData threadInternal = new LaserThreadInternalData ();
@@ -119,6 +145,8 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 	protected override void OnDestroy()
 	{
 		base.OnDestroy ();
+		if(snapshotWriter != null)
+			snapshotWriter.Close();		
 	}
 
 	protected override void Awake()
@@ -126,18 +154,26 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 		base.Awake();
 		laserPointCloud = SafeInstantiate<PointCloud> (plot.laserPointCloud);
 		laserTRS =  Matrix4x4.TRS (transform.localPosition, transform.localRotation, Vector3.one);
+
+		string robotName = transform.parent.name;
+
+		print(name + " - dumping snapshots to '" + Config.SnapshotPath(robot.sessionDirectory, robotName, name) + "'");
+		Directory.CreateDirectory(Config.SnapshotPath(robot.sessionDirectory, robotName));
+		snapshotWriter = new StreamWriter(Config.SnapshotPath(robot.sessionDirectory, robotName, name));
 	}
+
 
 	protected override void Start ()
 	{
 		map3D = GetComponent<Map3D> ();
 		base.Start();
 	}
-
+		
 	void Update ()
 	{
 		lock (threadShared)
 		{
+			threadShared.HandleSnapshotRequest(data);
 			if (threadShared.consumed)
 				return; //no new data, nothing to do
 			data.CopyNewDataFrom(threadShared);
@@ -145,7 +181,7 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 		}
 			
 		if (data.length > 360)
-			print ("Huh, does this ever happen? If so we can optimize");
+			print(name + " - huh, does this ever happen? If so we can optimize");
 
 		if(plot.plotType!=PlotType.Map)
 			laserPointCloud.SetVertices(data.readings);
@@ -201,7 +237,7 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 				threadInternal.invalidPercentage = threadInternal.invalidCount * 100 / 360;
 				threadInternal.crcFailures = threadInternal.invalidCount = 0;
 			}
-
+				
 			readings [angle_index] = Vector3.zero;
 			timestamps[angle_index] = packet.GetTimestampUs(i);
 			invalid_data[angle_index] = packet.laser_readings[i].invalid_data == 1;
@@ -240,7 +276,7 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 
 		if (not_in_history)
 		{
-			print("laser - ignoring packet (position data not in history) with timestamp " + t_from);
+			print(name + " - ignoring packet (position data not in history) with timestamp " + t_from);
 			return false;
 		}
 		if (not_yet)
@@ -286,9 +322,46 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 			threadShared.laserRPM = threadInternal.laserRPM;
 			threadShared.invalidPercentage = threadInternal.invalidPercentage;
 			threadShared.crcFailurePercentage = threadInternal.crcFailurePercentage;
+
+			if (threadShared.snapshot_request)
+			{
+				threadShared.snapshot_request = false;
+				threadInternal.snapshots_left = threadShared.snapshots_left;
+			}
+			threadShared.snapshots_left = threadInternal.snapshots_left;
 		}
+
+		if (threadInternal.snapshots_left == 0 || from + length != 360)
+			return;
+	
+		//just finished revolution, dump to file
+
+		--threadInternal.snapshots_left;
+	
+		DumpSnapshot();
 	}
 
+	void DumpSnapshot()
+	{
+		Vector3[] readings = threadInternal.readings;
+		bool[] invalid = threadInternal.invalid_data;
+
+		for (int i = 0; i < 360; ++i)
+		{						
+			for (int j = 0; j < 3; ++j)
+			{
+				int coordinate = (int)(readings[i][j] * 1000);
+				if (invalid[i])
+					coordinate = INVALID_DATA_SNAPSHOT_REPLACEMENT_VALUE;
+				snapshotWriter.Write(coordinate);
+			
+				if(!(i==359 && j==2))
+					snapshotWriter.Write(";");
+			}
+		}
+
+		snapshotWriter.WriteLine();
+	}
 
 	#endregion
 
@@ -311,6 +384,25 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 		map3D.SaveToPlyPolygonFileFormat(Config.MapPath(robot.sessionDirectory, robotName, name), "created with ev3dev-mapping");
 	}
 
+	public void TakeSnapshot()
+	{
+		if (data.snapshots_left > 0 || data.snapshot_request)
+		{
+			print(name + " - ignoring snapshot request (in progress)");
+			return;
+		}
+
+		data.snapshot_request = true;
+		data.snapshots_left = snapshot.snapshotNumber;
+
+//		if (snapshotsToTake != 0 || collecting)
+//		{
+//			print("laser - ignoring snapshot request (in progress)");
+//			return;
+//		}
+//		snapshotsToTake = snapshot.snapshotNumber;
+	}
+
 	#endregion
 
 	public float GetAveragedPacketTimeMs()
@@ -329,6 +421,11 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 	public float GetCRCFailurePercentage()
 	{
 		return data.crcFailurePercentage;
+	}
+
+	public int GetSnapshotsLeft()
+	{
+		return data.snapshots_left;
 	}
 
 	#region RobotModule

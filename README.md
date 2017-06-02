@@ -45,7 +45,8 @@ Preliminary!
 To test with robot hardware:
 
 - XV11 Lidar works with Laser component and ev3laser module (plotting only current readings)
-- 2 engines and CruizCore XG 1300L work with Odometry component and ev3odometry module (plotting only robot movement)
+- 2 engines work with Odometry component and ev3odometry module (plotting only robot movement)
+- 2 engines and CruizCore XG 1300L work with DeadReconning component and ev3dead-reconning module (plotting only robot movement)
 - if you have all of the above mapping (2D or 3D) is possible.
 - 2 engines work with Drive component and ev3drive module (control of robot)
 

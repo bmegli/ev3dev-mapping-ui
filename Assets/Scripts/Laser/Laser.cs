@@ -157,6 +157,9 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 
 		string robotName = transform.parent.name;
 
+		print(name + " - saving maps to \"" + Config.MapPath(robot.sessionDirectory, robotName, name) + "\"");
+		Directory.CreateDirectory(Config.MapPath(robot.sessionDirectory, robotName));
+
 		print(name + " - dumping snapshots to '" + Config.SnapshotPath(robot.sessionDirectory, robotName, name) + "'");
 		Directory.CreateDirectory(Config.SnapshotPath(robot.sessionDirectory, robotName));
 		snapshotWriter = new StreamWriter(Config.SnapshotPath(robot.sessionDirectory, robotName, name));
@@ -207,7 +210,6 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 		}
 
 		CalculateReadingsInLocalReferenceFrame(packet);
-
 
 		if (plot.plotType != PlotType.Local)
 			if (!TranslateReadingsToGlobalReferenceFrame (packet.laser_angle, packet.laser_readings.Length, packet.timestamp_us, packet.GetEndTimestampUs()))
@@ -271,12 +273,16 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 	private bool TranslateReadingsToGlobalReferenceFrame(int from, int len, ulong t_from, ulong t_to)
 	{
 		bool not_in_history, not_yet;
+
+		if (threadInternal.pending && t_from != threadInternal.t_from)
+			AddPendingDataToProcess(ref from, ref len, ref t_from);
+
 		PositionHistory.PositionSnapshot snapshot= positionHistory.GetPositionSnapshotThreadSafe(t_from, t_to, out not_yet, out not_in_history);
-		threadInternal.pending = false;
 
 		if (not_in_history)
 		{
-			print(name + " - ignoring packet (position data not in history) with timestamp " + t_from);
+			print("Laser - ignoring packet (position data not in history) with timestamp " + t_from);
+			threadInternal.pending = false;
 			return false;
 		}
 		if (not_yet)
@@ -284,31 +290,56 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 			threadInternal.SetPending (from, len, t_from, t_to);
 			return false;
 		}
-			
+
+		threadInternal.pending = false;
+
 		Matrix4x4 robotToGlobal = new Matrix4x4();
 		Vector3 scale = Vector3.one;
 		PositionData pos=new PositionData();
 		ulong[] timestamps = threadInternal.timestamps;
 		Vector3[] readings = threadInternal.readings;
 
-		for (int i = from; i < from+len; ++i)
+		for (int i = from, ind; i < from+len; ++i)
 		{
-			pos = snapshot.PositionAt(timestamps[i]);
+			ind = i % 360;
+	
+			pos = snapshot.PositionAt(timestamps[ind]);
 
 			robotToGlobal.SetTRS(pos.position, Quaternion.Euler(0.0f, pos.heading, 0.0f), scale);
-			readings[i]=robotToGlobal.MultiplyPoint3x4(readings[i]);
+			readings[ind]=robotToGlobal.MultiplyPoint3x4(readings[ind]);
 		}
 			
 		return true;
 	}
 
+	private void AddPendingDataToProcess(ref int from,ref int len, ref ulong t_from)
+	{
+		from = threadInternal.pending_from;
+		len = threadInternal.pending_length + len;
+		t_from = threadInternal.t_from;
+
+		if (len > 360)
+		{
+			int exceeds_by = len - 360;
+			from = (from + exceeds_by) % 360;
+			t_from = threadInternal.timestamps[from];
+			print("Laser - discarding some pending data, overrun");
+		}
+	}
+
 	public void PushCalculatedReadingsThreadSafe(int from, int length)
 	{
+		int readingsLength = threadInternal.readings.Length;
+
 		lock (threadShared)
 		{
-			Array.Copy(threadInternal.readings, from, threadShared.readings, from, length);
-			Array.Copy(threadInternal.invalid_data, from, threadShared.invalid_data, from, length);
-
+			for (int i = from, ind; i < from + length; ++i)
+			{
+				ind = i % readingsLength;
+				threadShared.readings[ind] = threadInternal.readings[ind];
+				threadShared.invalid_data[ind] = threadInternal.invalid_data[ind];
+			}
+				
 			if (threadShared.consumed)
 			{
 				threadShared.from = from;
@@ -330,8 +361,8 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 			}
 			threadShared.snapshots_left = threadInternal.snapshots_left;
 		}
-
-		if (threadInternal.snapshots_left == 0 || from + length != 360)
+			
+		if (threadInternal.snapshots_left == 0 || from + length < 360)
 			return;
 	
 		//just finished revolution, dump to file
@@ -371,15 +402,13 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 	{
 		if (map3D == null)
 		{
-			print("map is null, unable to save!");
+			print(name + " - map is null, unable to save!");
 			return;
 		}
 
 		string robotName = transform.parent.name;
 
-		Directory.CreateDirectory(Config.MapPath(robot.sessionDirectory, robotName));
-
-		print("saving map to file \"" + Config.MapPath(robot.sessionDirectory, robotName, name) + "\"");
+		print(name + " - saving map to file \"" + Config.MapPath(robot.sessionDirectory, robotName, name) + "\"");
 
 		map3D.SaveToPlyPolygonFileFormat(Config.MapPath(robot.sessionDirectory, robotName, name), "created with ev3dev-mapping");
 	}
@@ -392,15 +421,12 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 			return;
 		}
 
+		string robotName = transform.parent.name;
+
+		print(name + " - dumping snapshot to file \"" + Config.SnapshotPath(robot.sessionDirectory, robotName, name) + "\"");
+
 		data.snapshot_request = true;
 		data.snapshots_left = snapshot.snapshotNumber;
-
-//		if (snapshotsToTake != 0 || collecting)
-//		{
-//			print("laser - ignoring snapshot request (in progress)");
-//			return;
-//		}
-//		snapshotsToTake = snapshot.snapshotNumber;
 	}
 
 	#endregion

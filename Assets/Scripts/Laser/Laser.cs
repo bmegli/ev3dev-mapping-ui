@@ -199,23 +199,27 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 	protected override void ProcessPacket(LaserPacket packet)
 	{			
 		threadInternal.laserRPM = packet.laser_speed / 64.0f;
+		int i_from, len;
+		ulong t_from, t_to;
 
 		// if we had unprocessed packet last time do it now
 		if (plot.plotType != PlotType.Local && threadInternal.pending)
 		{
-			int i_from = threadInternal.pending_from, len=threadInternal.pending_length;
-			ulong t_from = threadInternal.t_from, t_to = threadInternal.t_to;
-			if (TranslateReadingsToGlobalReferenceFrame (i_from, len, t_from, t_to))
+			i_from = threadInternal.pending_from; len=threadInternal.pending_length;
+			t_from = threadInternal.t_from; t_to = threadInternal.t_to;
+			if (TranslateReadingsToGlobalReferenceFrame (ref i_from,ref len, t_from, t_to))
 				PushCalculatedReadingsThreadSafe (i_from, len);
 		}
 
 		CalculateReadingsInLocalReferenceFrame(packet);
 
+		i_from = packet.laser_angle; len = packet.laser_readings.Length; t_from = packet.timestamp_us; t_to = packet.GetEndTimestampUs();
+
 		if (plot.plotType != PlotType.Local)
-			if (!TranslateReadingsToGlobalReferenceFrame (packet.laser_angle, packet.laser_readings.Length, packet.timestamp_us, packet.GetEndTimestampUs()))
+		if (!TranslateReadingsToGlobalReferenceFrame (ref i_from, ref len, t_from, t_to))
 				return; //don't use the readings yet (or at all), no position data in this timeframe
 
-		PushCalculatedReadingsThreadSafe (packet.laser_angle, packet.laser_readings.Length);
+		PushCalculatedReadingsThreadSafe (i_from, len);
 	}
 
 	private void CalculateReadingsInLocalReferenceFrame(LaserPacket packet)
@@ -270,7 +274,7 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 		}
 	}
 
-	private bool TranslateReadingsToGlobalReferenceFrame(int from, int len, ulong t_from, ulong t_to)
+	private bool TranslateReadingsToGlobalReferenceFrame(ref int from,ref int len, ulong t_from, ulong t_to)
 	{
 		bool not_in_history, not_yet;
 
@@ -318,12 +322,13 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 		len = threadInternal.pending_length + len;
 		t_from = threadInternal.t_from;
 
+		//Discard some pending data if it exceeds 360 degrees (single scan)
 		if (len > 360)
 		{
 			int exceeds_by = len - 360;
+			len -= exceeds_by;
 			from = (from + exceeds_by) % 360;
 			t_from = threadInternal.timestamps[from];
-			print("Laser - discarding some pending data, overrun");
 		}
 	}
 

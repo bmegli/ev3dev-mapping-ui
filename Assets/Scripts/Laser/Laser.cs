@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2016 Bartosz Meglicki <meglickib@gmail.com>
+ * Copyright (C) 2016-2017 Bartosz Meglicki <meglickib@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -113,7 +113,8 @@ class LaserThreadInternalData
 		t_to = time_to;
 	}
 }
-	
+
+//OptionalComponent (typeof (Features))
 [RequireComponent (typeof (LaserUI))]
 [RequireComponent (typeof (Map3D))]
 public class Laser : ReplayableUDPServer<LaserPacket>
@@ -127,6 +128,7 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 
 	private PointCloud laserPointCloud;
 	private Map3D map3D;
+	private Features features;
 
 	private LaserThreadSharedData data=new LaserThreadSharedData();
 
@@ -168,7 +170,8 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 
 	protected override void Start ()
 	{
-		map3D = GetComponent<Map3D> ();
+		map3D = GetComponent<Map3D>();
+		features = GetComponent<Features>();
 		base.Start();
 	}
 		
@@ -367,9 +370,13 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 			threadShared.snapshots_left = threadInternal.snapshots_left;
 		}
 			
-		if (threadInternal.snapshots_left == 0 || from + length < 360)
+		if (from + length < 360)
 			return;
-	
+		if (features != null)
+			features.PutScanThreadSafe(threadInternal.readings, threadInternal.invalid_data);
+
+		if (threadInternal.snapshots_left == 0)
+			return;
 		//just finished revolution, dump to file
 
 		--threadInternal.snapshots_left;

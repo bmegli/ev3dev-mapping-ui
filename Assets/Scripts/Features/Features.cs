@@ -16,30 +16,6 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
-public class Scan360
-{
-	List<Vector3> readings = new List<Vector3>(360);
-	List<int> index = new List<int>(360);
-	List<float> angle = new List<float>(360);
-
-	public Scan360(Vector3[] readings, bool[] invalid_data)
-	{
-		for (int i = 0; i < readings.Length; ++i)
-			if (!invalid_data[i])
-			{
-				this.readings.Add(readings[i]);
-				this.index.Add(i);
-			}
-	}
-	public void EstimateLocalAngle(int index1=0, int index2=2)
-	{	//note this function can be optimized by keeping partial TLS sums and updating as we go
-		if (readings.Count < 3)
-			return;
-		for (int i = 0; i < readings.Count; ++i)
-			angle.Add(TotalLeastSquares.EstimateAngle(readings, i - 1, i + 1, index1, index2)); 
-	}
-}
-
 // This component may be added to GameObject with Laser component
 public class Features : MonoBehaviour
 {	

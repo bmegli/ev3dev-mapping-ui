@@ -20,12 +20,12 @@ public static class TotalLeastSquares
 	/// Estimates total least square angle. 
 	/// </summary>
 	/// <returns>The estimated angle in range <0, PI>.</returns>
-	/// <param name="points">Points.</param>
+	/// <param name="scan">Scan points.</param>
 	/// <param name="from">Estatimate starting from index (circular, can be negative).</param>
 	/// <param name="to">Estimate up to index (inclusive, circular, can be > points.Count).</param>
 	/// <param name="index1">Point Index 1: 0 for x, 1 for y, 2 for z.</param>
 	/// <param name="index2">Point Index 2: 0 for x, 1 for y, 2 for z.</param>
-	public static float EstimateAngle(List<Vector3> points, int from, int to, int index1, int index2)
+	public static float EstimateAngle(List<ScanPoint> scan, int from, int to, int index1, int index2)
 	{   
 		int X = index1;
 		int Y = index2;
@@ -34,9 +34,9 @@ public static class TotalLeastSquares
 
 		for (int i = from, ind; i <= to; ++i)
 		{
-			ind = Mod(i, points.Count);
-			xMean += points[ind][X];
-			yMean += points[ind][Y];
+			ind = Mod(i, scan.Count);
+			xMean += scan[ind].Point[X];
+			yMean += scan[ind].Point[Y];
 		}
 
 		xMean /= PTS;
@@ -44,9 +44,9 @@ public static class TotalLeastSquares
 
 		for (int i = from, ind; i <= to; ++i)
 		{
-			ind = Mod(i, points.Count);
-			xMeanLessX = xMean - points[ind][X];
-			yMeanLessY = yMean - points[ind][Y];
+			ind = Mod(i, scan.Count);
+			xMeanLessX = xMean - scan[ind].Point[X];
+			yMeanLessY = yMean - scan[ind].Point[Y];
 			sxy += xMeanLessX * yMeanLessY;
 			syyLsxx += yMeanLessY * yMeanLessY - xMeanLessX * xMeanLessX;
 		}

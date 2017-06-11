@@ -18,16 +18,29 @@ using UnityEngine;
 
 public class Scan360
 {
-	private Vector3[] readings=new Vector3[360];
-	private bool[] invalid_data=new bool[360];
+	List<Vector3> readings = new List<Vector3>(360);
+	List<int> index = new List<int>(360);
+	List<float> angle = new List<float>(360);
 
 	public Scan360(Vector3[] readings, bool[] invalid_data)
 	{
-		Array.Copy(readings, this.readings, 360);
-		Array.Copy(invalid_data, this.invalid_data, 360);
+		for (int i = 0; i < readings.Length; ++i)
+			if (!invalid_data[i])
+			{
+				this.readings.Add(readings[i]);
+				this.index.Add(i);
+			}
+	}
+	public void EstimateLocalAngle(int index1=0, int index2=2)
+	{	//note this function can be optimized by keeping partial TLS sums and updating as we go
+		if (readings.Count < 3)
+			return;
+		for (int i = 0; i < readings.Count; ++i)
+			angle.Add(TotalLeastSquares.EstimateAngle(readings, i - 1, i + 1, index1, index2)); 
 	}
 }
 
+// This component may be added to GameObject with Laser component
 public class Features : MonoBehaviour
 {	
 	private bool Run { get; set; }
@@ -36,7 +49,6 @@ public class Features : MonoBehaviour
 
 	private Queue<Scan360> waitingScans=new Queue<Scan360>();
 	private object waitingScansLock = new object();
-
 
 	void Awake()
 	{		
@@ -117,12 +129,15 @@ public class Features : MonoBehaviour
 				ProcessScan(scans.Dequeue());
 		}
 
-		print("Features - finished");
+		print("Features - scan thread finished");
 	}
 
 	void ProcessScan(Scan360 scan)
 	{
 		// this is the place to make the actual feature extraction
+
+		scan.EstimateLocalAngle();
+		//dbscan
 
 		// here is the place to push results to Unity in a thread safe manner
 	}

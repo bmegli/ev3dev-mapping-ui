@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2016 Bartosz Meglicki <meglickib@gmail.com>
+ * Copyright (C) 2016-2017 Bartosz Meglicki <meglickib@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -57,7 +57,6 @@ public class PointCloud : MonoBehaviour
 		{
 			mesh_indices[i] = i;
 			mesh_colors[i] = color; 
-		//	mesh_vertices [i] = new Vector3 (Mathf.Cos (i * Constants.DEG2RAD), 0, Mathf.Sin (Constants.DEG2RAD * i));
 		}
 
 		mesh = new Mesh();
@@ -72,11 +71,17 @@ public class PointCloud : MonoBehaviour
 		if (transform.parent == null)
 			transform.parent = SceneManager.DynamicObjects;
 	}
-
-
+		
 	public void SetVertices(Vector3[] data)
 	{
 		mesh.vertices = data;
+		mesh.RecalculateBounds();
+		assignedPoints = data.Length;
+	}
+	public void SetVertices(Vector3[] data, Color[] colors)
+	{
+		mesh.vertices = data;
+		mesh.colors = colors;
 		mesh.RecalculateBounds();
 		assignedPoints = data.Length;
 	}
@@ -104,8 +109,7 @@ public class PointCloud : MonoBehaviour
 
 		return assigned;
 	}
-
-
+		
 	public int AssignVertices(Vector3[] data, int i_from, int len, bool[] is_invalid)
 	{
 		Vector3[] vertices = mesh_vertices;

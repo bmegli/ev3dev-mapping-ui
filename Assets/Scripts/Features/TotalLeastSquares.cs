@@ -30,6 +30,8 @@ public static class TotalLeastSquares
 		int X = index1;
 		int Y = index2;
 		int PTS = to - from + 1;
+
+
 		float xMean=0, yMean=0, sxy=0, syyLsxx=0, xMeanLessX, yMeanLessY, angle;
 
 		for (int i = from, ind; i <= to; ++i)
@@ -51,7 +53,7 @@ public static class TotalLeastSquares
 			syyLsxx += yMeanLessY * yMeanLessY - xMeanLessX * xMeanLessX;
 		}
 
-		angle = Mathf.Atan2(-2 * sxy, syyLsxx)/2;
+		angle = Mathf.Atan2(-2.0f * sxy, syyLsxx)/2.0f;
 			
 		return (angle > 0) ? angle : angle + Mathf.PI;
 	}

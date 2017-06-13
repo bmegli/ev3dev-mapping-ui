@@ -39,8 +39,7 @@ public class LaserSnapshotProperties
 {
 	public int snapshotNumber=20;
 }
-
-
+	
 class LaserThreadSharedData
 {
 	public Vector3[] readings=new Vector3[360];
@@ -189,7 +188,7 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 		if (data.length > 360)
 			print(name + " - huh, does this ever happen? If so we can optimize");
 
-		if(plot.plotType!=PlotType.Map)
+		if(plot.plotType!=PlotType.Map && features==null)
 			laserPointCloud.SetVertices(data.readings);
 
 		if(map3D!=null && plot.plotType==PlotType.Map || plot.plotType==PlotType.GlobalWithMap)

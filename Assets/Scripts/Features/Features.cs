@@ -23,7 +23,9 @@ public class FeaturesPlotProperties
 {
 	public FeaturesSegmentationLevel level = FeaturesSegmentationLevel.AngleDistance;
 	public PointCloud pointCloud;
-	public Color[] colors={Color.gray, Color.green, Color.blue, Color.red, Color.magenta, Color.yellow, Color.cyan, Color.white};
+	public Color[] colors={Color.gray, Color.green, Color.blue, Color.red, Color.magenta, Color.yellow, Color.cyan,
+		new Color(255.0f/255,145.0f/255,21.0f/255),new Color(116.0f/255,0.0f/255,255.0f/255),new Color(255.0f/255,109.0f/255,109.0f/255),
+		new Color(0.0f,255.0f/255,154.0f/255),new Color(142.0f/255,60.0f/255,60.0f/255), new Color(0.0f/255,127.0f/255,255.0f/255),  Color.white};
 }
 	
 [Serializable]

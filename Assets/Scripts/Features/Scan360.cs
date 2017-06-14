@@ -19,7 +19,27 @@ public class ScanPoint
 	public Vector3 Point { get; set;}
 	public int Index { get; set;}
 	public float Angle { get; set;}
-	public int Cluster { get; set; }
+	public float Distance{ get; set; }
+
+	public int ParallelCluster { get; set; }
+	public int DistanceCluster { get; set; }
+
+	public static float MeanCircularAngle0Pi(IList<ScanPoint> data)
+	{
+		int N = data.Count;
+		float cosines=0, sines = 0, angle;
+		foreach (ScanPoint p in data)
+		{
+			cosines += Mathf.Cos(2.0f * p.Angle);
+			sines += Mathf.Sin(2.0f * p.Angle);
+		}
+		angle = Mathf.Atan2(sines, cosines);
+
+		if (angle < 0.0f)
+			angle = 2 * Mathf.PI + angle;
+
+		return angle / 2.0f; 
+	}
 }
 	
 public class AngleComparer : Comparer<ScanPoint>
@@ -30,12 +50,20 @@ public class AngleComparer : Comparer<ScanPoint>
 	}
 }
 
+public class DistanceComparer : Comparer<ScanPoint>
+{
+	public override int Compare(ScanPoint p1, ScanPoint p2)
+	{
+		return p1.Distance.CompareTo(p2.Distance);
+	}
+}
+
 public abstract class FloatMetric<TYPE>
 {
 	public abstract float Distance(ScanPoint p1, ScanPoint p2);
 }
 	
-public class AngleCircularComparer : FloatMetric<ScanPoint>
+public class AngleCircularMetric : FloatMetric<ScanPoint>
 {
 	public override float Distance(ScanPoint p1, ScanPoint p2)
 	{
@@ -44,6 +72,13 @@ public class AngleCircularComparer : FloatMetric<ScanPoint>
 	}
 }
 
+public class DistanceMetric : FloatMetric<ScanPoint>
+{
+	public override float Distance(ScanPoint p1, ScanPoint p2)
+	{
+		return Mathf.Abs(p1.Distance - p2.Distance);
+	}
+}
 
 public class Scan360
 {

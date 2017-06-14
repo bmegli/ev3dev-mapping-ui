@@ -10,28 +10,17 @@
  * GNU General Public License for more details.
  */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
-public class Cluster
+/// <summary>
+/// Density Based Scan implementation
+/// </summary>
+public class DBSCAN
 {
-	public int LowerIndex {get;private set;}
-	public int UpperIndex {get;private set;}
-	public int Id { get; private set; }
-	public int Count{ get{return UpperIndex - LowerIndex + 1; }}
-
-	public Cluster(int lower, int upper, int id)
-	{
-		LowerIndex = lower;
-		UpperIndex = upper;
-		Id = id;
-	}
-}
-	
-public class DensityBasedScan
-{
-	public DensityBasedScan(){}
-	public DensityBasedScan(int capacity)
+	public DBSCAN(){}
+	public DBSCAN(int capacity)
 	{
 		Capacity = capacity;
 	}
@@ -44,27 +33,26 @@ public class DensityBasedScan
 				return;
 			U=new int[value];
 			L=new int[value];
-			C = new int[value];
+			C=new int[value];
 		} 
 	}
 		
-	private int[] U, L;
-	public int[] C; //temp public
+	private int[] U, L, C;
 
 	private int capacity=0;
 
 	private const int NOT_VISITED=-1;
 	private const int NOISE=0; 
 			
-	public List<Cluster> DBSCAN(List<ScanPoint> scan, float eps, int minPoints, IComparer<ScanPoint> comparer, FloatMetric<ScanPoint> circularMetric)
+	public List<DBSCANCluster> Cluster(IList<ScanPoint> scan, float eps, int minPoints, Comparer<ScanPoint> comparer, FloatMetric<ScanPoint> circularMetric)
 	{
-		List<Cluster> clusters = new List<Cluster>();
+		List<DBSCANCluster> clusters = new List<DBSCANCluster>();
 		int cluster = 0, N=scan.Count;
 
 		if (N > Capacity)
 			Capacity = N;
 
-		scan.Sort(comparer);
+		ArrayList.Adapter((IList)scan).Sort(comparer);
 		CalculateNeighbourhood(scan, eps, circularMetric); 
 
 		for (int i = 0; i < N; ++i)
@@ -84,30 +72,29 @@ public class DensityBasedScan
 
 		return clusters;
 	}
-
+		
 	// Note:
 	// -u can be up to N+i-1
 	// -l can be down to -N+1+u
-	private void CalculateNeighbourhood(List<ScanPoint> scan, float eps, FloatMetric<ScanPoint> circularMetric)
+	private void CalculateNeighbourhood(IList<ScanPoint> scan, float eps, FloatMetric<ScanPoint> circularMetric)
 	{	//both the scan and feature space are circular which makes implemantation tricky!
 		int N=scan.Count, l = N-1, u = 0;
 
 		for (int i = 0; i < N; ++i)
 		{
-			for (; u < N + i && circularMetric.Distance(scan[Mod(u, N)], scan[i]) < eps; ++u);
-
+			for (; u < N + i && circularMetric.Distance(scan[Mod(u, N)], scan[i]) < eps; ++u)
+				;
 			U[i] = u-1;
 		}
 		for (int i = N-1; i >= 0; --i)
 		{
-			for(; U[i]-l+1<=N && circularMetric.Distance(scan[Mod(l, N)], scan[i]) < eps; --l);
-
+			for(; U[i]-l+1<=N && circularMetric.Distance(scan[Mod(l, N)], scan[i]) < eps; --l)
+				;
 			L[i] = l+1;
 		}			
 	}
-
-
-	private Cluster ExpandCluster(List<ScanPoint> scan, int cluster, int p, int minPoints)
+		
+	private DBSCANCluster ExpandCluster(IList<ScanPoint> scan, int cluster, int p, int minPoints)
 	{
 		C[p] = cluster;
 		int u = U[p], l=L[p];
@@ -143,7 +130,7 @@ public class DensityBasedScan
 		}
 		l = i + 1; //l is from p down to -N+1+u
 
-		return new Cluster(l, u, cluster);
+		return new DBSCANCluster(scan, l, u, cluster);
 	}
 
 	private int NeighbourCount(int i)
@@ -157,6 +144,7 @@ public class DensityBasedScan
 		return (r < 0) ? r+m : r;
 	}
 
+	/*
 	private static System.IO.StreamWriter snapshotWriter=new System.IO.StreamWriter(Config.SnapshotPath("SnapshotTour", "Robot", "temp"));
 
 	private static void DumpScan(List<ScanPoint> scan, int[] C)
@@ -182,6 +170,6 @@ public class DensityBasedScan
 		}
 
 		snapshotWriter.WriteLine();
-
 	}
+	*/
 }

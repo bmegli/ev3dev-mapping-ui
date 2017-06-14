@@ -95,6 +95,6 @@ public class Scan360
 		if (readings.Count < 3)
 			return;
 		for (int i = 0; i < readings.Count; ++i)
-			readings[i].Angle=TotalLeastSquares.EstimateAngle(readings, i - 1, i + 1, index1, index2); 
+			readings[i].Angle=TotalLeastSquares.Fit(readings, i - 1, i + 1, index1, index2, true).angle; 
 	}		
 }

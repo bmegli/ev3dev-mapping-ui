@@ -19,8 +19,10 @@ public class LaserUI : ModuleUI
 	private Text ppsText;
 	private Text laserSpeedText;
 	private Text laserInvalidCRCText;
+	private Text featuresElapsedTimeText;
 
 	private Laser laser;
+	private Features features;
 
 	protected override void Awake()
 	{
@@ -28,6 +30,10 @@ public class LaserUI : ModuleUI
 		ppsText = SafeInstantiateText(ModuleText, uiTransform, "pps 00 ms 00");
 		laserSpeedText = SafeInstantiateText(ModuleText, uiTransform, "rpm 000");
 		laserInvalidCRCText = SafeInstantiateText(ModuleText, uiTransform, "inv 000 crc 000");
+		features = GetComponent<Features>();
+		if (features != null)
+			featuresElapsedTimeText = SafeInstantiateText(ModuleText, uiTransform, "seg 00 ms");
+
 	}
 
 	protected override void Start ()
@@ -53,5 +59,9 @@ public class LaserUI : ModuleUI
 				
 		laserSpeedText.text = laserSpeedAndSnapshots;
 		laserInvalidCRCText.text = string.Format("inv {0:00} crc {1:00}",laser.GetInvalidPercentage() ,laser.GetCRCFailurePercentage());
+
+		if(features!=null)
+			featuresElapsedTimeText.text = string.Format("seg {0:00} ms", features.SegmentationElapsedMs);
+		
 	}
 }

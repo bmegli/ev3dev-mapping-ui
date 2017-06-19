@@ -36,15 +36,15 @@ public class FeaturesSegmentationProperties
 	public float distanceEpsCm = 1.0f;
 	public int distancePoints =10; 
 }
-
-
+	
 public class FeaturesThreadData
 {
 	public Vector3[] points=new Vector3[360];
 	public Color[] colors=new Color[360];
 	public bool consumed = true;
+	public long elapsedMs=0;
 
-	public void FromScan360(Scan360 scan, FeaturesSegmentationLevel level, Color[] featureColors)
+	public void FromScan360(Scan360 scan, FeaturesSegmentationLevel level, Color[] featureColors, long elapsedMs)
 	{
 		for (int i = 0; i < scan.readings.Count; ++i)
 		{
@@ -59,6 +59,7 @@ public class FeaturesThreadData
 			points[i] = scan.readings[0].Point;
 			colors[i] = Color.clear;
 		}
+		this.elapsedMs = elapsedMs;
 	}
 
 	private Color GetColor(int i, Color[] featureColors)
@@ -74,6 +75,8 @@ public class Features : MonoBehaviour
 {	
 	public FeaturesSegmentationProperties segmentation;
 	public FeaturesPlotProperties plot;
+
+	public long SegmentationElapsedMs {get {return uiData.elapsedMs; }}
 
 	private PointCloud featuresPointCloud;
 
@@ -105,6 +108,7 @@ public class Features : MonoBehaviour
 				return;
 			Array.Copy(sharedData.points, uiData.points, sharedData.points.Length);
 			Array.Copy(sharedData.colors, uiData.colors, sharedData.colors.Length);
+			uiData.elapsedMs = sharedData.elapsedMs;
 			sharedData.consumed = true;
 		}
 
@@ -192,7 +196,9 @@ public class Features : MonoBehaviour
 	{
 		if (scan.readings.Count < 3)
 			return false;
-		
+
+		System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
+
 		for (int i = 0; i < scan.readings.Count; ++i)
 			scan.readings[i].ParallelCluster = scan.readings[i].DistanceCluster = 0;
 
@@ -204,7 +210,9 @@ public class Features : MonoBehaviour
 		foreach (DBSCANCluster c in parallelClusters)
 			distanceClusters.AddRange(DistanceSegmentation(dbscan, c, ref lastClusterId, segmentation.distanceEpsCm/100.0f, segmentation.distancePoints));
 
-		result.FromScan360(scan, plot.level, plot.colors);
+		stopwatch.Stop();
+
+		result.FromScan360(scan, plot.level, plot.colors, stopwatch.ElapsedMilliseconds);
 
 		return true;
 	}
@@ -250,6 +258,7 @@ public class Features : MonoBehaviour
 		{
 			Array.Copy(result.points, sharedData.points, result.points.Length);
 			Array.Copy(result.colors, sharedData.colors, result.colors.Length);
+			sharedData.elapsedMs = result.elapsedMs;
 			sharedData.consumed = false;
 		}
 	}

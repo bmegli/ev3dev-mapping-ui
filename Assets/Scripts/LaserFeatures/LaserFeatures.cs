@@ -16,12 +16,12 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
-public enum FeaturesSegmentationLevel {Angle, AngleDistance};
+public enum LaserFeaturesSegmentationLevel {Angle, AngleDistance};
 
 [Serializable]
-public class FeaturesPlotProperties
+public class LaserFeaturesPlotProperties
 {
-	public FeaturesSegmentationLevel level = FeaturesSegmentationLevel.AngleDistance;
+	public LaserFeaturesSegmentationLevel level = LaserFeaturesSegmentationLevel.AngleDistance;
 	public PointCloud pointCloud;
 	public Color[] colors={Color.gray, Color.green, Color.blue, Color.red, Color.magenta, Color.yellow, Color.cyan,
 		new Color(255.0f/255,145.0f/255,21.0f/255),new Color(116.0f/255,0.0f/255,255.0f/255),new Color(255.0f/255,109.0f/255,109.0f/255),
@@ -29,7 +29,7 @@ public class FeaturesPlotProperties
 }
 	
 [Serializable]
-public class FeaturesSegmentationProperties
+public class LaserFeaturesSegmentationProperties
 {
 	public float angularEpsDeg = 2.0f;
 	public int angularPoints = 10;
@@ -37,19 +37,19 @@ public class FeaturesSegmentationProperties
 	public int distancePoints =10; 
 }
 	
-public class FeaturesThreadData
+public class LaserFeaturesThreadData
 {
 	public Vector3[] points=new Vector3[360];
 	public Color[] colors=new Color[360];
 	public bool consumed = true;
 	public long elapsedMs=0;
 
-	public void FromScan360(Scan360 scan, FeaturesSegmentationLevel level, Color[] featureColors, long elapsedMs)
+	public void FromScan360(Scan360 scan, LaserFeaturesSegmentationLevel level, Color[] featureColors, long elapsedMs)
 	{
 		for (int i = 0; i < scan.readings.Count; ++i)
 		{
 			points[i] = scan.readings[i].Point;
-			if (level == FeaturesSegmentationLevel.Angle)
+			if (level == LaserFeaturesSegmentationLevel.Angle)
 				colors[i] = GetColor(scan.readings[i].ParallelCluster, featureColors);
 			else
 				colors[i] =  GetColor(scan.readings[i].DistanceCluster, featureColors);
@@ -71,10 +71,10 @@ public class FeaturesThreadData
 }
 	
 // This component may be added to GameObject with Laser component
-public class Features : MonoBehaviour
+public class LaserFeatures : MonoBehaviour
 {	
-	public FeaturesSegmentationProperties segmentation;
-	public FeaturesPlotProperties plot;
+	public LaserFeaturesSegmentationProperties segmentation;
+	public LaserFeaturesPlotProperties plot;
 
 	public long SegmentationElapsedMs {get {return uiData.elapsedMs; }}
 
@@ -88,8 +88,8 @@ public class Features : MonoBehaviour
 	private Queue<Scan360> waitingScans=new Queue<Scan360>();
 	private object waitingScansLock = new object();
 
-	private FeaturesThreadData uiData=new FeaturesThreadData();
-	private FeaturesThreadData sharedData=new FeaturesThreadData();
+	private LaserFeaturesThreadData uiData=new LaserFeaturesThreadData();
+	private LaserFeaturesThreadData sharedData=new LaserFeaturesThreadData();
 
 	void Awake()
 	{
@@ -165,7 +165,7 @@ public class Features : MonoBehaviour
 		Queue<Scan360> scans = new Queue<Scan360>();
 		Queue<Scan360> temp = new Queue<Scan360>();
 		DBSCAN dbscan = new DBSCAN(360);
-		FeaturesThreadData resultData = new FeaturesThreadData();
+		LaserFeaturesThreadData resultData = new LaserFeaturesThreadData();
 
 		while (scanWaitEvent.WaitOne())
 		{
@@ -192,7 +192,7 @@ public class Features : MonoBehaviour
 		print("Features - scan thread finished");
 	}
 
-	private bool ProcessScan(DBSCAN dbscan, Scan360 scan, FeaturesThreadData result)
+	private bool ProcessScan(DBSCAN dbscan, Scan360 scan, LaserFeaturesThreadData result)
 	{
 		if (scan.readings.Count < 3)
 			return false;
@@ -251,7 +251,7 @@ public class Features : MonoBehaviour
 		return clusters;
 	}
 
-	private void PushResultsToUIThreadSafe(FeaturesThreadData result)
+	private void PushResultsToUIThreadSafe(LaserFeaturesThreadData result)
 	{
 		// consider - change to double buffered
 		lock (sharedData)

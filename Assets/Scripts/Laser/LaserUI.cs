@@ -22,7 +22,7 @@ public class LaserUI : ModuleUI
 	private Text featuresElapsedTimeText;
 
 	private Laser laser;
-	private Features features;
+	private LaserFeatures features;
 
 	protected override void Awake()
 	{
@@ -30,7 +30,7 @@ public class LaserUI : ModuleUI
 		ppsText = SafeInstantiateText(ModuleText, uiTransform, "pps 00 ms 00");
 		laserSpeedText = SafeInstantiateText(ModuleText, uiTransform, "rpm 000");
 		laserInvalidCRCText = SafeInstantiateText(ModuleText, uiTransform, "inv 000 crc 000");
-		features = GetComponent<Features>();
+		features = GetComponent<LaserFeatures>();
 		if (features != null)
 			featuresElapsedTimeText = SafeInstantiateText(ModuleText, uiTransform, "seg 00 ms");
 

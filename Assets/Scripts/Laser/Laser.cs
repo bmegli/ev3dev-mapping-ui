@@ -127,7 +127,7 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 
 	private PointCloud laserPointCloud;
 	private Map3D map3D;
-	private Features features;
+	private LaserFeatures features;
 
 	private LaserThreadSharedData data=new LaserThreadSharedData();
 
@@ -170,7 +170,7 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 	protected override void Start ()
 	{
 		map3D = GetComponent<Map3D>();
-		features = GetComponent<Features>();
+		features = GetComponent<LaserFeatures>();
 		base.Start();
 	}
 		

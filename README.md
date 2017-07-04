@@ -13,7 +13,7 @@ Other platforms may not work, need some tweaking or disabling some functionality
 
 ## Installation Instructions
 
-Required Unity Version: 5.6.0f3 or newer
+Required Unity Version: 5.6.2f1 or newer
 
 1. Download [Unity](https://unity3d.com/)
 2. Clone the project with submodules

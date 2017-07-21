@@ -38,13 +38,13 @@ On EV3 follow Building Instructions for [ev3dev-mapping-modules](https://github.
 
 ### Summary
 
-| Hardware                    | Connection | Unity Component    | EV3 module                 | Test Scene                       | First EV3 Step
-| ----------------------------|------------|--------------------|----------------------------|----------------------------------|------------------------
-| 2 x EV3 Large Servo Motor   | outA, outD | Drive/Odometry     | ev3drive/ev3odometry       | TestingTheDriveWithOdometry      | ./ev3control 8004 500
-| Above + CruizCore gyroscope | in3        | Drive/DeadReconning| ev3drive/ev3dead-reconning | TestingTheDriveWithDeadReconning | sudo ./TestingTheDriveWithDeadReconning.sh                        
-| WiFi dongle                 | wlan0      | WiFi               | ev3wifi                    | TestingTheWiFi                   | ./ev3control 8004 500
-| Neato XV11 Lidar            | in1, outC  | Laser              | ev3laser                   | TestingTheLidar                  | [Using the XV11 LIDAR ](http://www.ev3dev.org/docs/tutorials/using-xv11-lidar/)
-| All above                   | as above   | all above*         | all above*                 | Base**                             | sudo ./ev3init.sh
+| Hardware                    | Connection | Unity Component     | EV3 module                 | Test Scene                        | First EV3 Step
+| ----------------------------|------------|---------------------|----------------------------|-----------------------------------|------------------------
+| 2 x EV3 Large Servo Motor   | outA, outD | Drive, Odometry     | ev3drive, ev3odometry      | TestingTheDrive WithOdometry      | `./ev3control 8004 500`
+| Above + CruizCore gyroscope | in3        | Drive, DeadReconning| ev3drive, ev3dead-reconning| TestingTheDrive WithDeadReconning | `sudo ./TestingTheDriveWithDeadReconning.sh`                      
+| WiFi dongle                 | wlan0      | WiFi                | ev3wifi                    | TestingTheWiFi                    | `./ev3control 8004 500`
+| Neato XV11 Lidar            | in1, outC  | Laser               | ev3laser                   | TestingTheLidar                   | [Using the XV11 LIDAR ](http://www.ev3dev.org/docs/tutorials/using-xv11-lidar/)
+| All above                   | as above   | all above*          | all above*                 | Base**                            | `sudo ./ev3init.sh`
 
 *To test without gyroscope use Odometry component in place of DeadReconning. 
 **Change `Replay` `Mode` to `None` for hardware testing

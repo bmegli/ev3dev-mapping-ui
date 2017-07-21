@@ -43,14 +43,14 @@ On EV3 follow Building Instructions for [ev3dev-mapping-modules](https://github.
 | 2 x EV3 Large Servo Motor   | outA, outD | Drive, Odometry     | ev3drive, ev3odometry      | TestingTheDrive WithOdometry      | `./ev3control 8004 500`
 | Above + CruizCore gyroscope | in3        | Drive, DeadReconning| ev3drive, ev3dead-reconning| TestingTheDrive WithDeadReconning | `sudo ./TestingTheDriveWithDeadReconning.sh`                      
 | WiFi dongle                 | wlan0      | WiFi                | ev3wifi                    | TestingTheWiFi                    | `./ev3control 8004 500`
-| Neato XV11 Lidar            | in1, outC  | Laser               | ev3laser                   | TestingTheLidar                   | `./TestingTheLidar.sh`***
+| [Neato XV11 Lidar]            | in1, outC  | Laser               | ev3laser                 | TestingTheLidar                   | `./TestingTheLidar.sh`
 | All above                   | as above   | all above*          | all above*                 | Base**                            | `sudo ./ev3init.sh`
 
 *to test without gyroscope use Odometry component in place of DeadReconning. 
 
 **change `Replay` `Mode` to `None` for hardware testing
 
-***see also [Using the XV11 LIDAR](http://www.ev3dev.org/docs/tutorials/using-xv11-lidar/#ev3dev-mapping)
+[Neato XV11 Lidar]: http://www.ev3dev.org/docs/tutorials/using-xv11-lidar/
 
 After First Step on EV3:
 - follow printed instructions on EV3 (if any)

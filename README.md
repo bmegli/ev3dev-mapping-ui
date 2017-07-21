@@ -38,20 +38,17 @@ If all went well you should see a moving yellow brick (yes, this is the robot fo
 
 Follow [Using the XV11 LIDAR ](http://www.ev3dev.org/docs/tutorials/using-xv11-lidar/)
 
-### Other Hardware
+### Hardware Summary
 
-Preliminary!
+| Hardware                      | Unity Component    | Test Scene              |More Info
+| ------------------------------|--------------------|-------------------------|------------------------
+| Neato XV11 Lidar              | Laser              | TestingTheLidar         | [Using the XV11 LIDAR ](http://www.ev3dev.org/docs/tutorials/using-xv11-lidar/)
+| 2 x EV3 Large Servo Motor     | Drive/Odometry     |                         | Drive - control, Odometry - position estimate
+| 2 x motors + CruizCore gyro   | Drive/DeadReconning|                         | Drive - control, DeadReconning - position estimate                        
+| WiFi dongle                   | WiFi               | TestingTheWiFi          | Shows WiFi power on robot
 
-To test with robot hardware:
-
-- XV11 Lidar works with Laser component and ev3laser module (plotting only current readings)
-- 2 engines work with Odometry component and ev3odometry module (plotting only robot movement)
-- 2 engines and CruizCore XG 1300L work with DeadReconning component and ev3dead-reconning module (plotting only robot movement)
-- if you have all of the above mapping (2D or 3D) is possible.
-- 2 engines work with Drive component and ev3drive module (control of robot)
-
-If you want to use it with different hardware (for now) you have to modify existing [ev3dev-mapping-module](https://github.com/bmegli/ev3dev-mapping-modules)
-or write your own and its counterpart in UI.
+Configuration with 2 x EV3 Large Servo Motors, CruizCore gyroscope, 2 x XV11 lidars and WiFi is preset in `Base` scene.
+DeadReconning component can be changed to Odometry (then Base scene will work without gyroscope).
 
 ### Mapping/Scanning
 

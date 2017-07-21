@@ -40,15 +40,15 @@ Follow [Using the XV11 LIDAR ](http://www.ev3dev.org/docs/tutorials/using-xv11-l
 
 ### Hardware Summary
 
-| Hardware                      | Unity Component    | Test Scene              |More Info
-| ------------------------------|--------------------|-------------------------|------------------------
-| Neato XV11 Lidar              | Laser              | TestingTheLidar         | [Using the XV11 LIDAR ](http://www.ev3dev.org/docs/tutorials/using-xv11-lidar/)
-| 2 x EV3 Large Servo Motor     | Drive/Odometry     |                         | Drive - control, Odometry - position estimate
-| 2 x motors + CruizCore gyro   | Drive/DeadReconning|                         | Drive - control, DeadReconning - position estimate                        
-| WiFi dongle                   | WiFi               | TestingTheWiFi          | Shows WiFi power on robot
+| Hardware                         | Unity Component    | Test Scene              |More Info
+| ---------------------------------|--------------------|-------------------------|------------------------
+| Neato XV11 Lidar                 | Laser              | TestingTheLidar         | [Using the XV11 LIDAR ](http://www.ev3dev.org/docs/tutorials/using-xv11-lidar/)
+| 2 x EV3 Large Servo Motor        | Drive/Odometry     |                         | Drive - control, Odometry - position estimate
+| 2 x motors + CruizCore gyroscope | Drive/DeadReconning|                         | Drive - control, DeadReconning - position estimate                        
+| WiFi dongle                      | WiFi               | TestingTheWiFi          | EV3 WiFi power notification
 
-Configuration with 2 x EV3 Large Servo Motors, CruizCore gyroscope, 2 x XV11 lidars and WiFi is preset in `Base` scene.
-DeadReconning component can be changed to Odometry (then Base scene will work without gyroscope).
+Configuration with all hardware above is preset in `Base` scene.
+Odometry component can be used in place of DeadReconning (Base scene will work without gyroscope).
 
 ### Mapping/Scanning
 

@@ -44,9 +44,9 @@ On EV3 follow Building Instructions for [ev3dev-mapping-modules](https://github.
 | Above + CruizCore gyroscope | in3        | Drive, DeadReconning| ev3drive, ev3dead-reconning| TestingTheDrive WithDeadReconning | `sudo ./TestingTheDriveWithDeadReconning.sh`                      
 | WiFi dongle                 | wlan0      | WiFi                | ev3wifi                    | TestingTheWiFi                    | `./ev3control 8004 500`
 | [Neato XV11 Lidar]            | in1, outC  | Laser               | ev3laser                 | TestingTheLidar                   | `./TestingTheLidar.sh`
-| All above                   | as above   | all above*          | all above*                 | Base**                            | `sudo ./ev3init.sh`
+| All above*                  | as above   | all above*          | all above*                 | Base**                            | `sudo ./ev3init.sh`
 
-*to test without gyroscope use Odometry component in place of DeadReconning. 
+*to test without gyroscope use Odometry component in place of DeadReconning, to test with single lidar, remove the second `Laser` game object from `Robot` 
 
 **change `Replay` `Mode` to `None` for hardware testing
 

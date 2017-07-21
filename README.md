@@ -46,7 +46,7 @@ On EV3 follow Building Instructions for [ev3dev-mapping-modules](https://github.
 | [Neato XV11 Lidar]            | in1, outC  | Laser               | ev3laser                 | TestingTheLidar                   | `./TestingTheLidar.sh`
 | All above*                  | as above   | all above*          | all above*                 | Base**                            | `sudo ./ev3init.sh`
 
-*to test without gyroscope use Odometry component in place of DeadReconning, to test with single lidar, remove the second `Laser` game object from `Robot` 
+*no gyroscope -> replace DeadReconning with Odometry, only 1 lidar -> remove one `Laser` game object 
 
 **change `Replay` `Mode` to `None` for hardware testing
 

@@ -53,11 +53,11 @@ On EV3 follow Building Instructions for [ev3dev-mapping-modules](https://github.
 [Neato XV11 Lidar]: http://www.ev3dev.org/docs/tutorials/using-xv11-lidar/
 
 After First EV3 Step:
-- follow printed instructions on EV3 (if any)
-- on PC open ev3dev-mapping-ui in Unity 
-- open corresponding Test Scene and select `Robot` game object 
-- in `Network` component set `Host Ip` to your PC ip and 'Robot Ip' to your EV3 ip
-- hit 'Play' button
+1. Follow printed instructions on EV3 (if any)
+2. On PC open ev3dev-mapping-ui in Unity 
+    - open corresponding Test Scene and select `Robot` game object 
+    - in `Network` component set `Host Ip` to your PC ip and `Robot Ip` to your EV3 ip
+    - hit 'Play' button
 
 ### Mapping/Scanning
 

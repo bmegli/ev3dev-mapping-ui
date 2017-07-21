@@ -44,7 +44,7 @@ Follow [Using the XV11 LIDAR ](http://www.ev3dev.org/docs/tutorials/using-xv11-l
 | ---------------------------------|--------------------|-------------------------|------------------------
 | Neato XV11 Lidar                 | Laser              | TestingTheLidar         | [Using the XV11 LIDAR ](http://www.ev3dev.org/docs/tutorials/using-xv11-lidar/)
 | 2 x EV3 Large Servo Motor        | Drive/Odometry     |                         | Drive - control, Odometry - position estimate
-| 2 x motors + CruizCore gyroscope | Drive/DeadReconning|                         | Drive - control, DeadReconning - position estimate                        
+| 2 x EV3 Large Servo Motor and CruizCore gyroscope | Drive/DeadReconning|                         | Drive - control, DeadReconning - position estimate                        
 | WiFi dongle                      | WiFi               | TestingTheWiFi          | EV3 WiFi power notification
 
 Configuration with all hardware above is preset in `Base` scene.

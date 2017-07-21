@@ -52,7 +52,7 @@ On EV3 follow Building Instructions for [ev3dev-mapping-modules](https://github.
 
 [Neato XV11 Lidar]: http://www.ev3dev.org/docs/tutorials/using-xv11-lidar/
 
-After First Step on EV3:
+After First EV3 Step:
 - follow printed instructions on EV3 (if any)
 - on PC open ev3dev-mapping-ui in Unity 
 - open corresponding Test Scene and select `Robot` game object 

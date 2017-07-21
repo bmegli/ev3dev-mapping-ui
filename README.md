@@ -34,22 +34,30 @@ If all went well you should see a moving yellow brick (yes, this is the robot fo
 
 ## Hardware
 
-### Getting Started - LIDAR
+On EV3 follow Building Instructions for [ev3dev-mapping-modules](https://github.com/bmegli/ev3dev-mapping-modules)
 
-Follow [Using the XV11 LIDAR ](http://www.ev3dev.org/docs/tutorials/using-xv11-lidar/)
+### Summary
 
-### Hardware Summary
+| Hardware                    | Connection | Unity Component     | EV3 module                 | Test Scene                        | First EV3 Step
+| ----------------------------|------------|---------------------|----------------------------|-----------------------------------|------------------------
+| 2 x EV3 Large Servo Motor   | outA, outD | Drive, Odometry     | ev3drive, ev3odometry      | TestingTheDrive WithOdometry      | `./ev3control 8004 500`
+| Above + CruizCore gyroscope | in3        | Drive, DeadReconning| ev3drive, ev3dead-reconning| TestingTheDrive WithDeadReconning | `sudo ./TestingTheDriveWithDeadReconning.sh`                      
+| WiFi dongle                 | wlan0      | WiFi                | ev3wifi                    | TestingTheWiFi                    | `./ev3control 8004 500`
+| Neato XV11 Lidar            | in1, outC  | Laser               | ev3laser                   | TestingTheLidar                   | `./TestingTheLidar.sh`***
+| All above                   | as above   | all above*          | all above*                 | Base**                            | `sudo ./ev3init.sh`
 
-| Hardware                         | Unity Component    | Test Scene              |More Info
-| ---------------------------------|--------------------|-------------------------|------------------------
-| Neato XV11 Lidar                 | Laser              | TestingTheLidar         | [Using the XV11 LIDAR ](http://www.ev3dev.org/docs/tutorials/using-xv11-lidar/)
-| 2 x EV3 Large Servo Motor        | Drive/Odometry     |                         | Drive - control, Odometry - position estimate
-| 2 x EV3 Large Servo Motor and CruizCore gyroscope | Drive/DeadReconning|                         | Drive - control, DeadReconning - position estimate                        
-| WiFi dongle                      | WiFi               | TestingTheWiFi          | EV3 WiFi power notification
+*to test without gyroscope use Odometry component in place of DeadReconning. 
 
-Configuration with all hardware above is preset in `Base` scene.
+**change `Replay` `Mode` to `None` for hardware testing
 
-To test without gyroscope use Odometry component in place of DeadReconning.
+***see also [Using the XV11 LIDAR](http://www.ev3dev.org/docs/tutorials/using-xv11-lidar/#ev3dev-mapping)
+
+After First Step on EV3:
+- follow printed instructions on EV3 (if any)
+- on PC open ev3dev-mapping-ui in Unity 
+- open corresponding Test Scene and select `Robot` game object 
+- in `Network` component set `Host Ip` to your PC ip and 'Robot Ip' to your EV3 ip
+- hit 'Play' button
 
 ### Mapping/Scanning
 
@@ -57,7 +65,7 @@ This section summarizes how to get result like in [3D mapping/scanning project w
 
 #### Hardware
 
-| Hardware                      | Port               |
+| Hardware                      | Connection               |
 | ------------------------------|--------------------|
 | WiFi dongle                   | USB hub            |
 | EV3 Large Servo Motor (left)  | outA               |
@@ -71,7 +79,7 @@ This section summarizes how to get result like in [3D mapping/scanning project w
 1. On PC follow Installation Instructions and Gettings Started for [ev3dev-mapping-ui](https://github.com/bmegli/ev3dev-mapping-ui)
 2. On EV3 follow Building Instructions for [ev3dev-mapping-modules](https://github.com/bmegli/ev3dev-mapping-modules)
 3. On PC open ev3dev-mapping-ui `Base` scene in Unity
-    - select `Robot` component
+    - select `Robot` game object
 	- in `Robot Required` component change `Session Directory` (e.g. "session1")
 	- in `Replay` component change `Mode` to `None`
     - in `Network` component set `Host Ip` to your PC ip
@@ -88,8 +96,9 @@ sudo ./ev3init.sh
 
 ## Troubleshooting
 
-1. If you have a laptop with both integrated and dedicated GPU make sure Unity is using the dedicated one. Unity likes to use the first if not forced.
-2. If you want to build the project as standalone copy UDP folder to you build location (for replays)
-3. If you have some problems read the Unity console output
-4. If in Base scene floor and background are white instead of black make sure you are using Unity 5.4 or newer
-5. If laser (hardware) fails just after starting let it spin for 15 seconds and warmup (from ssh) and only later hit "play".
+1. If the robot moves but ev3dev-mapping-ui gets no data check your firewall settings (e.g. make exception for Unity Editor)
+2. If you have a laptop with both integrated and dedicated GPU make sure Unity is using the dedicated one. Unity likes to use the first if not forced.
+3. If you want to build the project as standalone copy UDP folder to you build location (for replays)
+4  If you have some problems read the Unity console output
+5. If in Base scene floor and background are white instead of black make sure you are using Unity 5.4 or newer
+6. If laser (hardware) fails just after starting let it spin for 15 seconds and warmup (from ssh) and only later hit "play".

@@ -55,9 +55,9 @@ On EV3 follow Building Instructions for [ev3dev-mapping-modules](https://github.
 After First EV3 Step:
 1. Follow printed instructions on EV3 (if any)
 2. On PC open ev3dev-mapping-ui in Unity 
-    - open corresponding Test Scene and select `Robot` game object 
+    - open corresponding Test Scene for the hardware and select `Robot` game object 
     - in `Network` component set `Host Ip` to your PC ip and `Robot Ip` to your EV3 ip
-    - hit 'Play' button
+    - hit `Play` button
 
 ### Mapping/Scanning
 

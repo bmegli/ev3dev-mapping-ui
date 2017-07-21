@@ -64,8 +64,8 @@ This section summarizes how to get result like in [3D mapping/scanning project w
 | WiFi dongle                   | USB hub            |
 | EV3 Large Servo Motor (left)  | outA               |
 | EV3 Large Servo Motor (right) | outD               | 
-| Neato Lidar (horizontal)      | outC, in1, USB hub | 
-| Neato Lidar (vertical)        | outB, in2, USB hub |
+| Neato XV11 Lidar (horizontal) | outC, in1, USB hub | 
+| Neato XV11 Lidar (vertical)   | outB, in2, USB hub |
 | CruizCore gyroscope           | in3                |
 
 #### Instructions

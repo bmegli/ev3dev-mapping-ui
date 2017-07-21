@@ -43,13 +43,14 @@ On EV3 follow Building Instructions for [ev3dev-mapping-modules](https://github.
 | 2 x EV3 Large Servo Motor   | outA, outD | Drive, Odometry     | ev3drive, ev3odometry      | TestingTheDrive WithOdometry      | `./ev3control 8004 500`
 | Above + CruizCore gyroscope | in3        | Drive, DeadReconning| ev3drive, ev3dead-reconning| TestingTheDrive WithDeadReconning | `sudo ./TestingTheDriveWithDeadReconning.sh`                      
 | WiFi dongle                 | wlan0      | WiFi                | ev3wifi                    | TestingTheWiFi                    | `./ev3control 8004 500`
-| Neato XV11 Lidar            | in1, outC  | Laser               | ev3laser                   | TestingTheLidar                   | [Using the XV11 LIDAR ](http://www.ev3dev.org/docs/tutorials/using-xv11-lidar/)
+| Neato XV11 Lidar            | in1, outC  | Laser               | ev3laser                   | TestingTheLidar                   | [Using the XV11 LIDAR ](http://www.ev3dev.org/docs/tutorials/using-xv11-lidar/#ev3dev-mapping)
 | All above                   | as above   | all above*          | all above*                 | Base**                            | `sudo ./ev3init.sh`
 
 *To test without gyroscope use Odometry component in place of DeadReconning. 
+
 **Change `Replay` `Mode` to `None` for hardware testing
 
-After First EV3 Step:
+After First Step on EV3:
 - follow printed instructions on EV3 (if any)
 - on PC open ev3dev-mapping-ui in Unity 
 - open corresponding Test Scene and select `Robot` game object 

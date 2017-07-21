@@ -55,9 +55,9 @@ or write your own and its counterpart in UI.
 
 ### Mapping/Scanning
 
-To get result like in [3D mapping/scanning project with ev3dev OS and Unity UI](https://www.youtube.com/watch?v=9o_Fi8bHdvs):
+This section summarizes how to get result like in [3D mapping/scanning project with ev3dev OS and Unity UI](https://www.youtube.com/watch?v=9o_Fi8bHdvs).
 
-Prepare hardware:
+#### Hardware
 
 | Hardware                      | Port               |
 | ------------------------------|--------------------|
@@ -68,13 +68,18 @@ Prepare hardware:
 | Neato Lidar (vertical)        | outB, in2, USB hub |
 | CruizCore gyroscope           | in3                |
 
+#### Instructions
 
 1. On PC follow Installation Instructions and Gettings Started for [ev3dev-mapping-ui]((https://github.com/bmegli/ev3dev-mapping-ui))
 2. On EV3 follow Building Instructions for [ev3dev-mapping-modules]
 3. On PC open ev3dev-mapping-ui Base scene in Unity
-    - set ips 
-    - change replay mode
-4. On EV3 run ev3init script and ev3control
+    - select Robot component
+	- in Robot Required component select directory for your session (e.g. "session1")
+	- in Replay component change mode to None
+    - in Network component set Host Ip to your PC ip
+	- in Network component set Robot Ip to your EV3 ip
+	- tweak other components and Robot children if your geometry differs 
+4. On EV3 (through ssh/putty) run ev3init script and ev3control
 ``` bash
 cd ev3dev-mapping-modules/bin
 sudo ./ev3init.sh
@@ -82,7 +87,6 @@ sudo ./ev3init.sh
 
 ```
 5. On PC hit play button in Unity
-
 
 ## Troubleshooting
 

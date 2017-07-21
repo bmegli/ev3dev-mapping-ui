@@ -53,6 +53,36 @@ To test with robot hardware:
 If you want to use it with different hardware (for now) you have to modify existing [ev3dev-mapping-module](https://github.com/bmegli/ev3dev-mapping-modules)
 or write your own and its counterpart in UI.
 
+### Mapping/Scanning
+
+To get result like in [3D mapping/scanning project with ev3dev OS and Unity UI](https://www.youtube.com/watch?v=9o_Fi8bHdvs):
+
+Prepare hardware:
+
+| Hardware                      | Port               |
+| ------------------------------|--------------------|
+| WiFi dongle                   | USB hub            |
+| EV3 Large Servo Motor (left)  | outA               |
+| EV3 Large Servo Motor (right) | outD               | 
+| Neato Lidar (horizontal)      | outC, in1, USB hub | 
+| Neato Lidar (vertical)        | outB, in2, USB hub |
+| CruizCore gyroscope           | in3                |
+
+
+1. On PC follow Installation Instructions and Gettings Started for [ev3dev-mapping-ui]((https://github.com/bmegli/ev3dev-mapping-ui))
+2. On EV3 follow Building Instructions for [ev3dev-mapping-modules]
+3. On PC open ev3dev-mapping-ui Base scene in Unity
+    - set ips 
+    - change replay mode
+4. On EV3 run ev3init script and ev3control
+``` bash
+cd ev3dev-mapping-modules/bin
+sudo ./ev3init.sh
+./ev3control 8004 500
+
+```
+5. On PC hit play button in Unity
+
 
 ## Troubleshooting
 

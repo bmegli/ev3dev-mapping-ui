@@ -48,7 +48,8 @@ Follow [Using the XV11 LIDAR ](http://www.ev3dev.org/docs/tutorials/using-xv11-l
 | WiFi dongle                      | WiFi               | TestingTheWiFi          | EV3 WiFi power notification
 
 Configuration with all hardware above is preset in `Base` scene.
-Odometry component can be used in place of DeadReconning (Base scene will work without gyroscope).
+
+To test without gyroscope use Odometry component in place of DeadReconning.
 
 ### Mapping/Scanning
 

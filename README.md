@@ -51,13 +51,14 @@ On EV3 follow Building Instructions for [ev3dev-mapping-modules](https://github.
 | Hardware                    | Connection            | Unity Component     | EV3 module                 | Test Scene                        | First EV3 Step
 | ----------------------------|-----------------------|---------------------|----------------------------|-----------------------------------|------------------------
 | 2 x EV3 Large Servo Motor   | outA, outD            | Drive, Odometry     | ev3drive, ev3odometry      | TestingTheDrive WithOdometry      | `./ev3control 8004 500`
-| above + CruizCore gyroscope | above + in3           | Drive, DeadReconning| ev3drive, ev3dead-reconning| TestingTheDrive WithDeadReconning | `sudo ./TestingTheDriveWithDeadReconning.sh`                     
+| above + CruizCore gyroscope | above + in3           | Drive, DeadReconning| ev3drive, ev3dead-reconning| TestingTheDrive WithDeadReconning | `sudo ./TestingTheDriveWithDeadReconning.sh`
 | WiFi dongle                 | wlan0                 | WiFi                | ev3wifi                    | TestingTheWiFi                    | `./ev3control 8004 500`
 | [Neato XV11 Lidar]          | in1, outC             | Laser               | ev3laser                   | TestingTheLidar                   | `./TestingTheLidar.sh`
 
 [Neato XV11 Lidar]: http://www.ev3dev.org/docs/tutorials/using-xv11-lidar/
 
-After First EV3 Step:
+On EV3 (through ssh/putty) execute First EV3 Step from the table and:
+
 1. Follow printed instructions on EV3 (if any)
 2. On PC open ev3dev-mapping-ui in Unity 
     - open corresponding Test Scene for the hardware and select `Robot` game object 

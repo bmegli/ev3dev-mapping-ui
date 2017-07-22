@@ -30,7 +30,18 @@ The easiest way to start is working with recorded UDP communication:
 3. Hit `Play` button in Unity
 4. Click `Replay` button in UI
 
-If all went well you should see a moving yellow brick (yes, this is the robot for now) and the readings as they are collected. 
+If all went well you should see a moving yellow brick and the readings as they were collected.
+
+### Other Recorded Sessions
+
+You may try other past sessions by changing `Robot` -> `Robot Required` -> `Session Directory` to:
+- Body
+- Building
+- Faces
+- Room
+- or your own recorded session
+
+Then follow with `Play` button in Unity and `Replay` button in UI
 
 ## Hardware
 

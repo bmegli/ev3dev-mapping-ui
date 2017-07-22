@@ -5,6 +5,8 @@ For high-level project overview visit [ev3dev-mapping web page](http://www.ev3de
 
 For project meta-repository visit [ev3dev-mapping](https://github.com/bmegli/ev3dev-mapping)
 
+![Alt text](https://user-images.githubusercontent.com/9095769/28491647-2beeb06a-6ef5-11e7-930e-611803ae11e0.png "ev3dev-mapping-ui screenshot")
+
 ## Supported Platforms
 
 This is Unity project. In theory it should work on platforms ranging from desktops, through consoles to mobile devices and TVs.

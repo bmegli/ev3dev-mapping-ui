@@ -38,7 +38,7 @@ Mouse <kbd>LMB</kbd> rotates <kbd>RMB</kbd> pans <kbd>Wheel</kbd> for up down <k
 
 Change `Robot` -> `Robot Required` -> `Session Directory` to: `Body`, `Building`, `Faces`, `Room` or your own past session.
 
-Then follow with <kbd>Play</kbd> button in Unity and <kdb>Replay</kbd> button in UI.
+Then follow with <kbd>Play</kbd> button in Unity and <kbd>Replay</kbd> button in UI.
 
 ## Hardware
 
@@ -54,7 +54,7 @@ On EV3 follow Building Instructions for [ev3dev-mapping-modules](https://github.
 | [Neato XV11 Lidar]          | in1, outC             | Laser               | ev3laser                   | TestingTheLidar                   | `./TestingTheLidar.sh`****
 | all above* + second lidar** | all above + in2, outB | all above*          | all above*                 | Base***                           | `sudo ./ev3init.sh`****
 
-*no gyroscope -> replace DeadReconning with Odometry (worse position estimate)
+*no gyroscope -> replace DeadReconning with Odometry (worse estimate)
 
 **only 1 lidar -> remove one `Laser` game object from `Robot`
 

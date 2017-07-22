@@ -32,6 +32,8 @@ The easiest way to start is working with recorded UDP communication:
 
 If all went well you should see a moving yellow brick and the readings as they were collected.
 
+Mouse <kbd>LMB</kbd> rotates, <kbd>RMB</kbd> pans, mouse wheel for up down, <kbd>~</kbd> shows/hides console, <kbd>Esc</kbd> shows/hides UI.
+
 ### Other Recorded Sessions
 
 Change `Robot` -> `Robot Required` -> `Session Directory` to: `Body`, `Building`, `Faces`, `Room` or your own past session.
@@ -69,12 +71,7 @@ After First EV3 Step:
     - in `Network` component set `Host Ip` to your PC ip and `Robot Ip` to your EV3 ip
     - hit `Play` button
 
-<kbd>←</kbd>, <kbd>↑</kbd>, <kbd>→</kbd>, <kbd>↓</kbd>, <kbd>Shift</kbd> or <kbd>W</kbd>, <kbd>S</kbd>, <kbd>A</kbd>, <kbd>D</kbd>, <kbd>Shift</kbd> to control the robot.
-
-Mouse + <kbd>LMB</kbd> to rotate view, mouse + <kbd>RMB</kbd> to pan, mouse wheel for up down
-
-<kbd>~</kbd> to show/hide console
-<kbd>Esc</kbd> to show/hide UI
+Use <kbd>←</kbd>, <kbd>↑</kbd>, <kbd>→</kbd>, <kbd>↓</kbd>, <kbd>Shift</kbd> or <kbd>W</kbd>, <kbd>S</kbd>, <kbd>A</kbd>, <kbd>D</kbd>, <kbd>Shift</kbd> to control the robot.
 	
 ### Mapping/Scanning
 

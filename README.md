@@ -36,19 +36,23 @@ If all went well you should see a moving yellow brick (yes, this is the robot fo
 
 On EV3 follow Building Instructions for [ev3dev-mapping-modules](https://github.com/bmegli/ev3dev-mapping-modules)
 
-### Summary
+### Hardware Getting Started
 
-| Hardware                    | Connection | Unity Component     | EV3 module                 | Test Scene                        | First EV3 Step
-| ----------------------------|------------|---------------------|----------------------------|-----------------------------------|------------------------
-| 2 x EV3 Large Servo Motor   | outA, outD | Drive, Odometry     | ev3drive, ev3odometry      | TestingTheDrive WithOdometry      | `./ev3control 8004 500`
-| Above + CruizCore gyroscope | in3        | Drive, DeadReconning| ev3drive, ev3dead-reconning| TestingTheDrive WithDeadReconning | `sudo ./TestingTheDriveWithDeadReconning.sh`                      
-| WiFi dongle                 | wlan0      | WiFi                | ev3wifi                    | TestingTheWiFi                    | `./ev3control 8004 500`
-| [Neato XV11 Lidar]            | in1, outC  | Laser               | ev3laser                 | TestingTheLidar                   | `./TestingTheLidar.sh`
-| All above*                  | as above   | all above*          | all above*                 | Base**                            | `sudo ./ev3init.sh`
+| Hardware                    | Connection           | Unity Component     | EV3 module                 | Test Scene                        | First EV3 Step
+| ----------------------------|----------------------|---------------------|----------------------------|-----------------------------------|------------------------
+| 2 x EV3 Large Servo Motor   | outA, outD           | Drive, Odometry     | ev3drive, ev3odometry      | TestingTheDrive WithOdometry      | `./ev3control 8004 500`
+| above + CruizCore gyroscope | in3                  | Drive, DeadReconning| ev3drive, ev3dead-reconning| TestingTheDrive WithDeadReconning | `sudo ./TestingTheDriveWithDeadReconning.sh`****                      
+| WiFi dongle                 | wlan0                | WiFi                | ev3wifi                    | TestingTheWiFi                    | `./ev3control 8004 500`
+| [Neato XV11 Lidar]          | in1, outC            | Laser               | ev3laser                   | TestingTheLidar                   | `./TestingTheLidar.sh`****
+| all above* + second lidar** | all above, in2, outB | all above*          | all above*                 | Base***                           | `sudo ./ev3init.sh`****
 
-*no gyroscope -> replace DeadReconning with Odometry, only 1 lidar -> remove one `Laser` game object 
+*no gyroscope -> replace DeadReconning with Odometry
 
-**change `Replay` `Mode` to `None` for hardware testing
+**only 1 lidar -> remove one `Laser` game object from `Robot`
+
+***change `Replay` `Mode` to `None` on `Robot` for hardware testing
+
+****simple *one shot* after boot, `./ev3init.sh` *will not work* after calling other init script (reboot) 
 
 [Neato XV11 Lidar]: http://www.ev3dev.org/docs/tutorials/using-xv11-lidar/
 
@@ -85,6 +89,10 @@ This section summarizes how to get result like in [3D mapping/scanning project w
     - in `Network` component set `Host Ip` to your PC ip
 	- in `Network` component set `Robot Ip` to your EV3 ip
 	- tweak other components and `Robot` children if your geometry differs 
+		- set your wheel diameter in `Robot` -> `Physics` -> `Wheel Diameter Mm`
+		- set distance between wheels in `Robot` -> `Physics` -> `Wheelbase Mm`
+		- set horizontal lidar position/rotation in `Robot` -> `LaserXZ` -> `Transform` (relative to midpoint between wheels)
+		- set vertical lidar position/rotation in `Robot` -> `LaserXY` -> `Transform` (relative to midpoint between wheels)
 4. On EV3 (through ssh/putty) run `ev3init` script and `ev3control`
 ``` bash
 cd ev3dev-mapping-modules/bin
@@ -99,6 +107,6 @@ sudo ./ev3init.sh
 1. If the robot moves but ev3dev-mapping-ui gets no data check your firewall settings (e.g. make exception for Unity Editor)
 2. If you have a laptop with both integrated and dedicated GPU make sure Unity is using the dedicated one. Unity likes to use the first if not forced.
 3. If you want to build the project as standalone copy UDP folder to you build location (for replays)
-4  If you have some problems read the Unity console output
+4. If you have some problems read the Unity console output
 5. If in Base scene floor and background are white instead of black make sure you are using Unity 5.4 or newer
 6. If laser (hardware) fails just after starting let it spin for 15 seconds and warmup (from ssh) and only later hit "play".

@@ -72,7 +72,7 @@ After First EV3 Step:
 #### Control the Robot/UI
 
 Use:
-	- &larr, <kbd>←</kbd>, <kbd>↑</kbd>, <kbd>→</kbd>, <kbd>↓</kbd>  or <kbd>W</kbd>, <kbd>S</kbd>, <kbd>A</kbd>, <kbd>D</kbd> and <kbd>Shift</kbd> to control the robot
+	- <kbd>←</kbd>, <kbd>↑</kbd>, <kbd>→</kbd>, <kbd>↓</kbd>  or <kbd>W</kbd>, <kbd>S</kbd>, <kbd>A</kbd>, <kbd>D</kbd> and <kbd>Shift</kbd> to control the robot
 	- mouse + <kbd>LMB</kbd> to rotate view, mouse + <kbd>RMB</kbd> to pan, mouse wheel for up down
 	- <kbd>~</kbd> to show/hide console
 	- <kbd>Esc</kbd> to show/hide UI

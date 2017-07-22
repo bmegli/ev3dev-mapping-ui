@@ -32,7 +32,7 @@ The easiest way to start is working with recorded UDP communication:
 
 If all went well you should see a moving yellow brick and the readings as they were collected.
 
-Mouse <kbd>LMB</kbd> rotates, <kbd>RMB</kbd> pans, mouse wheel for up down, <kbd>~</kbd> shows/hides console, <kbd>Esc</kbd> shows/hides UI.
+Mouse <kbd>LMB</kbd> rotates, <kbd>RMB</kbd> pans, <kbd>Wheel</kbd> for up down, <kbd>~</kbd> shows/hides console, <kbd>Esc</kbd> shows/hides UI.
 
 ### Other Recorded Sessions
 
@@ -71,7 +71,7 @@ After First EV3 Step:
     - in `Network` component set `Host Ip` to your PC ip and `Robot Ip` to your EV3 ip
     - hit `Play` button
 
-Use <kbd>←</kbd>, <kbd>↑</kbd>, <kbd>→</kbd>, <kbd>↓</kbd>, <kbd>Shift</kbd> or <kbd>W</kbd>, <kbd>S</kbd>, <kbd>A</kbd>, <kbd>D</kbd>, <kbd>Shift</kbd> to control the robot.
+Use <kbd>←</kbd>, <kbd>↑</kbd>, <kbd>→</kbd>, <kbd>↓</kbd>, <kbd>Shift</kbd> or <kbd>W</kbd>, <kbd>S</kbd>, <kbd>A</kbd>, <kbd>D</kbd>, <kbd>Shift</kbd> or joy/pad to control the robot.
 	
 ### Mapping/Scanning
 

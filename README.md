@@ -27,8 +27,8 @@ The easiest way to start is working with recorded UDP communication:
 
 1. Open the project in Unity
 2. Open the Base scene
-3. Hit `Play` button in Unity
-4. Click `Replay` button in UI
+3. Hit <kbd>Play</kbd> button in Unity
+4. Click <kbd>Replay</kbd> button in UI
 
 If all went well you should see a moving yellow brick and the readings as they were collected.
 
@@ -38,7 +38,7 @@ Mouse <kbd>LMB</kbd> rotates <kbd>RMB</kbd> pans <kbd>Wheel</kbd> for up down <k
 
 Change `Robot` -> `Robot Required` -> `Session Directory` to: `Body`, `Building`, `Faces`, `Room` or your own past session.
 
-Then follow with `Play` button in Unity and `Replay` button in UI.
+Then follow with <kbd>Play</kbd> button in Unity and <kdb>Replay</kbd> button in UI.
 
 ## Hardware
 
@@ -69,7 +69,7 @@ After First EV3 Step:
 2. On PC open ev3dev-mapping-ui in Unity 
     - open corresponding Test Scene for the hardware and select `Robot` game object 
     - in `Network` component set `Host Ip` to your PC ip and `Robot Ip` to your EV3 ip
-    - hit `Play` button
+    - hit <kbd>Play</kbd> Unity button
 
 Use <kbd>←</kbd> <kbd>↑</kbd> <kbd>→</kbd> <kbd>↓</kbd> <kbd>Shift</kbd> or <kbd>W</kbd> <kbd>S</kbd> <kbd>A</kbd> <kbd>D</kbd> <kbd>Shift</kbd> or joy/pad to control the robot.
 	
@@ -110,7 +110,7 @@ sudo ./ev3init.sh
 ./ev3control 8004 500
 
 ```
-5. On PC hit play button in Unity
+5. On PC hit <kbd>Play</kbd> button in Unity
 
 ## Troubleshooting
 

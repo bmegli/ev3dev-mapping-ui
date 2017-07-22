@@ -34,7 +34,7 @@ If all went well you should see a moving yellow brick and the readings as they w
 
 ### Other Recorded Sessions
 
-Load other past sessions by changing `Robot` -> `Robot Required` -> `Session Directory` to: `Body`, `Building`, `Faces`, `Room` or your own recorded session
+Load other past sessions by changing `Robot` -> `Robot Required` -> `Session Directory` to: `Body`, `Building`, `Faces`, `Room` or your own recorded session.
 
 Then follow with `Play` button in Unity and `Replay` button in UI.
 

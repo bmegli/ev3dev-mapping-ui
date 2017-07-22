@@ -42,7 +42,7 @@ Then follow with <kbd>Play</kbd> button in Unity and <kbd>Replay</kbd> button in
 
 ## Hardware
 
-On EV3 follow Building Instructions for [ev3dev-mapping-modules](https://github.com/bmegli/ev3dev-mapping-modules)
+On EV3 follow Building Instructions for [ev3dev-mapping-modules](https://github.com/bmegli/ev3dev-mapping-modules).
 
 ### Hardware Getting Started
 

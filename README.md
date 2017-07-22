@@ -108,5 +108,5 @@ sudo ./ev3init.sh #only once after each boot
 2. If the robot moves but ev3dev-mapping-ui gets no data check your firewall settings (e.g. make exception for Unity Editor)
 3. If you have a laptop with both integrated and dedicated GPU make sure Unity is using the dedicated one. Unity likes to use the first if not forced.
 4. If you want to build the project as standalone copy UDP folder to you build location (for replays)
-5. If you have some problems read the Unity console output (<kbd>~</kbd>
+5. If you have some problems read the Unity console output with <kbd>~</kbd> key
 6. If laser (hardware) fails just after starting let it spin for 15 seconds and warmup (from ssh) and only later hit <kbd>Play</kbd>.

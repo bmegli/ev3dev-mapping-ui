@@ -69,13 +69,12 @@ After First EV3 Step:
     - in `Network` component set `Host Ip` to your PC ip and `Robot Ip` to your EV3 ip
     - hit `Play` button
 
-#### Control the Robot/UI
+<kbd>←</kbd>, <kbd>↑</kbd>, <kbd>→</kbd>, <kbd>↓</kbd>, <kbd>Shift</kbd> or <kbd>W</kbd>, <kbd>S</kbd>, <kbd>A</kbd>, <kbd>D</kbd>, <kbd>Shift</kbd> to control the robot.
 
-Use:
-	- <kbd>←</kbd>, <kbd>↑</kbd>, <kbd>→</kbd>, <kbd>↓</kbd>  or <kbd>W</kbd>, <kbd>S</kbd>, <kbd>A</kbd>, <kbd>D</kbd> and <kbd>Shift</kbd> to control the robot
-	- mouse + <kbd>LMB</kbd> to rotate view, mouse + <kbd>RMB</kbd> to pan, mouse wheel for up down
-	- <kbd>~</kbd> to show/hide console
-	- <kbd>Esc</kbd> to show/hide UI
+Mouse + <kbd>LMB</kbd> to rotate view, mouse + <kbd>RMB</kbd> to pan, mouse wheel for up down
+
+<kbd>~</kbd> to show/hide console
+<kbd>Esc</kbd> to show/hide UI
 	
 ### Mapping/Scanning
 

@@ -44,7 +44,9 @@ Then follow with <kbd>Play</kbd> button in Unity and <kbd>Replay</kbd> button in
 
 ## Hardware
 
-On EV3 follow Building Instructions for [ev3dev-mapping-modules](https://github.com/bmegli/ev3dev-mapping-modules).
+On [EV3] follow Building Instructions for [ev3dev-mapping-modules](https://github.com/bmegli/ev3dev-mapping-modules).
+
+[EV3]: https://www.lego.com/en-us/mindstorms/products/mindstorms-ev3-31313
 
 ### Hardware Getting Started
 

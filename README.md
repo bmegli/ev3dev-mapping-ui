@@ -48,12 +48,12 @@ On EV3 follow Building Instructions for [ev3dev-mapping-modules](https://github.
 
 ### Hardware Getting Started
 
-| Hardware                      | Connection            | ev3dev-mapping-ui   | ev3dev-mapping-modules      | Test Scene                        | First ev3dev-mapping-modules step
-| ------------------------------|-----------------------|---------------------|-----------------------------|-----------------------------------|------------------------
-| 2 x EV3 Large Servo Motor     | outA, outD            | Drive, Odometry     | ev3drive, ev3odometry       | TestingTheDrive WithOdometry      | `./ev3control 8004 500`
-| above + [CruizCore] gyroscope | above + in3           | Drive, DeadReconning| ev3drive, ev3dead-reconning | TestingTheDrive WithDeadReconning | `sudo ./TestingTheDriveWithDeadReconning.sh`
-| [WiFi dongle]                 | USB, wlan0            | WiFi                | ev3wifi                     | TestingTheWiFi                    | `./ev3control 8004 500`
-| [Neato XV11 Lidar]            | in1, outC, USB        | Laser               | ev3laser                    | TestingTheLidar                   | `./TestingTheLidar.sh`
+| Hardware                      | Connection            | ev3dev-mapping-ui component | ev3dev-mapping-modules      | Test Scene                        | First ev3dev-mapping-modules step
+| ------------------------------|-----------------------|-----------------------------|-----------------------------|-----------------------------------|------------------------
+| 2 x EV3 Large Servo Motor     | outA, outD            | Drive, Odometry             | ev3drive, ev3odometry       | TestingTheDrive WithOdometry      | `./ev3control 8004 500`
+| above + [CruizCore] gyroscope | above + in3           | Drive, DeadReconning        | ev3drive, ev3dead-reconning | TestingTheDrive WithDeadReconning | `sudo ./TestingTheDriveWithDeadReconning.sh`
+| [WiFi dongle]                 | USB, wlan0            | WiFi                        | ev3wifi                     | TestingTheWiFi                    | `./ev3control 8004 500`
+| [Neato XV11 Lidar]            | in1, outC, USB        | Laser                       | ev3laser                    | TestingTheLidar                   | `./TestingTheLidar.sh`
 
 [CruizCore]: http://docs.ev3dev.org/projects/lego-linux-drivers/en/ev3dev-jessie/sensor_data.html#microinfinity-digital-gyroscope-and-accelerometer
 [WiFi dongle]: http://www.ev3dev.org/docs/networking/#with-a-wi-fi-dongle

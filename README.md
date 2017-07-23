@@ -48,13 +48,15 @@ On EV3 follow Building Instructions for [ev3dev-mapping-modules](https://github.
 
 ### Hardware Getting Started
 
-| Hardware                    | Connection            | Unity Component     | EV3 module                 | Test Scene                        | First EV3 Step
-| ----------------------------|-----------------------|---------------------|----------------------------|-----------------------------------|------------------------
-| 2 x EV3 Large Servo Motor   | outA, outD            | Drive, Odometry     | ev3drive, ev3odometry      | TestingTheDrive WithOdometry      | `./ev3control 8004 500`
-| above + CruizCore gyroscope | above + in3           | Drive, DeadReconning| ev3drive, ev3dead-reconning| TestingTheDrive WithDeadReconning | `sudo ./TestingTheDriveWithDeadReconning.sh`
-| WiFi dongle                 | wlan0                 | WiFi                | ev3wifi                    | TestingTheWiFi                    | `./ev3control 8004 500`
-| [Neato XV11 Lidar]          | in1, outC             | Laser               | ev3laser                   | TestingTheLidar                   | `./TestingTheLidar.sh`
+| Hardware                      | Connection            | Unity Component     | EV3 module                 | Test Scene                        | First EV3 Step
+| ------------------------------|-----------------------|---------------------|----------------------------|-----------------------------------|------------------------
+| 2 x EV3 Large Servo Motor     | outA, outD            | Drive, Odometry     | ev3drive, ev3odometry      | TestingTheDrive WithOdometry      | `./ev3control 8004 500`
+| above + [CruizCore] gyroscope | above + in3           | Drive, DeadReconning| ev3drive, ev3dead-reconning| TestingTheDrive WithDeadReconning | `sudo ./TestingTheDriveWithDeadReconning.sh`
+| [WiFi dongle]                 | wlan0                 | WiFi                | ev3wifi                    | TestingTheWiFi                    | `./ev3control 8004 500`
+| [Neato XV11 Lidar]            | in1, outC             | Laser               | ev3laser                   | TestingTheLidar                   | `./TestingTheLidar.sh`
 
+[CruizCore]: http://docs.ev3dev.org/projects/lego-linux-drivers/en/ev3dev-jessie/sensor_data.html#microinfinity-digital-gyroscope-and-accelerometer
+[WiFi dongle]: http://www.ev3dev.org/docs/networking/#with-a-wi-fi-dongle
 [Neato XV11 Lidar]: http://www.ev3dev.org/docs/tutorials/using-xv11-lidar/
 
 On EV3 (through ssh/putty) execute First EV3 Step from the table and:
@@ -73,14 +75,14 @@ This section summarizes how to get result like in [3D mapping/scanning project w
 
 #### Hardware
 
-| Hardware                      | Connection         | Extra Info                                                           | 
-| ------------------------------|--------------------|----------------------------------------------------------------------|
-| WiFi dongle                   | USB hub            |                                                                      |
-| EV3 Large Servo Motor (left)  | outA               |                                                                      |
-| EV3 Large Servo Motor (right) | outD               |                                                                      |
-| Neato XV11 Lidar (horizontal) | outC, in1, USB hub |                                                                      |
-| Neato XV11 Lidar (vertical)   | outB, in2, USB hub | one lidar -> remove one `Laser` game object frome `Base` scene       |
-| CruizCore gyroscope           | in3                | no gyroscope -> replace DeadReconning with Odometry (worse estimate) |
+| Hardware                      | Connection         | Extra Info                                                                                               | 
+| ------------------------------|--------------------|----------------------------------------------------------------------------------------------------------|
+| WiFi dongle                   | USB hub            |                                                                                                          |
+| EV3 Large Servo Motor (left)  | outA               |                                                                                                          |
+| EV3 Large Servo Motor (right) | outD               |                                                                                                          |
+| Neato XV11 Lidar (horizontal) | outC, in1, USB hub |                                                                                                          |
+| Neato XV11 Lidar (vertical)   | outB, in2, USB hub | one lidar -> remove one `Laser` game object frome `Base` scene and comment out its entries in ev3init.sh |
+| CruizCore gyroscope           | in3                | no gyroscope -> replace DeadReconning with Odometry (worse estimate) and comment out entry in ev3init.sh |
 
 #### Instructions
 
@@ -93,7 +95,7 @@ This section summarizes how to get result like in [3D mapping/scanning project w
     - in `Network` component set `Host Ip` to your PC ip
 	- in `Network` component set `Robot Ip` to your EV3 ip
 	- tweak other components and `Robot` children if your geometry differs 
-		- set your wheel diameter in `Robot` -> `Physics` -> `Wheel Diameter Mm`
+		- set your [wheel diameter] in `Robot` -> `Physics` -> `Wheel Diameter Mm`
 		- set distance between wheels in `Robot` -> `Physics` -> `Wheelbase Mm`
 		- set horizontal lidar position/rotation in `Robot` -> `LaserXZ` -> `Transform` (relative to midpoint between wheels)
 		- set vertical lidar position/rotation in `Robot` -> `LaserXY` -> `Transform` (relative to midpoint between wheels)
@@ -104,6 +106,8 @@ sudo ./ev3init.sh #only once after each boot
 ./ev3control 8004 500
 ```
 5. On PC hit <kbd>Play</kbd> button in Unity
+
+[wheel diameter]: http://wheels.sariel.pl/
 
 ## Troubleshooting
 

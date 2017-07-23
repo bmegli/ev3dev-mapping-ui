@@ -48,12 +48,12 @@ On EV3 follow Building Instructions for [ev3dev-mapping-modules](https://github.
 
 ### Hardware Getting Started
 
-| Hardware                      | Connection            | ev3dev-mapping-ui component | ev3dev-mapping-modules     | Test Scene                        | First ev3dev-mapping-modules step
-| ------------------------------|-----------------------|-----------------------------|----------------------------|-----------------------------------|------------------------
-| 2 x EV3 Large Servo Motor     | outA, outD            | Drive, Odometry             | ev3drive, ev3odometry      | TestingTheDrive WithOdometry      | `./ev3control 8004 500`
-| above + [CruizCore] gyroscope | above + in3           | Drive, DeadReconning        | ev3drive, ev3dead-reconning| TestingTheDrive WithDeadReconning | `sudo ./TestingTheDriveWithDeadReconning.sh`
-| [WiFi dongle]                 | USB, wlan0            | WiFi                        | ev3wifi                    | TestingTheWiFi                    | `./ev3control 8004 500`
-| [Neato XV11 Lidar]            | in1, outC, USB        | Laser                       | ev3laser                   | TestingTheLidar                   | `./TestingTheLidar.sh`
+| Hardware                      | Connection            | ev3dev-mapping-ui component |ev3dev-mapping-modules module| Test Scene                        | First ev3dev-mapping-modules step
+| ------------------------------|-----------------------|-----------------------------|-----------------------------|-----------------------------------|------------------------
+| 2 x EV3 Large Servo Motor     | outA, outD            | Drive, Odometry             | ev3drive, ev3odometry       | TestingTheDrive WithOdometry      | `./ev3control 8004 500`
+| above + [CruizCore] gyroscope | above + in3           | Drive, DeadReconning        | ev3drive, ev3dead-reconning | TestingTheDrive WithDeadReconning | `sudo ./TestingTheDriveWithDeadReconning.sh`
+| [WiFi dongle]                 | USB, wlan0            | WiFi                        | ev3wifi                     | TestingTheWiFi                    | `./ev3control 8004 500`
+| [Neato XV11 Lidar]            | in1, outC, USB        | Laser                       | ev3laser                    | TestingTheLidar                   | `./TestingTheLidar.sh`
 
 [CruizCore]: http://docs.ev3dev.org/projects/lego-linux-drivers/en/ev3dev-jessie/sensor_data.html#microinfinity-digital-gyroscope-and-accelerometer
 [WiFi dongle]: http://www.ev3dev.org/docs/networking/#with-a-wi-fi-dongle
@@ -63,7 +63,7 @@ On EV3 (through ssh/putty) execute *First ev3dev-mapping-modules step* from the 
 
 1. Follow printed instructions on EV3 (if any)
 2. On PC open ev3dev-mapping-ui in Unity 
-    - open corresponding Test Scene for the hardware and select `Robot` game object 
+    - open corresponding *Test Scene* for the hardware and select `Robot` game object 
     - in `Network` component set `Host Ip` to your PC ip and `Robot Ip` to your EV3 ip
     - hit <kbd>Play</kbd> Unity button
 

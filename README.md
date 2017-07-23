@@ -54,7 +54,7 @@ On [EV3] follow Building Instructions for [ev3dev-mapping-modules](https://githu
 | ------------------------------|-----------------------|-----------------------------|-----------------------------|-----------------------------------|------------------------
 | 2 x EV3 Large Servo Motor     | outA, outD            | Drive, Odometry             | ev3drive, ev3odometry       | TestingTheDrive WithOdometry      | `./ev3control 8004 500`
 | above + [CruizCore] gyroscope | above + in3           | Drive, DeadReconning        | ev3drive, ev3dead-reconning | TestingTheDrive WithDeadReconning | `sudo ./TestingTheDriveWithDeadReconning.sh`
-| [WiFi dongle]                 | USB, wlan0            | WiFi                        | ev3wifi                     | TestingTheWiFi                    | `./ev3control 8004 500`
+| [WiFi dongle]                 | USB (wlan0)           | WiFi                        | ev3wifi                     | TestingTheWiFi                    | `./ev3control 8004 500`
 | [Neato XV11 Lidar]            | in1, outC, USB        | Laser                       | ev3laser                    | TestingTheLidar                   | `./TestingTheLidar.sh`
 
 [CruizCore]: http://docs.ev3dev.org/projects/lego-linux-drivers/en/ev3dev-jessie/sensor_data.html#microinfinity-digital-gyroscope-and-accelerometer
@@ -79,7 +79,7 @@ This section summarizes how to get result like in [3D mapping/scanning project w
 
 | Hardware                      | Connection         | Extra Info                                                                                                     | 
 | ------------------------------|--------------------|----------------------------------------------------------------------------------------------------------------|
-| WiFi dongle                   | USB hub            |                                                                                                                |
+| WiFi dongle                   | USB hub (wlan0)    |                                                                                                                |
 | EV3 Large Servo Motor (left)  | outA               |                                                                                                                |
 | EV3 Large Servo Motor (right) | outD               |                                                                                                                |
 | Neato XV11 Lidar (horizontal) | outC, in1, USB hub |                                                                                                                |

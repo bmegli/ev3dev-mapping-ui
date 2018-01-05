@@ -15,7 +15,7 @@ Other platforms may not work, need some tweaking or disabling some functionality
 
 ## Installation Instructions
 
-Required Unity Version: 5.6.2f1 or newer
+Required Unity Version: 2017.3.0f3 or newer
 
 1. Download [Unity](https://unity3d.com/)
 2. Clone the project with submodules
@@ -38,9 +38,11 @@ Mouse <kbd>LMB</kbd> rotates <kbd>RMB</kbd> pans <kbd>Wheel</kbd> for up down <k
 
 ### Other Recorded Sessions
 
-Change `Robot` -> `Robot Required` -> `Session Directory` to: `Body`, `Building`, `Faces`, `Room` or your own past session.
+Change `Robot` -> `Robot Required` -> `Session Directory` to: `Body`, `Building`, `Faces`, `Room`, `SnapshotTour` or your own past session.
 
 Then follow with <kbd>Play</kbd> button in Unity and <kbd>Replay</kbd> button in UI.
+
+You may also try FeatureExtraction scene with `NoisyRoom` or `SnapshotTour` sessions.
 
 ## Hardware
 

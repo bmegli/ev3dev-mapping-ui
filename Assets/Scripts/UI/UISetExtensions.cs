@@ -2,6 +2,13 @@
 using UnityEngine.UI;
 using System.Reflection;
 
+//fix for unity Extension methods requires `System.Runtime.CompilerServices.ExtensionAttribute'
+//see http://schoening.it/blog/solution-cannot-define-a-new-extension-method-because-the-compiler-required-type-system-runtime-compilerservices-extensionattribute-cannot-be-found-are-you-missing-a-reference-to-system-core-dll/
+namespace System.Runtime.CompilerServices
+{
+	public class ExtensionAttribute : Attribute { }
+}
+
 public static class UISetExtensions
 {
 	static MethodInfo toggleSetMethod;

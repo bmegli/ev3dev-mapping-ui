@@ -77,13 +77,6 @@ public abstract class RobotModule : MonoBehaviour, IComparable<RobotModule>
 		input = SafeGetComponentInParent<UserInput>().DeepCopy();
 	}
 
-	public abstract ulong GetFirstPacketTimestampUs();
-	protected abstract void StartReplay(int time_offset_us);
-	public virtual void StartReplay()
-	{
-		StartReplay(0);
-	}
-
 	protected T SafeInstantiate<T>(T original) where T : MonoBehaviour
 	{
 		if (original == null)

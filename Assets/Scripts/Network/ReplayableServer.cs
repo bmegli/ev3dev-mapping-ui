@@ -15,4 +15,11 @@ using System.Collections;
 
 public abstract class ReplayableServer : RobotModule
 {
+	//consider adding common class for ReplayableClient and ReplayableServer with those functions
+	public abstract ulong GetFirstPacketTimestampUs();
+	protected abstract void StartReplay(int time_offset_us);
+	public virtual void StartReplay()
+	{
+		StartReplay(0);
+	}
 }

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2016 Bartosz Meglicki <meglickib@gmail.com>
+ * Copyright (C) 2016-2018 Bartosz Meglicki <meglickib@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -20,6 +20,7 @@ namespace Ev3devMapping
 [Serializable]
 public class DriveModuleProperties : ModuleProperties
 {
+	public string program="ev3drive";
 	public int timeoutMs=500;
 }
 
@@ -279,7 +280,7 @@ public class Drive : ReplayableUDPClient<DrivePacket>
 
 	public override string ModuleCall()
 	{
-		return "ev3drive " + moduleNetwork.port + " " + module.timeoutMs;
+		return module.program + " " + moduleNetwork.port + " " + module.timeoutMs;
 	}
 	public override int ModulePriority()
 	{

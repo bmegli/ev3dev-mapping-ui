@@ -23,6 +23,7 @@ public enum PlotType {Local, Global, Map, GlobalWithMap}
 [Serializable]
 public class LaserModuleProperties : ModuleProperties
 {
+	public string program="ev3laser";
 	public string laserDevice = "/dev/tty_in1";
 	public string motorPort = "outC";
 	public int laserDutyCycle = 44;
@@ -472,7 +473,7 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 
 	public override string ModuleCall()
 	{
-		return "ev3laser " + module.laserDevice + " " + module.motorPort + " " + network.hostIp + " " + moduleNetwork.port + " " + module.laserDutyCycle + " " + module.crcTolerancePct;
+		return  module.program + " " + module.laserDevice + " " + module.motorPort + " " + network.hostIp + " " + moduleNetwork.port + " " + module.laserDutyCycle + " " + module.crcTolerancePct;
 	}
 	public override int ModulePriority()
 	{

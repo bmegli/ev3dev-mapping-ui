@@ -334,12 +334,20 @@ Prefab:
     - target: {fileID: 114000013585239938, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
       propertyPath: module.laserDutyCycle
-      value: 50
+      value: 45
       objectReference: {fileID: 0}
     - target: {fileID: 114000013585239938, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
       propertyPath: plot.plotType
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 401802, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
+      propertyPath: m_LocalScale.x
+      value: 0.297
+      objectReference: {fileID: 0}
+    - target: {fileID: 401802, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
+      propertyPath: m_LocalScale.z
+      value: 0.4285
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}

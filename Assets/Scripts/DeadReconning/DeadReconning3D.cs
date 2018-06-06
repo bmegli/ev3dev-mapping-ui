@@ -72,10 +72,8 @@ public class DeadReconning3D : ReplayableUDPServer<DeadReconning3DPacket>
 			actualPosition = thread_shared_position;
 			averagedPacketTimeMs = thread_shared_averaged_packet_time_ms;
 		}
-
 			
 		transform.parent.transform.position=actualPosition.position;
-		//transform.parent.transform.rotation=Quaternion.Euler(actualPosition.rotation);
 		transform.parent.transform.rotation=actualPosition.quaternion;
 	}
 
@@ -113,8 +111,7 @@ public class DeadReconning3D : ReplayableUDPServer<DeadReconning3DPacket>
 	}
 		
 	private PositionData EstimatePosition(PositionData lastPosition, DeadReconning3DPacket lastPacket, DeadReconning3DPacket packet)
-	{
-		/*
+	{		
 		// Calculate the linear displacement since last packet
 		float distance_per_encoder_count_mm = Mathf.PI * physics.wheelDiameterMm / physics.encoderCountsPerRotation;
 		float ldiff = packet.position_left - lastPacket.position_left;
@@ -124,25 +121,16 @@ public class DeadReconning3D : ReplayableUDPServer<DeadReconning3DPacket>
 		if (physics.reverseMotorPolarity)
 			displacement_m = -displacement_m;
 		
-		// Calculate the average heading from previous and current packet
-		float angle_start_deg = lastPacket.HeadingInDegrees;
-		float angle_end_deg = packet.HeadingInDegrees;
-		float angle_difference_deg = angle_end_deg - angle_start_deg;
+		Quaternion quat_act = new Quaternion (packet.quat_x, packet.quat_y, packet.quat_z, packet.quat_w);
+		Quaternion quat_avg = Quaternion.Lerp(lastPosition.quaternion, quat_act, 0.5f); 
 
-		// The tricky case when we cross 0 or -180/180 in packets has to be handled separately
-		if (Mathf.Abs(angle_difference_deg) > 180.0f)
-			angle_difference_deg = angle_difference_deg -  Mathf.Sign(angle_difference_deg) * 360.0f;
-
-		float average_heading_rad = (angle_start_deg + initialHeading + angle_difference_deg / 2.0f) * Constants.DEG2RAD;
-		*/
+		Vector3 forward = quat_avg * Vector3.forward;
+		Vector3 displacement = displacement_m * forward;
 
 		// Finally update the position and heading
 		lastPosition.timestamp = packet.timestamp_us;
-		//lastPosition.position = new Vector3(lastPosition.position.x + displacement_m * Mathf.Sin(average_heading_rad), lastPosition.position.y, lastPosition.position.z + displacement_m * Mathf.Cos(average_heading_rad));
-		lastPosition.position = Vector3.zero;
-		//lastPosition.heading = angle_end_deg + initialHeading;
+		lastPosition.position = lastPosition.position + displacement;
 		lastPosition.quaternion.Set(packet.quat_x, packet.quat_y, packet.quat_z, packet.quat_w);
-		//lastPosition.rotation = new Vector3(packet.euler_x, packet.euler_y, packet.euler_z);
 
 		return lastPosition;
 	}

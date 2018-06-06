@@ -20,7 +20,13 @@ public struct PositionData : System.IComparable<PositionData>
 {
 	public ulong timestamp;
 	public Vector3 position;
-	public float heading;
+	public Vector3 rotation;
+	public Quaternion quaternion;
+
+	public float heading {
+		get {return rotation.y; }
+		set {rotation = new Vector3(rotation.x, value, rotation.z); }
+	}
 
 	public int CompareTo(PositionData other)
 	{
@@ -29,7 +35,7 @@ public struct PositionData : System.IComparable<PositionData>
 
 	public override string ToString()
 	{
-		return string.Format("ts={0} ps={1} hd={2}", timestamp, position, heading);
+		return string.Format("ts={0} ps={1} hd={2}", timestamp, position, rotation.y);
 	}
 }
 

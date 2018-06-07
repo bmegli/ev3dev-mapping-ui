@@ -141,6 +141,8 @@ public sealed class PositionHistory : MonoBehaviour
 
 				pos.heading = data[before].heading + at * angle_difference;
 
+				pos.quaternion = Quaternion.Lerp(data[before].quaternion, data[after].quaternion, at);
+
 				return pos;
 			}
 			catch(System.Exception) {

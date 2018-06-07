@@ -315,7 +315,8 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 	
 			pos = snapshot.PositionAt(timestamps[ind]);
 
-			robotToGlobal.SetTRS(pos.position, Quaternion.Euler(0.0f, pos.heading, 0.0f), scale);
+			//robotToGlobal.SetTRS(pos.position, Quaternion.Euler(0.0f, pos.heading, 0.0f), scale);
+			robotToGlobal.SetTRS(pos.position, pos.quaternion, scale);
 			readings[ind]=robotToGlobal.MultiplyPoint3x4(readings[ind]);
 		}
 			

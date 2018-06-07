@@ -354,7 +354,7 @@ Prefab:
     - target: {fileID: 114000013339424578, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
       propertyPath: MaxLinearSpeedMmPerSec
-      value: 500
+      value: 300
       objectReference: {fileID: 0}
     - target: {fileID: 114000013339424578, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
@@ -399,12 +399,12 @@ Prefab:
     - target: {fileID: 114000013585239938, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
       propertyPath: module.laserDutyCycle
-      value: 35
+      value: 38
       objectReference: {fileID: 0}
     - target: {fileID: 114000013585239938, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
       propertyPath: plot.plotType
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 401802, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
       propertyPath: m_LocalScale.x
@@ -432,7 +432,7 @@ Prefab:
     - target: {fileID: 114000013608529052, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
       propertyPath: plot.plotType
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 114000013608529052, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}

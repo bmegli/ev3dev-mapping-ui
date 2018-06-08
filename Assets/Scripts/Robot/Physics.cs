@@ -8,7 +8,7 @@ public class Physics : MonoBehaviour
 {
 	public float wheelDiameterMm=43.2f;
 	public float wheelbaseMm=250.0f;
-	public int encoderCountsPerRotation=360;
+	public float encoderCountsPerRotation=360.0f;
 	public int maxEncoderCountsPerSecond=1000;
 	public bool reverseMotorPolarity=false;
 

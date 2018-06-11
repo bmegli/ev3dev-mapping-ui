@@ -280,7 +280,8 @@ public class Drive : ReplayableUDPClient<DrivePacket>
 
 	public override string ModuleCall()
 	{
-		return module.program + " " + moduleNetwork.port + " " + module.timeoutMs;
+		//hardocoded arguments for ccdrive!
+		return module.program + " " + "/dev/ttyO1" + " " + moduleNetwork.port + " " + "/dev/ttyACM0" + " " + network.hostIp  + " " + "8013" +  " " + module.timeoutMs;
 	}
 	public override int ModulePriority()
 	{

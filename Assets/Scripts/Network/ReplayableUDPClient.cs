@@ -132,7 +132,6 @@ public abstract class ReplayableUDPClient<DATAGRAM> : ReplayableClient
 	protected void InitRecordTo(string filename)
 	{
 		print(name + " - dumping packets to '" + filename + "'");
-		Directory.CreateDirectory(Config.DUMPS_DIRECTORY);
 		Directory.CreateDirectory(Config.DumpPath(robot.sessionDirectory, transform.parent.name));
 		client.InitRecordTo(filename);
 	}

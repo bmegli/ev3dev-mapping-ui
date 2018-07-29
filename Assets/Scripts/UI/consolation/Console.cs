@@ -83,13 +83,14 @@ namespace Consolation
 
 		void Update ()
 		{
-			if (Input.GetKeyDown(toggleKey)) {
+			if (Input.GetKeyDown(toggleKey))
 				visible = !visible;
-			}
 
-			if (shakeToOpen && Input.acceleration.sqrMagnitude > shakeAcceleration) {
-				visible = true;
-			}
+			if (Input.GetButtonDown("Fire1"))
+				visible = !visible;
+
+			if (shakeToOpen && Input.acceleration.sqrMagnitude > shakeAcceleration)
+				visible = !visible;
 		}
 
 		void OnGUI ()

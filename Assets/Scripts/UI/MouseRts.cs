@@ -39,7 +39,7 @@ public class MouseRts : MonoBehaviour
 		Camera camera = GetComponent<Camera>();
 	
 		// Zoom in or out
-		var zoomDelta = Input.GetAxis("Mouse ScrollWheel")*ZoomSpeed*Time.deltaTime;
+		var zoomDelta = - Input.GetAxis("Zoom")*ZoomSpeed*Time.deltaTime;
 		if (zoomDelta!=0)
 			translation -= Vector3.up * ZoomSpeed * zoomDelta;
 		
@@ -47,8 +47,8 @@ public class MouseRts : MonoBehaviour
 		pan = Mathf.Clamp(pan, PanAngleMin, PanAngleMax);
 
 		//Rotate around Y axis
-		if (Input.GetMouseButton(0)) // LMB
-			yrotation -=  Input.GetAxis("Mouse X") * RotationSpeed * Time.deltaTime;
+		//if (Input.GetMouseButton(0)) // LMB
+			yrotation +=  Input.GetAxis("Rotate") * RotationSpeed * Time.deltaTime;
 
 		// Start panning camera if zooming in close to the ground or if just zooming out.
 //		Vector3 forward = GetComponent<Camera>().transform.forward;
@@ -59,13 +59,13 @@ public class MouseRts : MonoBehaviour
 	//	translation += new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")) * Time.deltaTime * ScrollSpeed;
 
 		// Move camera with mouse
-		if (Input.GetMouseButton(1)) // RMB
+//		if (Input.GetMouseButton(1)) // RMB
 		{
 			// Hold button and drag camera around
-			translation -= new Vector3(Input.GetAxis("Mouse X") * DragSpeed * Time.deltaTime, 0, 
-				Input.GetAxis("Mouse Y") * DragSpeed * Time.deltaTime);
+			translation += new Vector3(Input.GetAxis("Mouse X") * DragSpeed * Time.deltaTime, 0, 
+				- Input.GetAxis("Mouse Y") * DragSpeed * Time.deltaTime);
 		}
-		else
+//		else
 		{
 			/*
 			// Move camera if mouse pointer reaches screen borders

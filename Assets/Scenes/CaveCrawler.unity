@@ -187,6 +187,11 @@ Prefab:
       propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114000013377491482, guid: 7f06da13b2f46d746b6fc95626d32620,
+        type: 2}
+      propertyPath: shakeToOpen
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7f06da13b2f46d746b6fc95626d32620, type: 2}
   m_IsPrefabParent: 0
@@ -354,22 +359,22 @@ Prefab:
     - target: {fileID: 114000013339424578, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
       propertyPath: MaxLinearSpeedMmPerSec
-      value: 350
+      value: 450
       objectReference: {fileID: 0}
     - target: {fileID: 114000013339424578, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
       propertyPath: MaxAngularSpeedDegPerSec
-      value: 60
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 114000013934419876, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
       propertyPath: robotIp
-      value: 192.168.1.107
+      value: 192.168.8.1
       objectReference: {fileID: 0}
     - target: {fileID: 114000013934419876, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
       propertyPath: hostIp
-      value: 192.168.1.80
+      value: 192.168.8.100
       objectReference: {fileID: 0}
     - target: {fileID: 114000012465450012, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
@@ -399,7 +404,7 @@ Prefab:
     - target: {fileID: 114000013585239938, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
       propertyPath: module.laserDutyCycle
-      value: 37
+      value: 33
       objectReference: {fileID: 0}
     - target: {fileID: 114000013585239938, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
@@ -437,7 +442,7 @@ Prefab:
     - target: {fileID: 114000013608529052, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
       propertyPath: module.laserDutyCycle
-      value: 29
+      value: 28
       objectReference: {fileID: 0}
     - target: {fileID: 1000012653361042, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
       propertyPath: m_IsActive
@@ -466,6 +471,16 @@ Prefab:
     - target: {fileID: 4000010463103654, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
       propertyPath: m_LocalPosition.y
       value: 0.07
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000010667919226, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
+        type: 2}
+      propertyPath: packetDelayMs
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000010667919226, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
+        type: 2}
+      propertyPath: moduleNetwork.port
+      value: 9152
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
@@ -587,6 +602,21 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4000012579884992, guid: dcf44ebd51c01a043bd5a69921978e64, type: 2}
       propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000010135716272, guid: dcf44ebd51c01a043bd5a69921978e64,
+        type: 2}
+      propertyPath: RotationSpeed
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000010135716272, guid: dcf44ebd51c01a043bd5a69921978e64,
+        type: 2}
+      propertyPath: ZoomSpeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000010135716272, guid: dcf44ebd51c01a043bd5a69921978e64,
+        type: 2}
+      propertyPath: PanSpeed
       value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []

@@ -54,8 +54,6 @@ namespace Ev3devMapping
 		{
 			return PREFIX + SNAPSHOTS_DIRECTORY + "/" + snap_dir + "/" + snap_subdir + "/" + snap_file + ".csv";
 		}
-
-
 	}
 
 } //namespace

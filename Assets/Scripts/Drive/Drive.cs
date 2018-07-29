@@ -41,7 +41,7 @@ public class Drive : ReplayableUDPClient<DrivePacket>
 	{
 		StopBacktrack();
 		base.OnDestroy ();
-		File.Delete(GetBacktrackFilename());
+	//	File.Delete(GetBacktrackFilename());
 		if (!replay.ReplayAny() && !replay.RecordOutbound())
 			File.Delete(GetRecordFilename());
 	}
@@ -50,8 +50,8 @@ public class Drive : ReplayableUDPClient<DrivePacket>
 	{		
 		base.Awake ();
 
-		if (!replay.ReplayAny () && !replay.RecordOutbound ())
-			InitRecordTo (GetRecordFilename());
+		//if (!replay.ReplayAny () && !replay.RecordOutbound ())
+			//InitRecordTo (GetRecordFilename());
 		
 		CheckLimits();
 	}
@@ -96,13 +96,13 @@ public class Drive : ReplayableUDPClient<DrivePacket>
 		else if (mode == DriveMode.Manual)
 		{
 			packet.command = DrivePacket.Commands.SET_SPEED;
-			InputToEngineSpeeds (Input.GetAxis(input.horizontal), Input.GetAxis(input.vertical), (1.0f-input.accelerationPower) + input.accelerationPower *Input.GetAxis(input.acceleration), out packet.param1,out packet.param2);
+			InputToEngineSpeeds (Input.GetAxis(input.horizontal), Input.GetAxis(input.vertical), (1.0f-input.accelerationPower) + input.accelerationPower *(Input.GetAxis(input.acceleration)+1)/2.0f, out packet.param1,out packet.param2);
 		}
 
 		Send(packet);	
 		timeSinceLastPacketMs = 0.0f;
 	}
-
+		
 	public bool IsManualInput()
 	{
 		return (Input.GetAxis ("Horizontal") != 0.0f || Input.GetAxis ("Vertical") != 0);

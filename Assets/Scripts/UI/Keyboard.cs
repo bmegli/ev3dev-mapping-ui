@@ -10,6 +10,9 @@ public class Keyboard : MonoBehaviour
 	{
 		if (Input.GetKeyDown (KeyCode.Escape))
 			SceneManager.Instance.ToggleShowUI ();
+
+		if (Input.GetButtonDown("Fire1"))
+			SceneManager.Instance.ToggleShowUI ();
 	}
 }
 

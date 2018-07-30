@@ -284,4 +284,9 @@ public class Control : ReplayableTCPClient<ControlMessage>
 	}
 
 	#endregion
+
+	public bool ReplayAny()
+	{
+		return replay.ReplayAny();
+	}
 }

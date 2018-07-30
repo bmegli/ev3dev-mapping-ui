@@ -26,7 +26,6 @@ public class SceneManager : MonoBehaviour
 	private Transform dynamicObjects;
 	private GameObject uiCanvas;
 	private GameObject robotsPanel;
-	private GameObject settings;
 
 	public static SceneManager Instance { get; private set; }
 
@@ -47,7 +46,7 @@ public class SceneManager : MonoBehaviour
 
 	public static GameObject Settings
 	{
-		get{ return Instance.settings;}
+		get{ return GameObject.Find ("Settings");}
 	}
 
 	private void Destroy()
@@ -66,7 +65,6 @@ public class SceneManager : MonoBehaviour
 		dynamicObjects = new GameObject("DynamicObjects").transform;
 		uiCanvas = GameObject.Find("UICanvas");
 		robotsPanel = GameObject.Find("RobotsPanel");
-		settings = GameObject.Find ("Settings");
 	}
 
 	public void ToggleShowUI()

@@ -59,18 +59,19 @@ public class ControlUI : MonoBehaviour
 			takeSnapshotButton.onClick.AddListener(OnSnapshotButtonClicked);
 			takeSnapshotButton.GetComponentInChildren<Text>().text = "snapshot";		
 		}
+	}
 
-		if (GetComponentInParent<Replay>().ReplayAny())
+	protected virtual void Start ()
+	{
+		control = GetComponent<Control>();
+
+		if (control.ReplayAny())
 		{
 			replayButton = SafeInstantiate<Button>(ModuleButton, uiTransform);
 			replayButton.onClick.AddListener(OnReplayButtonClicked);
 			replayButton.GetComponentInChildren<Text>().text = "replay";
 		}
-	}
-		
-	protected virtual void Start ()
-	{
-		control = GetComponent<Control>();
+
 		moduleName.text = transform.parent.name;
 
 		uiTransform.SetParent(modulesPanel, false);

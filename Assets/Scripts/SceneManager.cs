@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2016 Bartosz Meglicki <meglickib@gmail.com>
+ * Copyright (C) 2016-2018 Bartosz Meglicki <meglickib@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -10,6 +10,13 @@
  * GNU General Public License for more details.
  */
 
+/*
+ * This class provides strongly typed access to game objects
+ * that should be available on robot scene.
+ *
+ * (e.g. DynamicObjects list, UI Panel, Settings from MainMenu scene)
+*/
+
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -19,6 +26,7 @@ public class SceneManager : MonoBehaviour
 	private Transform dynamicObjects;
 	private GameObject uiCanvas;
 	private GameObject robotsPanel;
+	private GameObject settings;
 
 	public static SceneManager Instance { get; private set; }
 
@@ -37,6 +45,11 @@ public class SceneManager : MonoBehaviour
 		get{ return Instance.uiCanvas.transform; }
 	}
 
+	public static GameObject Settings
+	{
+		get{ return Instance.settings;}
+	}
+
 	private void Destroy()
 	{
 		Instance = null;
@@ -53,6 +66,7 @@ public class SceneManager : MonoBehaviour
 		dynamicObjects = new GameObject("DynamicObjects").transform;
 		uiCanvas = GameObject.Find("UICanvas");
 		robotsPanel = GameObject.Find("RobotsPanel");
+		settings = GameObject.Find ("Settings");
 	}
 
 	public void ToggleShowUI()
@@ -60,4 +74,3 @@ public class SceneManager : MonoBehaviour
 		uiCanvas.SetActive(!uiCanvas.activeSelf);
 	}
 }
-	

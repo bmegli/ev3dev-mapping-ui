@@ -17,6 +17,9 @@ using CircularBuffer;
 using System;
 
 
+namespace Ev3devMapping
+{
+
 public enum WifiPlotType {None, Map}
 
 [Serializable]
@@ -228,5 +231,6 @@ public class Wifi : ReplayableUDPServer<WifiPacket>
 	}
 
 	#endregion
-
 }
+
+} //namespace

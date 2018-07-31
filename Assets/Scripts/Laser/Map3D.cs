@@ -15,6 +15,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
+namespace Ev3devMapping
+{
+
 public class Map3D : MonoBehaviour
 {
 	public PointCloud mapPointCloud;
@@ -80,5 +83,6 @@ public class Map3D : MonoBehaviour
 		pointCloudContainer = new GameObject(transform.parent.name + name).transform;
 		pointCloudContainer.parent = SceneManager.DynamicObjects;
 	}
-
 }
+
+} //namespace

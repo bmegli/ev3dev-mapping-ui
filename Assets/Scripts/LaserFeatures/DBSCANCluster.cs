@@ -13,7 +13,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-	
+
+namespace Ev3devMapping
+{
+
 /// <summary>
 /// DBSCAN data wrapper for cluster without copying the actual data 
 /// </summary>
@@ -211,3 +214,5 @@ public class DBSCANCluster : IList<ScanPoint>, IList
 		}
 	}
 }
+
+} //namespace

@@ -21,6 +21,9 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 
+namespace Ev3devMapping
+{
+
 [Serializable]
 public class ControlProperties
 {
@@ -290,3 +293,5 @@ public class Control : ReplayableTCPClient<ControlMessage>
 		return replay.ReplayAny();
 	}
 }
+
+} //namespace

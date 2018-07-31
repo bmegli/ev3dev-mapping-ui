@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+namespace Ev3devMapping
+{
+
 public class Keyboard : MonoBehaviour
 {
 	void Update ()
@@ -9,3 +12,5 @@ public class Keyboard : MonoBehaviour
 			SceneManager.Instance.ToggleShowUI ();
 	}
 }
+
+} //namespace

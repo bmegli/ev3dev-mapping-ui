@@ -15,6 +15,9 @@ using UnityEngine;
 using System.Collections;
 using System.IO;
 
+namespace Ev3devMapping
+{
+
 public abstract class ReplayableTCPClient<MESSAGE> : ReplayableClient
 	where MESSAGE : IMessage, new()
 {
@@ -141,3 +144,5 @@ public abstract class ReplayableTCPClient<MESSAGE> : ReplayableClient
 		return client.GetFirstReplayTimestamp();
 	}
 }
+
+} //namespace

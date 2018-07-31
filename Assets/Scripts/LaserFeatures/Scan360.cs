@@ -14,6 +14,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace Ev3devMapping
+{
+
 public class ScanPoint
 {
 	public Vector3 Point { get; set;}
@@ -98,3 +101,5 @@ public class Scan360
 			readings[i].Angle=TotalLeastSquares.Fit(readings, i - 1, i + 1, index1, index2, true).angle; 
 	}		
 }
+
+} //namespace

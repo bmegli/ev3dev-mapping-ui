@@ -14,6 +14,9 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.IO;
 
+namespace Ev3devMapping
+{
+
 public abstract class ReplayableUDPServer<DATAGRAM> : ReplayableServer
 	where DATAGRAM : IDatagram, new()
 {
@@ -127,3 +130,5 @@ public abstract class ReplayableUDPServer<DATAGRAM> : ReplayableServer
 	}
 
 }
+
+} //namespace

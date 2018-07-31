@@ -13,6 +13,9 @@
 using UnityEngine;
 using System.Collections;
 
+namespace Ev3devMapping
+{
+
 public abstract class ReplayableClient : RobotModule
 {
 	//consider adding common class for ReplayableClient and ReplayableServer with those functions
@@ -23,3 +26,5 @@ public abstract class ReplayableClient : RobotModule
 		StartReplay(0);
 	}
 }
+
+} //namespace

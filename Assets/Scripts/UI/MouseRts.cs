@@ -3,6 +3,9 @@
 
 using UnityEngine;
 
+namespace Ev3devMapping
+{
+
 public class MouseRts : MonoBehaviour
 {
 	public int LevelArea = 100;
@@ -102,3 +105,5 @@ public class MouseRts : MonoBehaviour
 		
 	}
 }
+
+} //namespace

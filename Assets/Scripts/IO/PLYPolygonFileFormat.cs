@@ -17,6 +17,9 @@ using UnityEngine;
 
 //to do - encode in big or little endian specifically!
 
+namespace Ev3devMapping
+{
+
 public static class PLYPolygonFileFormat
 {
 	public static void EmitHeader(BinaryWriter bw, int vertices, string comment)
@@ -55,3 +58,5 @@ public static class PLYPolygonFileFormat
 		return System.Text.Encoding.ASCII.GetBytes(s);
 	}
 }
+
+} //namespace

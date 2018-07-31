@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+namespace Ev3devMapping
+{
+
 [RequireComponent (typeof (Network))]
 [RequireComponent (typeof (Replay))]
 [RequireComponent (typeof (PositionHistory))]
@@ -18,3 +21,5 @@ public class RobotRequired : MonoBehaviour
 		return other;
 	}
 }
+
+} //namespace

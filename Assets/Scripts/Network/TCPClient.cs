@@ -19,6 +19,9 @@ using System;
 
 using UnityEngine;
 
+namespace Ev3devMapping
+{
+
 public enum TCPClientState {Disconnected, Connecting, Connected, Idle};
 
 public class TCPClient<MESSAGE> 
@@ -271,3 +274,4 @@ public class TCPClient<MESSAGE>
 	}
 }
 
+} //namespace

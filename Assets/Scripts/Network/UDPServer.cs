@@ -17,6 +17,9 @@ using System.Threading;
 using System.IO;
 using UnityEngine;
 
+namespace Ev3devMapping
+{
+
 public delegate void DatagramHandler<DATAGRAM>(DATAGRAM data); 
 
 public class UDPServer<DATAGRAM> 
@@ -135,6 +138,6 @@ public class UDPServer<DATAGRAM>
 		avgPacketTimeMs += (timeDiffMs - avgPacketTimeMs) * Constants.ExponentialSmoothingAlpha; 
 		lastPacketTimeUs = currentUs;
 	}
-
-
 }
+
+} //namespace

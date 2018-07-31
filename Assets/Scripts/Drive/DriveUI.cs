@@ -14,6 +14,9 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 
+namespace Ev3devMapping
+{
+
 public class DriveUI : ModuleUI
 {
 	private Drive drive;
@@ -73,3 +76,5 @@ public class DriveUI : ModuleUI
 		base.Update();
 	}
 }
+
+} //namespace

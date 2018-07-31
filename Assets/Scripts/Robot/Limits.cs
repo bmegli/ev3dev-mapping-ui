@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+namespace Ev3devMapping
+{
+
 public class Limits : MonoBehaviour
 {
 	public float MaxLinearSpeedMmPerSec=200;
@@ -16,7 +19,6 @@ public class Limits : MonoBehaviour
 		Limits other = (Limits) this.MemberwiseClone();
 		return other;
 	}
-
-
-
 }
+
+} //namespace

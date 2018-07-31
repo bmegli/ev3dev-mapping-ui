@@ -14,6 +14,9 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 
+namespace Ev3devMapping
+{
+
 public class ControlUI : MonoBehaviour
 {
 	public Transform UiTransform;
@@ -165,7 +168,6 @@ public class ControlUI : MonoBehaviour
 		return instantiated;
 	}
 
-
-
-
 }
+
+} //namespace

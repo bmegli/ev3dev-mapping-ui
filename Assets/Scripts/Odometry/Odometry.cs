@@ -14,6 +14,9 @@ using UnityEngine;
 using System.Collections;
 using System;
 
+namespace Ev3devMapping
+{
+
 // we want to keep binary compatiblity between DeadReconning and Odometry
 // so that we can rebuild recorded DeadReconning as Odometry (skipping information about heading)
 using OdometryPacket = DeadReconningPacket;
@@ -181,3 +184,5 @@ public class Odometry : ReplayableUDPServer<OdometryPacket>
 
 	#endregion
 }
+
+} //namespace

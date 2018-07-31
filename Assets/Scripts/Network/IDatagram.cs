@@ -10,6 +10,9 @@
  * GNU General Public License for more details.
  */
 
+namespace Ev3devMapping
+{
+
 public interface IDatagram
 {
 	void FromBinary(System.IO.BinaryReader reader);
@@ -17,3 +20,5 @@ public interface IDatagram
 	int BinarySize();
 	ulong GetTimestampUs();
 }
+
+} //namespace

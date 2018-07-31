@@ -28,6 +28,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+namespace Ev3devMapping
+{
+
 [RequireComponent (typeof (RobotRequired))]
 public class RobotSettings : MonoBehaviour
 {		
@@ -70,3 +73,5 @@ public class RobotSettings : MonoBehaviour
 		return GameObject.Find (gameObjectName).GetComponent<Dropdown>().value;
 	}
 }
+
+} //namespace

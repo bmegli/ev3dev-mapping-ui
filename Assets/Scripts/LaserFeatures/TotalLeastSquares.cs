@@ -14,6 +14,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace Ev3devMapping
+{
+
 public struct TotalLeastSquaresFit
 {
 	public float angle;
@@ -84,3 +87,5 @@ public static class TotalLeastSquares
 		return (r < 0) ? r+m : r;
 	}
 }
+
+} //namespace

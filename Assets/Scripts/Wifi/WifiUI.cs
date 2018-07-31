@@ -15,6 +15,9 @@ using System;
 using System.Collections;
 using UnityEngine.UI;
 
+namespace Ev3devMapping
+{
+
 public class WifiUI : ModuleUI
 {
 	public Slider SignalSlider;
@@ -82,3 +85,5 @@ public class WifiUI : ModuleUI
 		SetSignalSliderFillColor(signalDbm);
 	}
 }
+
+} //namespace

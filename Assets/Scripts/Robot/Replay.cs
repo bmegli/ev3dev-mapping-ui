@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+namespace Ev3devMapping
+{
+
 public enum ReplayMode {None, RecordIn, ReplayIn, RecordOut, ReplayOut, RecordInRecordOut, RecordInReplayOut};
 
 public class Replay : MonoBehaviour
@@ -34,3 +37,5 @@ public class Replay : MonoBehaviour
 		return other;
 	}
 }
+
+} //namespace

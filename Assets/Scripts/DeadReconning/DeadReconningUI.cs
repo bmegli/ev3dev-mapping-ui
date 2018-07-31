@@ -14,6 +14,9 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 
+namespace Ev3devMapping
+{
+
 public class DeadReconningUI : ModuleUI
 {
 	private Text ppsText;
@@ -48,3 +51,5 @@ public class DeadReconningUI : ModuleUI
 		headingText.text= string.Format("head {0:+##0.0;-##0.0}", deadReconning.GetHeading());
 	}
 }
+
+} //namespace

@@ -15,6 +15,9 @@ using System.Collections;
 using System;
 using System.IO;
 
+namespace Ev3devMapping
+{
+
 public enum PlotType {Local, Global, Map, GlobalWithMap}
 
 [Serializable]
@@ -485,5 +488,6 @@ public class Laser : ReplayableUDPServer<LaserPacket>
 	}
 
 	#endregion
-
 }
+
+} //namespace

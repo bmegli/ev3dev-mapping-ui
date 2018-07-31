@@ -12,6 +12,9 @@
 
 using System;
 
+namespace Ev3devMapping
+{
+
 public class Timestamp
 {
 	public static ulong TimestampUs()
@@ -20,3 +23,4 @@ public class Timestamp
 	}
 }
 
+} //namespace

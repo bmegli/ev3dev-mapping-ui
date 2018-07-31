@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+namespace Ev3devMapping
+{
+
 public class UserInput : MonoBehaviour
 {
 	public string horizontal="Horizontal";
@@ -27,3 +30,5 @@ public class UserInput : MonoBehaviour
 		return other;
 	}
 }
+
+} //namespace

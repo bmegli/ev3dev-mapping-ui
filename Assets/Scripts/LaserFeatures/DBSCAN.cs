@@ -14,6 +14,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+namespace Ev3devMapping
+{
+
 /// <summary>
 /// Density Based Scan implementation
 /// </summary>
@@ -173,3 +176,5 @@ public class DBSCAN
 	}
 	*/
 }
+
+} //namespace

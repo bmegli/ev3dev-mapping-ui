@@ -14,6 +14,9 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 
+namespace Ev3devMapping
+{
+
 public class LaserUI : ModuleUI
 {
 	private Text ppsText;
@@ -65,3 +68,5 @@ public class LaserUI : ModuleUI
 		
 	}
 }
+
+} //namespace

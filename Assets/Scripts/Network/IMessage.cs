@@ -13,6 +13,9 @@
 using System;
 using System.Net.Sockets;
 
+namespace Ev3devMapping
+{
+
 public interface IMessage
 {
 	void FromBinary(System.IO.BinaryReader reader);
@@ -25,4 +28,5 @@ public interface IMessage
 
 }
 
+} //namespace
 

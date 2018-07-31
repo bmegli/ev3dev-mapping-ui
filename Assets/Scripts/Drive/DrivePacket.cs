@@ -12,6 +12,9 @@
 
 using System.Net;
 
+namespace Ev3devMapping
+{
+
 public class DrivePacket : IDatagram
 {
 	public enum Commands : short {KEEPALIVE=0, SET_SPEED=1, TO_POSITION_WITH_SPEED};
@@ -56,5 +59,6 @@ public class DrivePacket : IDatagram
 	{
 		return timestamp_us;
 	}
-
 }
+
+} //namespace

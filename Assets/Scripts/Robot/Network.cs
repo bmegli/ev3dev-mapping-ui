@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+namespace Ev3devMapping
+{
+
 public class Network : MonoBehaviour
 {
 	public string hostIp="192.168.0.103";
@@ -14,3 +17,5 @@ public class Network : MonoBehaviour
 		return other;
 	}
 }
+
+} //namespace

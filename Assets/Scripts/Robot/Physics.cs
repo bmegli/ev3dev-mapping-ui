@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+namespace Ev3devMapping
+{
+
 public class Physics : MonoBehaviour
 {
 	public float wheelDiameterMm=43.2f;
@@ -23,5 +26,6 @@ public class Physics : MonoBehaviour
 		Physics other = (Physics) this.MemberwiseClone();
 		return other;
 	}
-
 }
+
+} //namespace

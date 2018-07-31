@@ -22,6 +22,9 @@ using System;
 using System.Net;
 using System.IO;
 
+namespace Ev3devMapping
+{
+
 public enum ControlCommands : sbyte {KEEPALIVE=0, ENABLE=1, DISABLE=2, DISABLE_ALL=3, ENABLED=-1, DISABLED=-2, FAILED=-3 };
 public enum ControlAttributes : byte {UNIQUE_NAME=0, CALL=1, CRATION_DELAY_MS=2, RETURN_VALUE=3};
 
@@ -428,3 +431,5 @@ public class ControlAttributeUnknown : ControlAttribute
 		return data;
 	}
 }
+
+} //namespace

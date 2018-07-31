@@ -15,6 +15,9 @@ using System.Collections;
 using CircularBuffer;
 using System;
 
+namespace Ev3devMapping
+{
+
 [Serializable]
 public class PositionHistoryProperties
 {
@@ -148,3 +151,5 @@ public sealed class PositionHistory : MonoBehaviour
 		}
 	}
 }
+
+} //namespace

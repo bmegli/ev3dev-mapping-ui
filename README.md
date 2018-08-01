@@ -34,7 +34,7 @@ The easiest way to start is working with recorded UDP communication:
 
 If all went well you should see a moving yellow brick and the readings as they were collected.
 
-Mouse <kbd>LMB</kbd> rotates <kbd>RMB</kbd> pans <kbd>Wheel</kbd> for up down <kbd>~</kbd> shows/hides console <kbd>Esc</kbd> shows/hides UI.
+Mouse <kbd>LMB</kbd> moves <kbd>RMB</kbd> rotates <kbd>Wheel</kbd> for up down <kbd>~</kbd> shows/hides console <kbd>Esc</kbd> shows/hides UI.
 
 ### Other Recorded Sessions
 

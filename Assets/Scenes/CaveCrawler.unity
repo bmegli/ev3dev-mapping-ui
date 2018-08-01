@@ -399,7 +399,7 @@ Prefab:
     - target: {fileID: 114000013585239938, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
       propertyPath: module.laserDutyCycle
-      value: 37
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 114000013585239938, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
@@ -437,7 +437,7 @@ Prefab:
     - target: {fileID: 114000013608529052, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
       propertyPath: module.laserDutyCycle
-      value: 29
+      value: 28
       objectReference: {fileID: 0}
     - target: {fileID: 1000012653361042, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
       propertyPath: m_IsActive

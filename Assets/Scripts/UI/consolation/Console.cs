@@ -26,7 +26,7 @@ namespace Consolation
 		/// <summary>
 		/// Whether to open the window by shaking the device (mobile-only).
 		/// </summary>
-		public bool shakeToOpen = true;
+		public bool shakeToOpen = false;
 
 		/// <summary>
 		/// The (squared) acceleration above which the window should open.
@@ -88,7 +88,7 @@ namespace Consolation
 			}
 
 			if (shakeToOpen && Input.acceleration.sqrMagnitude > shakeAcceleration) {
-				visible = true;
+				visible = !visible;
 			}
 		}
 

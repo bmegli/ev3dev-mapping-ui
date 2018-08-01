@@ -24,6 +24,11 @@ namespace Consolation
 		public KeyCode toggleKey = KeyCode.BackQuote;
 
 		/// <summary>
+		/// The button to show and hide the console window.
+		/// </summary>
+		public string toggleButton="Fire1";
+
+		/// <summary>
 		/// Whether to open the window by shaking the device (mobile-only).
 		/// </summary>
 		public bool shakeToOpen = false;
@@ -86,6 +91,9 @@ namespace Consolation
 			if (Input.GetKeyDown(toggleKey)) {
 				visible = !visible;
 			}
+
+			if (Input.GetButtonDown (toggleButton))
+				visible = !visible;
 
 			if (shakeToOpen && Input.acceleration.sqrMagnitude > shakeAcceleration) {
 				visible = !visible;

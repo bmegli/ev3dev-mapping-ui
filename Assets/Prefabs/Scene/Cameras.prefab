@@ -137,8 +137,8 @@ MonoBehaviour:
   LevelArea: 15
   ScrollArea: 0
   ScrollSpeed: 3
-  DragSpeed: 20
-  ZoomSpeed: 20
+  DragSpeed: 10
+  ZoomSpeed: 100
   ZoomMin: 0.5
   ZoomMax: 10
   PanSpeed: 20

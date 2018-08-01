@@ -24,11 +24,20 @@ public class MouseRts : MonoBehaviour
 
 	public int RotationSpeed=100;
 
-	public float TouchRotationMinMagSquared = 1; 
+	public float TouchRotationMinMagSquared = 1f; 
 	public float TouchRotationMinAngle = 0.1f;
 
 	private bool touchRotating = false;
 	private Vector2 touchRotationStart = Vector2.zero;
+
+	public float MobileUpDownScale = 0.03f;
+	public float MobileRotateScale = 0.5f;
+	public float MobileMoveScale = 0.5f;
+
+	public float TouchUpDownScale = 0.15f;
+	public float TouchRotateScale = 0.015f;
+	public float TouchMoveScale = 1f;
+
 
 	private float yrotation;
 
@@ -51,11 +60,11 @@ public class MouseRts : MonoBehaviour
 		float xrotation = transform.eulerAngles.x - zoomDelta * PanSpeed;
 		xrotation = Mathf.Clamp(xrotation, PanAngleMin, PanAngleMax);
 
-		yrotation += CameraRotation();
+		yrotation += CameraRotation() * RotationSpeed;
 
 		transform.eulerAngles = new Vector3(0, yrotation, 0);
 
-		translation += CameraMovement();
+		translation += CameraMovement() * DragSpeed;
 
 		// Keep camera within level and zoom area
 		Vector3 desiredPosition = transform.position + transform.TransformDirection(translation);
@@ -76,7 +85,7 @@ public class MouseRts : MonoBehaviour
 		float delta=0f;
 
 		#if UNITY_STANDALONE
-		delta= Input.GetAxis("Mouse ScrollWheel")*ZoomSpeed*Time.deltaTime;
+		delta = Input.GetAxis("Mouse ScrollWheel")*Time.deltaTime;
 		#else
 		if (Input.touchCount == 2)
 		{
@@ -90,9 +99,12 @@ public class MouseRts : MonoBehaviour
 			float touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
 
 			float deltaMagnitudeDiff = (prevTouchDeltaMag - touchDeltaMag)/Mathf.Sqrt(Screen.width*Screen.width + Screen.height*Screen.height);
-
-			delta = deltaMagnitudeDiff;
+				 
+			delta = deltaMagnitudeDiff * TouchUpDownScale;
 		}
+
+			delta += Input.GetAxis("MobileCameraUpDown") * MobileUpDownScale * Time.deltaTime;
+
 		#endif
 
 		return delta;
@@ -103,7 +115,7 @@ public class MouseRts : MonoBehaviour
 		float yrotation = 0.0f;
 		#if UNITY_STANDALONE
 		if (Input.GetMouseButton(1)) // RMB
-			yrotation = Input.GetAxis("Mouse X") * RotationSpeed * Time.deltaTime;
+			yrotation = Input.GetAxis("Mouse X") * Time.deltaTime;
 		#else
 		if (Input.touchCount == 2)
 		{
@@ -121,14 +133,17 @@ public class MouseRts : MonoBehaviour
 				{
 					Vector3 LR = Vector3.Cross(touchRotationStart, currVector);
 					// z > 0 left rotation, z < 0 right rotation
-					yrotation -= Mathf.Sign(LR.z) * angleOffset;
+						yrotation -= Mathf.Sign(LR.z) * angleOffset * TouchRotateScale;
 
 					touchRotationStart = currVector;
 				}
 			}
 		}
 		else
-			touchRotating = false;	
+			touchRotating = false;
+
+			yrotation += Input.GetAxis("MobileCameraRotate") * MobileRotateScale * Time.deltaTime;
+
 		#endif
 
 		return yrotation;
@@ -140,18 +155,24 @@ public class MouseRts : MonoBehaviour
 		#if UNITY_STANDALONE
 		if (Input.GetMouseButton(0)) // LMB
 		{
-			move += new Vector3(Input.GetAxis("Mouse X") * DragSpeed * Time.deltaTime, 0, 
-			Input.GetAxis("Mouse Y") * DragSpeed * Time.deltaTime);
+			move += new Vector3(Input.GetAxis("Mouse X") * Time.deltaTime, 0, 
+			Input.GetAxis("Mouse Y") * Time.deltaTime);
 		}
 		#else
 		if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Moved)
 		{
 			Touch touch = Input.GetTouch (0);
 
-			move += new Vector3(touch.deltaPosition.x / Screen.width * DragSpeed, 0, 
-				touch.deltaPosition.y / Screen.height * DragSpeed);				
+			move += new Vector3(touch.deltaPosition.x / Screen.width, 0, 
+					touch.deltaPosition.y / Screen.height) * TouchMoveScale;				
 		}
+
+		move += new Vector3(Input.GetAxis("MobileCameraX"), 0, 
+			-Input.GetAxis("MobileCameraY")) * Time.deltaTime * MobileMoveScale;
+			
 		#endif
+
+
 
 		return move;
 	}

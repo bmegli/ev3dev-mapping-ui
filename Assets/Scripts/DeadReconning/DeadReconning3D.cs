@@ -14,6 +14,9 @@ using UnityEngine;
 using System.Collections;
 using System;
 
+namespace Ev3devMapping
+{
+
 /*
 [Serializable]
 public class DeadReconningModuleProperties : ModuleProperties
@@ -178,3 +181,5 @@ public class DeadReconning3D : ReplayableUDPServer<DeadReconning3DPacket>
 	#endregion
 
 }
+
+} //namespace

@@ -14,6 +14,9 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 
+namespace Ev3devMapping
+{
+
 public class DeadReconning3DUI : ModuleUI
 {
 	private Text ppsText;
@@ -50,3 +53,5 @@ public class DeadReconning3DUI : ModuleUI
 		rotationText.text= string.Format("r {0:+##0.0;-##0.0} {1:+##0.0;-##0.0} {2:+##0.0;-##0.0}", rot.x, rot.y, rot.z);
 	}
 }
+
+} //namespace

@@ -13,6 +13,9 @@
 using System.Net;
 using System;
 
+namespace Ev3devMapping
+{
+
 public class DeadReconning3DPacket : IDatagram
 {
 	public ulong timestamp_us;
@@ -104,3 +107,5 @@ public class DeadReconning3DPacket : IDatagram
 		return timestamp_us;
 	}
 }
+
+} //namespace

@@ -350,7 +350,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toggleKey: 96
-  shakeToOpen: 1
+  toggleButton: Fire1
+  shakeToOpen: 0
   shakeAcceleration: 3
   restrictLogCount: 0
   maxLogs: 1000

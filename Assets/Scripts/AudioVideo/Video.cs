@@ -21,6 +21,9 @@ using System;
 using System.Diagnostics;
 using UnityEngine;
 
+namespace Ev3devMapping
+{
+
 [Serializable]
 public class VideoModuleProperties : ModuleProperties
 {
@@ -92,3 +95,5 @@ public class Video : RobotModule
 		
 	#endregion
 }
+
+} //namespace

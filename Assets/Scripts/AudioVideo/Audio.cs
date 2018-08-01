@@ -21,6 +21,9 @@ using System;
 using System.Diagnostics;
 using UnityEngine;
 
+namespace Ev3devMapping
+{
+
 [Serializable]
 public class AudioModuleProperties : ModuleProperties
 {
@@ -90,3 +93,5 @@ public class Audio : RobotModule
 		
 	#endregion
 }
+
+} //namespace

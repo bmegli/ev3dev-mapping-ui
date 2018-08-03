@@ -21,6 +21,7 @@ public class DeadReconning3DPacket : IDatagram
 	public ulong timestamp_us;
 	public int position_left;
 	public int position_right;
+	public short battery_voltage; //temp in 10*Volts
 	//in degrees, consider array or vector4
 	public float quat_w;
 	public float quat_x; 
@@ -45,6 +46,7 @@ public class DeadReconning3DPacket : IDatagram
 		timestamp_us = (ulong)IPAddress.NetworkToHostOrder(reader.ReadInt64());
 		position_left = IPAddress.NetworkToHostOrder(reader.ReadInt32());
 		position_right = IPAddress.NetworkToHostOrder(reader.ReadInt32());
+		battery_voltage = IPAddress.NetworkToHostOrder (reader.ReadInt16 ());
 
 		data = reader.ReadBytes(4);
 		Array.Reverse (data);
@@ -68,6 +70,7 @@ public class DeadReconning3DPacket : IDatagram
 		writer.Write(IPAddress.HostToNetworkOrder((long)timestamp_us));
 		writer.Write(IPAddress.HostToNetworkOrder(position_left));
 		writer.Write(IPAddress.HostToNetworkOrder(position_right));
+		writer.Write(IPAddress.HostToNetworkOrder(battery_voltage));
 
 		data = BitConverter.GetBytes (quat_w);
 		Array.Reverse (data);
@@ -88,7 +91,7 @@ public class DeadReconning3DPacket : IDatagram
 
 	public int BinarySize()
 	{
-		return 32; // 8 + 2*4 + 4*4
+		return 34; // 8 + 2*4 + 2 + 4*4
 	}
 
 	public void CloneFrom(DeadReconning3DPacket p)

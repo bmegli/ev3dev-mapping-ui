@@ -98,9 +98,9 @@ public class MouseRts : MonoBehaviour
 			float prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).magnitude;
 			float touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
 
-			float deltaMagnitudeDiff = (prevTouchDeltaMag - touchDeltaMag)/Mathf.Sqrt(Screen.width*Screen.width + Screen.height*Screen.height);
+				float deltaMagnitudeDiff = (touchDeltaMag - prevTouchDeltaMag)/Mathf.Sqrt(Screen.width*Screen.width + Screen.height*Screen.height);
 				 
-			delta = deltaMagnitudeDiff * TouchUpDownScale;
+			delta += deltaMagnitudeDiff * TouchUpDownScale;
 		}
 
 			delta += Input.GetAxis("MobileCameraUpDown") * MobileUpDownScale * Time.deltaTime;

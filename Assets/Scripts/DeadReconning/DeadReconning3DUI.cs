@@ -49,7 +49,7 @@ public class DeadReconning3DUI : ModuleUI
 		float voltage = deadReconning.GetBatteryVoltage ();
 
 		if (avgPacketMs != 0)
-				ppsText.text = string.Format("pps {0:00} ms {1:00} bt {2:0.0}", 1000.0f / avgPacketMs, avgPacketMs, voltage);
+				ppsText.text = string.Format("pps {0:00} ms {1:00} b {2:0.0}", 1000.0f / avgPacketMs, avgPacketMs, voltage);
 		positionText.text = string.Format("p {0:+0.00;-0.00} {1:+0.00;-0.00} {2:+0.00;-0.00}", pos.x, pos.y, pos.z);
 		rotationText.text= string.Format("r {0:+##0.0;-##0.0} {1:+##0.0;-##0.0} {2:+##0.0;-##0.0}", rot.x, rot.y, rot.z);
 	}

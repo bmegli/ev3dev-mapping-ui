@@ -27,6 +27,13 @@ namespace CircularBuffer
 				else
 					return buffer[head+i-capacity];
 			}
+			set
+			{
+				if (head + i < capacity)
+					buffer [head + i] = value;
+				else
+					buffer [head + i - capacity] = value;
+			}
 		}
 
 		public T[] CloneSubset(int index_from, int index_to)
@@ -201,6 +208,15 @@ namespace CircularBuffer
             size = Math.Min(size + count, capacity);
             return count;
         }
+
+		//unoptimal temporary implementation
+		public int Put(CircularBuffer<T> src)
+		{
+			T[] srcArray = src.ToArray ();
+			Put (srcArray);
+			return src.Size;
+		}
+
 
         public void Put(T item)
         {

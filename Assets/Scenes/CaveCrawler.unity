@@ -302,7 +302,7 @@ Prefab:
     - target: {fileID: 114000013788507174, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
       propertyPath: sessionDirectory
-      value: CaveCrawler
+      value: crawler
       objectReference: {fileID: 0}
     - target: {fileID: 114000013585239938, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
@@ -317,7 +317,7 @@ Prefab:
     - target: {fileID: 114000010431501252, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
       propertyPath: mode
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1000012680756564, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
       propertyPath: m_IsActive
@@ -325,7 +325,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1000013886380694, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1000013759948782, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
       propertyPath: m_IsActive
@@ -364,12 +364,12 @@ Prefab:
     - target: {fileID: 114000013934419876, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
       propertyPath: robotIp
-      value: 192.168.1.107
+      value: 192.168.8.1
       objectReference: {fileID: 0}
     - target: {fileID: 114000013934419876, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
       propertyPath: hostIp
-      value: 192.168.1.80
+      value: 192.168.8.100
       objectReference: {fileID: 0}
     - target: {fileID: 114000012465450012, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
@@ -417,7 +417,7 @@ Prefab:
     - target: {fileID: 114000013608529052, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
       propertyPath: module.laserDevice
-      value: /dev/ttyO4
+      value: /dev/ttyUSB0
       objectReference: {fileID: 0}
     - target: {fileID: 114000013608529052, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
@@ -427,7 +427,7 @@ Prefab:
     - target: {fileID: 114000013608529052, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
       propertyPath: module.program
-      value: cclaser
+      value: rplidar
       objectReference: {fileID: 0}
     - target: {fileID: 114000013608529052, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
@@ -457,7 +457,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4000010463103654, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 0.085
+      value: 0.0817
       objectReference: {fileID: 0}
     - target: {fileID: 401802, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
       propertyPath: m_LocalPosition.y
@@ -465,7 +465,47 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4000010463103654, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0.07
+      value: 0.0789
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000013608529052, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
+        type: 2}
+      propertyPath: moduleNetwork.port
+      value: 8022
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000013608529052, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
+        type: 2}
+      propertyPath: plot.distanceLimit
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000013608529052, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
+        type: 2}
+      propertyPath: module.autostart
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000010463103654, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000010463103654, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000010463103654, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000010463103654, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000010463103654, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000013608529052, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
+        type: 2}
+      propertyPath: module.creationDelayMs
+      value: 50
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
@@ -588,6 +628,11 @@ Prefab:
     - target: {fileID: 4000012579884992, guid: dcf44ebd51c01a043bd5a69921978e64, type: 2}
       propertyPath: m_RootOrder
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000010135716272, guid: dcf44ebd51c01a043bd5a69921978e64,
+        type: 2}
+      propertyPath: LevelArea
+      value: 30
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: dcf44ebd51c01a043bd5a69921978e64, type: 2}

@@ -387,7 +387,7 @@ namespace Ev3devMapping
 
 		public override string ModuleCall()
 		{
-			return  module.program + " " + module.laserDevice + " " + module.motorPort + " " + network.hostIp + " " + moduleNetwork.port + " " + module.laserDutyCycle + " " + module.crcTolerancePct;
+			return  module.program + " " + module.laserDevice + " " + network.hostIp + " " + moduleNetwork.port;
 		}
 		public override int ModulePriority()
 		{

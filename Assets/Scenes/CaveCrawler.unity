@@ -206,7 +206,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &313462150
 Transform:
   m_ObjectHideFlags: 0
@@ -317,7 +317,7 @@ Prefab:
     - target: {fileID: 114000010431501252, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
       propertyPath: mode
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1000012680756564, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
       propertyPath: m_IsActive
@@ -329,7 +329,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1000013759948782, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114000012465450012, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
@@ -359,17 +359,17 @@ Prefab:
     - target: {fileID: 114000013339424578, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
       propertyPath: MaxAngularSpeedDegPerSec
-      value: 60
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 114000013934419876, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
       propertyPath: robotIp
-      value: 192.168.8.1
+      value: 192.168.0.95
       objectReference: {fileID: 0}
     - target: {fileID: 114000013934419876, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
       propertyPath: hostIp
-      value: 192.168.8.100
+      value: 192.168.0.125
       objectReference: {fileID: 0}
     - target: {fileID: 114000012465450012, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
@@ -506,6 +506,16 @@ Prefab:
         type: 2}
       propertyPath: module.creationDelayMs
       value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000010445054316, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
+        type: 2}
+      propertyPath: module.wirelessDevice
+      value: wlp1s0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000010445054316, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
+        type: 2}
+      propertyPath: moduleNetwork.port
+      value: 8006
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}

@@ -2,6 +2,7 @@
 // http://www.andrejeworutzki.de/game-developement/unity-realtime-strategy-camera/
 
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Ev3devMapping
 {
@@ -49,8 +50,13 @@ public class MouseRts : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
+		if (EventSystem.current.IsPointerOverGameObject ())
+			return;
+			
 		Vector3 translation = Vector3.zero;
 	
+
+
 		// Zoom in or out
 		float zoomDelta = CameraUpDown ();
 
@@ -98,7 +104,7 @@ public class MouseRts : MonoBehaviour
 			float prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).magnitude;
 			float touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
 
-				float deltaMagnitudeDiff = (touchDeltaMag - prevTouchDeltaMag)/Mathf.Sqrt(Screen.width*Screen.width + Screen.height*Screen.height);
+			float deltaMagnitudeDiff = (touchDeltaMag - prevTouchDeltaMag)/Mathf.Sqrt(Screen.width*Screen.width + Screen.height*Screen.height);
 				 
 			delta += deltaMagnitudeDiff * TouchUpDownScale;
 		}
@@ -133,7 +139,7 @@ public class MouseRts : MonoBehaviour
 				{
 					Vector3 LR = Vector3.Cross(touchRotationStart, currVector);
 					// z > 0 left rotation, z < 0 right rotation
-						yrotation -= Mathf.Sign(LR.z) * angleOffset * TouchRotateScale;
+					yrotation -= Mathf.Sign(LR.z) * angleOffset * TouchRotateScale;
 
 					touchRotationStart = currVector;
 				}

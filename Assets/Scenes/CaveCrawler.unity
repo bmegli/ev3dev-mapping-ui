@@ -805,6 +805,8 @@ GameObject:
   - component: {fileID: 1922256056}
   - component: {fileID: 1922256055}
   - component: {fileID: 1922256057}
+  - component: {fileID: 1922256059}
+  - component: {fileID: 1922256058}
   m_Layer: 0
   m_Name: RawImage
   m_TagString: Untagged
@@ -876,6 +878,30 @@ MonoBehaviour:
   device: /dev/dri/renderD128
   ip: 
   port: 9766
+--- !u!114 &1922256058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1922256053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 092b72c78ef034499bc3557702f44eb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1922256059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1922256053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1862395651, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates: []
+  delegates: []
 --- !u!1 &1943859239
 GameObject:
   m_ObjectHideFlags: 0

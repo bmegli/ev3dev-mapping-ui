@@ -95,6 +95,9 @@ public class MouseRts : MonoBehaviour
 		#else
 		if (Input.touchCount == 2)
 		{
+			if (EventSystem.current.IsPointerOverGameObject (0) || EventSystem.current.IsPointerOverGameObject (1))
+				return delta;
+
 			Touch touchZero = Input.GetTouch(0);
 			Touch touchOne = Input.GetTouch(1);
 
@@ -125,6 +128,9 @@ public class MouseRts : MonoBehaviour
 		#else
 		if (Input.touchCount == 2)
 		{
+			if (EventSystem.current.IsPointerOverGameObject (0) || EventSystem.current.IsPointerOverGameObject (1))
+				return yrotation;
+
 			if (!touchRotating)
 			{
 				touchRotationStart = Input.touches [1].position - Input.touches [0].position;
@@ -167,6 +173,9 @@ public class MouseRts : MonoBehaviour
 		#else
 		if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Moved)
 		{
+			if (EventSystem.current.IsPointerOverGameObject (0))
+				return move;
+
 			Touch touch = Input.GetTouch (0);
 
 			move += new Vector3(touch.deltaPosition.x / Screen.width, 0, 

@@ -889,6 +889,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 092b72c78ef034499bc3557702f44eb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scaleMouseSpeed: 0.01
+  scalePinchSpeed: 0.01
+  minScale: 0.25
 --- !u!114 &1922256059
 MonoBehaviour:
   m_ObjectHideFlags: 0

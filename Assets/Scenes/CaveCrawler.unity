@@ -369,7 +369,7 @@ Prefab:
     - target: {fileID: 114000013934419876, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
       propertyPath: hostIp
-      value: 192.168.0.125
+      value: 192.168.0.55
       objectReference: {fileID: 0}
     - target: {fileID: 114000012465450012, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
@@ -647,6 +647,58 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: dcf44ebd51c01a043bd5a69921978e64, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1168344449
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1168344450}
+  - component: {fileID: 1168344451}
+  m_Layer: 0
+  m_Name: VideoCamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1168344450
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1168344449}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 515788134}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1168344451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1168344449}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07216330873c84e8f82645cbcba1fca1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moduleNetwork:
+    port: 9766
+  module:
+    autostart: 1
+    priority: 10
+    creationDelayMs: 100
+    stream: 0
+    width: 640
+    height: 360
+    framerate: 30
+    device: /dev/dri/renderD128
+    bitrate: 1000000
 --- !u!1 &1370561970
 GameObject:
   m_ObjectHideFlags: 0
@@ -843,7 +895,7 @@ MonoBehaviour:
   m_Script: {fileID: -98529514, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 4c1fe2ee6505d48a9afde5fc0e6a0917, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
@@ -875,7 +927,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 288663a1783db4dcfb48557dd0e7d0c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  device: /dev/dri/renderD129
+  device: /dev/dri/renderD128
   ip: 
   port: 9766
 --- !u!114 &1922256058

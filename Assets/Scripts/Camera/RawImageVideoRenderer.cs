@@ -21,11 +21,11 @@ public class RawImageVideoRenderer : MonoBehaviour
 
 	private IntPtr nhvd;
 	private NHVD.nhvd_frame frame = new NHVD.nhvd_frame{ data=new System.IntPtr[3], linesize=new int[3] };
-	private Texture2D Y, U, V;
+	private Texture2D texture1, texture2, texture3;
 
 	void Awake()
 	{
-		NHVD.nhvd_hw_config hw_config = new NHVD.nhvd_hw_config{hardware="vaapi", codec="h264", device=this.device, pixel_format="yuv420p"};
+		NHVD.nhvd_hw_config hw_config = new NHVD.nhvd_hw_config{hardware="vaapi", codec="h264", device=this.device, pixel_format="nv12"};
 		NHVD.nhvd_net_config net_config = new NHVD.nhvd_net_config{ip=this.ip, port=this.port, timeout_ms=500 };
 
 		nhvd=NHVD.nhvd_init (ref net_config, ref hw_config);
@@ -43,29 +43,56 @@ public class RawImageVideoRenderer : MonoBehaviour
 
 	private void AdaptTexture()
 	{
-		if(Y== null || Y.width != frame.width || Y.height != frame.height)
-		{
-			Y = new Texture2D (frame.width, frame.height, TextureFormat.R8, false);
-			U = new Texture2D (frame.width/2, frame.height/2, TextureFormat.R8, false);
-			V = new Texture2D (frame.width/2, frame.height/2, TextureFormat.R8, false);
-			GetComponent<RawImage> ().texture = Y;
-			GetComponent<RawImage>().material.SetTexture("_U", U);
-			GetComponent<RawImage>().material.SetTexture("_V", V);
+		if(texture1== null || texture1.width != frame.width || texture1.height != frame.height)
+        {
+            //frame.format is AVPixelFormat
+            if (frame.format == 0) //yuv420p
+            {
+                texture1 = new Texture2D(frame.width, frame.height, TextureFormat.R8, false);
+                texture2 = new Texture2D(frame.width / 2, frame.height / 2, TextureFormat.R8, false);
+                texture3 = new Texture2D(frame.width / 2, frame.height / 2, TextureFormat.R8, false);
+                GetComponent<RawImage>().texture = texture1;
+                GetComponent<RawImage>().material.SetTexture("_U", texture2);
+                GetComponent<RawImage>().material.SetTexture("_V", texture3);
+            }
+            else if (frame.format == 25) //nv12
+            {
+                texture1 = new Texture2D(frame.width, frame.height, TextureFormat.R8, false);
+                texture2 = new Texture2D(frame.width / 2, frame.height / 2, TextureFormat.RG16, false);
+                GetComponent<RawImage>().texture = texture1;
+                GetComponent<RawImage>().material.SetTexture("_UV", texture2);
+            }
 		}
 	}
+
+    private void FillTexture()
+    {
+        if (frame.format == 0) //yuv420p
+        {
+            texture1.LoadRawTextureData (frame.data[0], frame.width*frame.height);
+            texture1.Apply (false);
+            texture2.LoadRawTextureData (frame.data [1], frame.width * frame.height / 4);
+            texture2.Apply (false);
+            texture3.LoadRawTextureData (frame.data [2], frame.width * frame.height / 4);
+            texture3.Apply (false); 
+        }
+        else if (frame.format == 25) //nv12
+        {
+            texture1.LoadRawTextureData (frame.data[0], frame.width*frame.height);
+            texture1.Apply (false);
+            texture2.LoadRawTextureData (frame.data [1], frame.width * frame.height / 2);
+            texture2.Apply (false);
+        }
+
+    }
 						
 	// Update is called once per frame
 	void LateUpdate ()
 	{
 		if (NHVD.nhvd_get_frame_begin(nhvd, ref frame) == 0)
 		{
-			AdaptTexture ();
-			Y.LoadRawTextureData (frame.data[0], frame.width*frame.height);
-			Y.Apply (false);
-			U.LoadRawTextureData (frame.data [1], frame.width * frame.height / 4);
-			U.Apply (false);
-			V.LoadRawTextureData (frame.data [2], frame.width * frame.height / 4);
-			V.Apply (false);	
+			AdaptTexture();
+            FillTexture();
 		}
 
 		if (NHVD.nhvd_get_frame_end (nhvd) != 0)

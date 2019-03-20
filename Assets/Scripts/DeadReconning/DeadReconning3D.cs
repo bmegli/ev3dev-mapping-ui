@@ -110,7 +110,6 @@ public class DeadReconning3D : ReplayableUDPServer<DeadReconning3DPacket>
 		{
 			thread_shared_position=lastPosition;
 			thread_shared_averaged_packet_time_ms = AveragedPacketTimeMs();
-			thread_shared_battery_voltage = packet.battery_voltage / 10.0f;
 		}
 
 		positionHistory.PutThreadSafe(lastPosition);

@@ -32,7 +32,6 @@ public class DeadReconning3D : ReplayableUDPServer<DeadReconning3DPacket>
 
 	private PositionData actualPosition;
 	private float averagedPacketTimeMs;
-	private float batteryVoltage; //temp in Volts 
 
 	#region UDP Thread Only Data
 	private DeadReconning3DPacket lastPacket=new DeadReconning3DPacket();
@@ -44,7 +43,6 @@ public class DeadReconning3D : ReplayableUDPServer<DeadReconning3DPacket>
 	private object deadReconningLock=new object();
 	private PositionData thread_shared_position=new PositionData();
 	private float thread_shared_averaged_packet_time_ms;
-	private float thread_shared_battery_voltage; //temp in volts
 	#endregion
 
 	protected override void OnDestroy()
@@ -76,7 +74,6 @@ public class DeadReconning3D : ReplayableUDPServer<DeadReconning3DPacket>
 		{
 			actualPosition = thread_shared_position;
 			averagedPacketTimeMs = thread_shared_averaged_packet_time_ms;
-			batteryVoltage = thread_shared_battery_voltage;
 		}
 			
 		transform.parent.transform.position=actualPosition.position;
@@ -161,12 +158,7 @@ public class DeadReconning3D : ReplayableUDPServer<DeadReconning3DPacket>
 	{
 		return averagedPacketTimeMs;
 	}
-
-	public float GetBatteryVoltage()
-	{
-		return batteryVoltage;
-	}
-
+            
 	#region RobotModule 
 
 	public override string ModuleCall()

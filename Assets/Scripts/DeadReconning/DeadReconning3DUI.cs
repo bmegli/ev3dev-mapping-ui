@@ -28,7 +28,7 @@ public class DeadReconning3DUI : ModuleUI
 	protected override void Awake()
 	{
 		base.Awake();
-		ppsText = SafeInstantiateText(ModuleText, uiTransform, "pps 00 ms 00 bt 0.0");
+		ppsText = SafeInstantiateText(ModuleText, uiTransform, "pps 00 ms 00");
 		positionText = SafeInstantiateText(ModuleText, uiTransform, "x +0.00 y +00.0 z +00.0");
 		rotationText = SafeInstantiateText(ModuleText, uiTransform, "x 000.0 y 000.0 z 000.0");
 	}
@@ -46,10 +46,9 @@ public class DeadReconning3DUI : ModuleUI
 		Vector3 rot = deadReconning.GetRotation();
 
 		float avgPacketMs = deadReconning.GetAveragedPacketTimeMs();
-		float voltage = deadReconning.GetBatteryVoltage ();
 
 		if (avgPacketMs != 0)
-				ppsText.text = string.Format("pps {0:00} ms {1:00} b {2:0.0}", 1000.0f / avgPacketMs, avgPacketMs, voltage);
+				ppsText.text = string.Format("pps {0:00} ms {1:00}", 1000.0f / avgPacketMs, avgPacketMs);
 		positionText.text = string.Format("p {0:+0.00;-0.00} {1:+0.00;-0.00} {2:+0.00;-0.00}", pos.x, pos.y, pos.z);
 		rotationText.text= string.Format("r {0:+##0.0;-##0.0} {1:+##0.0;-##0.0} {2:+##0.0;-##0.0}", rot.x, rot.y, rot.z);
 	}

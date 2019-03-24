@@ -329,7 +329,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1000013759948782, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114000012465450012, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
@@ -432,7 +432,7 @@ Prefab:
     - target: {fileID: 114000013608529052, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
       propertyPath: plot.plotType
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114000013608529052, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}

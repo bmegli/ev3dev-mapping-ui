@@ -62,13 +62,12 @@ public class LaserReading
 
 public class LaserPacket : IDatagram
 {
-	public const int LASER_READINGS_PER_PACKET = 192;
+	public const int LASER_READINGS_PER_PACKET = 96;
 
 	public const ulong MICROSECONDS_PER_MINUTE = 60 * 1000000;
 
 	public ulong timestamp_us;
-	public ushort sample_us; //fixed point, 6 bits precision, divide by 64.0 to get floating point 
-	public ushort readings_count;
+	public ushort sample_us; 
 
 	/// laser_readings[LASER_READINGS_PER_PACKET]
 	public LaserReading[] laser_readings = new LaserReading[LASER_READINGS_PER_PACKET];
@@ -81,7 +80,7 @@ public class LaserPacket : IDatagram
 
 	public ulong GetEndTimestampUs()
 	{
-		return GetTimestampUs(readings_count-1);
+        return GetTimestampUs(LASER_READINGS_PER_PACKET-1);
 	}
 
 	public ulong GetTimestampUs()
@@ -97,7 +96,6 @@ public class LaserPacket : IDatagram
 	{
 		timestamp_us = (ulong)IPAddress.NetworkToHostOrder(reader.ReadInt64());
 		sample_us = (ushort)IPAddress.NetworkToHostOrder(reader.ReadInt16());
-		readings_count = (ushort)IPAddress.NetworkToHostOrder(reader.ReadInt16());
 
 		for (int i = 0; i < laser_readings.Length; ++i)
 			laser_readings[i].FromBinary(reader);	
@@ -106,7 +104,6 @@ public class LaserPacket : IDatagram
 	{
 		writer.Write(IPAddress.HostToNetworkOrder((long)timestamp_us));
 		writer.Write(IPAddress.HostToNetworkOrder((short)sample_us));
-		writer.Write(IPAddress.HostToNetworkOrder((short)readings_count));
 
 		for (int i = 0; i < laser_readings.Length; ++i)
 			laser_readings[i].ToBinary(writer);	
@@ -114,12 +111,12 @@ public class LaserPacket : IDatagram
 			
 	public int BinarySize()
 	{
-		return 8 + 2 + 2 + 4 * LASER_READINGS_PER_PACKET;
+		return 8 + 2 + 4 * LASER_READINGS_PER_PACKET;
 	}
 
 	public override string ToString()
 	{
-		return string.Format("[ts={0} us={1} rc={2}]", timestamp_us, sample_us, readings_count) + laser_readings[3].ToString();
+		return string.Format("[ts={0} us={1}", timestamp_us, sample_us) + laser_readings[3].ToString();
 	}
 }
 

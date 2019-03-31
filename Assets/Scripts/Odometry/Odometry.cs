@@ -17,9 +17,9 @@ using System;
 namespace Ev3devMapping
 {
 
-// we want to keep binary compatiblity between DeadReconning and Odometry
+// we want to keep binary compatiblity between DeadReconning3D and Odometry
 // so that we can rebuild recorded DeadReconning as Odometry (skipping information about heading)
-using OdometryPacket = DeadReconningPacket;
+using OdometryPacket = DeadReconning3DPacket;
 
 [Serializable]
 public class OdometryModuleProperties : ModuleProperties
@@ -55,7 +55,7 @@ public class Odometry : ReplayableUDPServer<OdometryPacket>
 	protected override void Awake()
 	{
 		base.Awake();
-		lastPosition = new PositionData{position=transform.parent.position, heading=transform.parent.eulerAngles.y};
+        lastPosition = new PositionData{position=transform.parent.position, rotation=transform.parent.eulerAngles, quaternion=transform.parent.rotation};
 		thread_shared_position = lastPosition;
 	}
 
@@ -77,8 +77,8 @@ public class Odometry : ReplayableUDPServer<OdometryPacket>
 			averagedPacketTimeMs = thread_shared_averaged_packet_time_ms;
 		}
 
-		transform.parent.transform.position=actualPosition.position;
-		transform.parent.transform.rotation=Quaternion.Euler(0.0f, actualPosition.heading, 0.0f);
+        transform.parent.transform.position=actualPosition.position;
+        transform.parent.transform.rotation=actualPosition.quaternion;
 	}
 
 	#region UDP Thread Only Functions
@@ -125,8 +125,7 @@ public class Odometry : ReplayableUDPServer<OdometryPacket>
 		if (physics.reverseMotorPolarity)
 			displacement_m = -displacement_m;
 
-
-		float angle_start_deg = lastPosition.heading;
+        float angle_start_deg = lastPosition.quaternion.eulerAngles.y;
 		float angle_difference_deg = (ldiff - rdiff) * distance_per_encoder_count_mm / physics.wheelbaseMm * Constants.RAD2DEG;
 		if (physics.reverseMotorPolarity)
 			angle_difference_deg = -angle_difference_deg;
@@ -142,7 +141,7 @@ public class Odometry : ReplayableUDPServer<OdometryPacket>
 		// Finally update the position and heading
 		lastPosition.timestamp = packet.timestamp_us;
 		lastPosition.position = new Vector3(lastPosition.position.x + displacement_m * Mathf.Sin(average_heading_rad), lastPosition.position.y, lastPosition.position.z + displacement_m * Mathf.Cos(average_heading_rad));
-		lastPosition.heading = angle_end_deg;
+        lastPosition.quaternion = Quaternion.Euler(new Vector3(0, angle_end_deg, 0));
 
 		return lastPosition;
 	}

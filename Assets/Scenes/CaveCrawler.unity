@@ -206,7 +206,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &313462150
 Transform:
   m_ObjectHideFlags: 0
@@ -251,7 +251,7 @@ MonoBehaviour:
   moduleNetwork:
     port: 8013
   module:
-    autostart: 0
+    autostart: 1
     priority: 10
     creationDelayMs: 0
     pollMs: 10
@@ -317,7 +317,7 @@ Prefab:
     - target: {fileID: 114000010431501252, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
       propertyPath: mode
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1000012680756564, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 2}
       propertyPath: m_IsActive
@@ -354,12 +354,12 @@ Prefab:
     - target: {fileID: 114000013339424578, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
       propertyPath: MaxLinearSpeedMmPerSec
-      value: 350
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 114000013339424578, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
       propertyPath: MaxAngularSpeedDegPerSec
-      value: 90
+      value: 45
       objectReference: {fileID: 0}
     - target: {fileID: 114000013934419876, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 2}
@@ -616,7 +616,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &996809482
 Transform:
   m_ObjectHideFlags: 0
@@ -886,7 +886,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1680662229
 RectTransform:
   m_ObjectHideFlags: 0
@@ -992,7 +992,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 288663a1783db4dcfb48557dd0e7d0c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  device: /dev/dri/renderD128
+  device: /dev/dri/renderD129
   ip: 
   port: 9766
 --- !u!114 &1922256058

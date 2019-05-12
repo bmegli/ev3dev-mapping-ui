@@ -11,61 +11,103 @@
 
 using System;
 using UnityEngine;
+using UnityEngine.UI; //RawImage
 
 public class VideoRenderer : MonoBehaviour
 {
-	public string device = "/dev/dri/renderD128";
-	public string ip = "";
-	public ushort port = 9766;
+    public string device = "/dev/dri/renderD128";
+    public string ip = "";
+    public ushort port = 9766;
 
-	private IntPtr nhvd;
-	private NHVD.nhvd_frame frame = new NHVD.nhvd_frame{ data=new System.IntPtr[3], linesize=new int[3] };
-	private Texture2D videoTexture;
+    private IntPtr nhvd;
+    private NHVD.nhvd_frame frame = new NHVD.nhvd_frame{ data=new System.IntPtr[3], linesize=new int[3] };
+    private Texture2D texture1, texture2, texture3;
 
-	void Awake()
-	{
-		NHVD.nhvd_hw_config hw_config = new NHVD.nhvd_hw_config{hardware="vaapi", codec="h264", device=this.device, pixel_format="bgr0"};
-		NHVD.nhvd_net_config net_config = new NHVD.nhvd_net_config{ip=this.ip, port=this.port, timeout_ms=500 };
+    void Awake()
+    {
+        NHVD.nhvd_hw_config hw_config = new NHVD.nhvd_hw_config{hardware="vaapi", codec="h264", device=this.device, pixel_format="nv12"};
+        NHVD.nhvd_net_config net_config = new NHVD.nhvd_net_config{ip=this.ip, port=this.port, timeout_ms=500 };
 
-		nhvd=NHVD.nhvd_init (ref net_config, ref hw_config);
+        nhvd=NHVD.nhvd_init (ref net_config, ref hw_config);
 
-		if (nhvd == IntPtr.Zero)
-		{
-			Debug.Log ("failed to initialize NHVD");
-			gameObject.SetActive (false);
-		}
+        if (nhvd == IntPtr.Zero)
+        {
+            Debug.Log ("failed to initialize NHVD");
+            gameObject.SetActive (false);
+        }
 
-		//flip the texture mapping upside down
-		Vector2[] uv = GetComponent<MeshFilter>().mesh.uv;
-		for (int i = 0; i < uv.Length; ++i)
-			uv [i][1] = -uv [i][1];
-		GetComponent<MeshFilter> ().mesh.uv = uv;
-	}
-	void OnDestroy()
-	{
-		NHVD.nhvd_close (nhvd);
-	}
+        //flip the texture mapping upside down
+        Vector2[] uv = GetComponent<MeshFilter>().mesh.uv;
+        for (int i = 0; i < uv.Length; ++i)
+            uv [i][1] = -uv [i][1];
+        GetComponent<MeshFilter> ().mesh.uv = uv;
 
-	private void AdaptTexture()
-	{
-		if(videoTexture== null || videoTexture.width != frame.width || videoTexture.height != frame.height)
-		{
-			videoTexture = new Texture2D (frame.width, frame.height, TextureFormat.BGRA32, false);
-			GetComponent<Renderer> ().material.mainTexture = videoTexture;
-		}
-	}
+    }
+    void OnDestroy()
+    {
+        NHVD.nhvd_close (nhvd);
+    }
 
-	// Update is called once per frame
-	void LateUpdate ()
-	{
-		if (NHVD.nhvd_get_frame_begin(nhvd, ref frame) == 0)
-		{
-			AdaptTexture ();
-			videoTexture.LoadRawTextureData (frame.data[0], frame.width*frame.height*4);
-			videoTexture.Apply (false);
-		}
+    private void AdaptTexture()
+    {
+        if(texture1== null || texture1.width != frame.width || texture1.height != frame.height)
+        {
+            //frame.format is AVPixelFormat
+            if (frame.format == 0) //yuv420p
+            {
+                texture1 = new Texture2D(frame.width, frame.height, TextureFormat.R8, false);
+                texture2 = new Texture2D(frame.width / 2, frame.height / 2, TextureFormat.R8, false);
+                texture3 = new Texture2D(frame.width / 2, frame.height / 2, TextureFormat.R8, false);
+                GetComponent<Renderer>().material.mainTexture = texture1;
+                GetComponent<Renderer>().material.SetTexture("_U", texture2);
+                GetComponent<Renderer>().material.SetTexture("_V", texture3);
+            }
+            else if (frame.format == 25) //nv12
+            {
+                texture1 = new Texture2D(frame.width, frame.height, TextureFormat.R8, false);
+                texture2 = new Texture2D(frame.width / 2, frame.height / 2, TextureFormat.RG16, false);
+                GetComponent<Renderer>().material.mainTexture = texture1;
+                GetComponent<Renderer>().material.SetTexture("_UV", texture2);
+            }
+        }
+    }
 
-		if (NHVD.nhvd_get_frame_end (nhvd) != 0)
-			Debug.LogWarning ("Failed to get NHVD frame data");
-	}
+    private void FillTexture()
+    {
+        if (frame.format == 0) //yuv420p
+        {
+            texture1.LoadRawTextureData (frame.data[0], frame.width*frame.height);
+            texture1.Apply (false);
+            texture2.LoadRawTextureData (frame.data [1], frame.width * frame.height / 4);
+            texture2.Apply (false);
+            texture3.LoadRawTextureData (frame.data [2], frame.width * frame.height / 4);
+            texture3.Apply (false); 
+        }
+        else if (frame.format == 25) //nv12
+        {
+            texture1.LoadRawTextureData (frame.data[0], frame.width*frame.height);
+            texture1.Apply (false);
+            texture2.LoadRawTextureData (frame.data [1], frame.width * frame.height / 2);
+            texture2.Apply (false);
+        }
+
+    }
+    void Update()
+    {
+        //rotate the view the same as camera
+        //transform.rotation = Camera.main.transform.rotation;
+    }
+
+    // Update is called once per frame
+    void LateUpdate ()
+    {
+        if (NHVD.nhvd_get_frame_begin(nhvd, ref frame) == 0)
+        {
+            AdaptTexture();
+            FillTexture();
+        }
+
+        if (NHVD.nhvd_get_frame_end (nhvd) != 0)
+            Debug.LogWarning ("Failed to get NHVD frame data");
+    }
 }

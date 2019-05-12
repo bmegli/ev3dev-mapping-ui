@@ -163,7 +163,11 @@ public class DeadReconning3D : ReplayableUDPServer<DeadReconning3DPacket>
 
 	public override string ModuleCall()
 	{
-		return "ev3dead-reconning " + network.hostIp + " " + moduleNetwork.port + " " + module.pollMs;
+        //Temporary workaround to start ccmcu
+
+		//return "ev3dead-reconning " + network.hostIp + " " + moduleNetwork.port + " " + module.pollMs;
+        //temporary for ccmcu tty_device host odometry_port lidar_port
+        return "ccmcu " + "/dev/ttyACM0" + " " + network.hostIp + " " + moduleNetwork.port + " " + "8022";
 	}
 	public override int ModulePriority()
 	{
@@ -171,7 +175,7 @@ public class DeadReconning3D : ReplayableUDPServer<DeadReconning3DPacket>
 	}
 	public override bool ModuleAutostart()
 	{
-		return false; //consider
+            return module.autostart; //consider
 	}
 	public override int CreationDelayMs()
 	{

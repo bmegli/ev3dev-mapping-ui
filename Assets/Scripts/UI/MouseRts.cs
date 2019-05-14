@@ -28,6 +28,9 @@ public class MouseRts : MonoBehaviour
 	public float TouchRotationMinMagSquared = 1f; 
 	public float TouchRotationMinAngle = 0.1f;
 
+    private bool touchRotating = false;
+    private Vector2 touchRotationStart = Vector2.zero;
+
 	public float MobileUpDownScale = 0.03f;
 	public float MobileRotateScale = 0.5f;
 	public float MobileMoveScale = 0.5f;

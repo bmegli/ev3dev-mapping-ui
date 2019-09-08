@@ -213,7 +213,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &313462150
 Transform:
   m_ObjectHideFlags: 0
@@ -326,7 +326,7 @@ PrefabInstance:
     - target: {fileID: 114000013788507174, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 3}
       propertyPath: sessionDirectory
-      value: GardenMCU2
+      value: testing
       objectReference: {fileID: 0}
     - target: {fileID: 114000013585239938, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 3}
@@ -411,7 +411,7 @@ PrefabInstance:
     - target: {fileID: 114000010431501252, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 3}
       propertyPath: mode
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1000012680756564, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 3}
       propertyPath: m_IsActive
@@ -423,7 +423,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1000013759948782, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114000012465450012, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 3}
@@ -463,7 +463,7 @@ PrefabInstance:
     - target: {fileID: 114000013934419876, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 3}
       propertyPath: robotIp
-      value: 192.168.0.50
+      value: 192.168.0.10
       objectReference: {fileID: 0}
     - target: {fileID: 114000013934419876, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 3}
@@ -1060,6 +1060,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scaleMouseSpeed: 0.01
   scalePinchSpeed: 0.01
+  scaleButtonSpeed: 0.01
   minScale: 0.25
 --- !u!114 &1922256059
 MonoBehaviour:

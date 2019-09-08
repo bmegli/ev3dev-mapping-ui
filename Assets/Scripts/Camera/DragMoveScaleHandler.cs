@@ -29,6 +29,9 @@ public class DragMoveScaleHandler : MonoBehaviour, IDragHandler, IBeginDragHandl
 {	
 	public float scaleMouseSpeed = 0.01f;
 	public float scalePinchSpeed = 0.01f;
+
+	public float scaleButtonSpeed = 0.01f;
+
 	public float minScale = 0.25f;
 
 	private bool scaling=false;
@@ -73,13 +76,24 @@ public class DragMoveScaleHandler : MonoBehaviour, IDragHandler, IBeginDragHandl
 			return;
 
 		transform.localScale += new Vector3 (scalePinchSpeed, scalePinchSpeed, 0f) * scaleDelta;
-
-		ValidateScale();
 	}
-		
+
+	//To be refactored out to separate class?
+	private void ButtonScale()
+	{
+		float scaleDelta = Input.GetAxis("VideoScale");
+
+		if (scaleDelta == 0f)
+			return;
+
+		transform.localScale += new Vector3 (scaleButtonSpeed, scaleButtonSpeed, 0f) * scaleDelta;
+	}
+
 	public void Update()
 	{
 		PinchScale();
+		ButtonScale();
+		ValidateScale();
 	}
 
 	public void OnBeginDrag(PointerEventData eventData)

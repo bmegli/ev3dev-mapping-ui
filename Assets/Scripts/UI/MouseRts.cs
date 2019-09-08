@@ -31,9 +31,9 @@ public class MouseRts : MonoBehaviour
     private bool touchRotating = false;
     private Vector2 touchRotationStart = Vector2.zero;
 
-	public float MobileUpDownScale = 0.03f;
-	public float MobileRotateScale = 0.5f;
-	public float MobileMoveScale = 0.5f;
+	public float UpDownScale = 0.03f;
+	public float RotateScale = 0.5f;
+	public float MoveScale = 0.5f;
 
 	public float TouchUpDownScale = 0.15f;
 	public float TouchRotateScale = 0.015f;
@@ -44,18 +44,13 @@ public class MouseRts : MonoBehaviour
 
 	public void Start()
 	{
+		Cursor.visible=false;
 		yrotation = transform.eulerAngles.y;
 	}
 
-	// Update is called once per frame
 	void Update()
 	{
-		if (EventSystem.current.IsPointerOverGameObject ())
-			return;
-			
 		Vector3 translation = Vector3.zero;
-	
-
 
 		// Zoom in or out
 		float zoomDelta = CameraUpDown ();
@@ -81,9 +76,7 @@ public class MouseRts : MonoBehaviour
 
 		// Finally move camera parallel to world axis
 		transform.position = desiredPosition;
-			
 		transform.eulerAngles = new Vector3(xrotation, yrotation, 0);
-		
 	}
 
 	private float CameraUpDown()
@@ -112,9 +105,9 @@ public class MouseRts : MonoBehaviour
 			delta += deltaMagnitudeDiff * TouchUpDownScale;
 		}
 
-			delta += Input.GetAxis("MobileCameraUpDown") * MobileUpDownScale * Time.deltaTime;
-
 		#endif
+
+		delta += Input.GetAxis("CameraUpDown") * UpDownScale * Time.deltaTime;
 
 		return delta;
 	}
@@ -123,7 +116,7 @@ public class MouseRts : MonoBehaviour
 	{
 		float yrotation = 0.0f;
 		#if UNITY_STANDALONE
-		if (Input.GetMouseButton(1)) // RMB
+		if (Input.GetMouseButton(1) && !EventSystem.current.IsPointerOverGameObject()) // RMB
 			yrotation = Input.GetAxis("Mouse X") * Time.deltaTime;
 		#else
 		if (Input.touchCount == 2)
@@ -154,22 +147,28 @@ public class MouseRts : MonoBehaviour
 		else
 			touchRotating = false;
 
-			yrotation += Input.GetAxis("MobileCameraRotate") * MobileRotateScale * Time.deltaTime;
-
 		#endif
+
+		yrotation += Input.GetAxis("CameraRotate") * RotateScale * Time.deltaTime;
 
 		return yrotation;
 	}
 
+	private bool mouseDragging = false;
 	private Vector3 CameraMovement()
 	{
 		Vector3 move = Vector3.zero;
+
 		#if UNITY_STANDALONE
-		if (Input.GetMouseButton(0)) // LMB
+
+		if(mouseDragging)
 		{
 			move += new Vector3(Input.GetAxis("Mouse X") * Time.deltaTime, 0, 
 			Input.GetAxis("Mouse Y") * Time.deltaTime);
 		}
+
+		mouseDragging = Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject();
+
 		#else
 		if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Moved)
 		{
@@ -182,12 +181,10 @@ public class MouseRts : MonoBehaviour
 					touch.deltaPosition.y / Screen.height) * TouchMoveScale;				
 		}
 
-		move += new Vector3(Input.GetAxis("MobileCameraX"), 0, 
-			-Input.GetAxis("MobileCameraY")) * Time.deltaTime * MobileMoveScale;
-			
 		#endif
 
-
+		move += new Vector3(Input.GetAxis("CameraX"), 0,
+			-Input.GetAxis("CameraY")) * Time.deltaTime * MoveScale;
 
 		return move;
 	}

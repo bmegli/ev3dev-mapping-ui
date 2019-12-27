@@ -213,7 +213,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &313462150
 Transform:
   m_ObjectHideFlags: 0
@@ -316,7 +316,7 @@ PrefabInstance:
     - target: {fileID: 114000010445054316, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 3}
       propertyPath: module.wirelessDevice
-      value: wlp1s0
+      value: wlx74da3814085d
       objectReference: {fileID: 0}
     - target: {fileID: 114000010445054316, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 3}
@@ -357,6 +357,16 @@ PrefabInstance:
         type: 3}
       propertyPath: plot.plotType
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000013585239938, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
+        type: 3}
+      propertyPath: moduleNetwork.port
+      value: 8023
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000013585239938, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
+        type: 3}
+      propertyPath: module.autostart
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114000013608529052, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 3}
@@ -419,11 +429,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1000013886380694, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1000013759948782, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114000012465450012, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 3}
@@ -453,22 +463,22 @@ PrefabInstance:
     - target: {fileID: 114000013339424578, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 3}
       propertyPath: MaxLinearSpeedMmPerSec
-      value: 200
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 114000013339424578, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 3}
       propertyPath: MaxAngularSpeedDegPerSec
-      value: 45
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 114000013934419876, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 3}
       propertyPath: robotIp
-      value: 192.168.0.10
+      value: 192.168.0.30
       objectReference: {fileID: 0}
     - target: {fileID: 114000013934419876, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 3}
       propertyPath: hostIp
-      value: 192.168.0.200
+      value: 192.168.0.100
       objectReference: {fileID: 0}
     - target: {fileID: 114000010667919226, guid: c8a62375b1ea46e4eba9d5b8240fb33b,
         type: 3}
@@ -498,6 +508,34 @@ PrefabInstance:
     - target: {fileID: 4000013121608044, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0.123
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000013121608044, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000013121608044, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000013121608044, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000013121608044, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000013121608044, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000013121608044, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000013121608044, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4000010463103654, guid: c8a62375b1ea46e4eba9d5b8240fb33b, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1233,7 +1271,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cffd01d65ed93460395c956d5514d637, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  device: /dev/dri/renderD129
+  device: /dev/dri/renderD128
   ip: 
   port: 9766
 --- !u!23 &2079692230

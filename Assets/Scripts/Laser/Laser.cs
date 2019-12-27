@@ -47,7 +47,7 @@ namespace Ev3devMapping
 		
 	class LaserThreadSharedData
 	{
-		const int READINGS_SIZE = 360 * 3;
+		const int READINGS_SIZE = 360 * 6;
 		public CircularBuffer<Vector3> readings = new CircularBuffer<Vector3> (READINGS_SIZE, true);
 
 		public bool consumed = true;
@@ -84,7 +84,7 @@ namespace Ev3devMapping
 
 	class LaserThreadInternalData
 	{
-		const int READINGS_SIZE = 360 * 3;
+		const int READINGS_SIZE = 360 * 6;
 		public CircularBuffer<Vector3> readings = new CircularBuffer<Vector3> (READINGS_SIZE, true);
 		public CircularBuffer<ulong> timestamps = new CircularBuffer<ulong>(READINGS_SIZE, true);
 

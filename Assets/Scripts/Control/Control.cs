@@ -152,7 +152,7 @@ public class Control : ReplayableTCPClient<ControlMessage>
 				module.SetState(ModuleStateFromControlCommand(cmd));
 				break;
 			default:
-				print(name + " - ignoring unsupported command " + message.GetType());
+				print(name + " - ignoring unsupported command " + message.GetCommand());
 				break;
 		}
 	}
